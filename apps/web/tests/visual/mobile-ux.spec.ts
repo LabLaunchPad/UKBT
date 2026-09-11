@@ -38,7 +38,6 @@ const ALL_ROUTES = [
   '/services',
   '/coaching',
   '/community',
-  '/design-system',
   '/404',
 ];
 

@@ -7,7 +7,7 @@ import { VIEWPORT_MATRIX } from './viewports.js';
  * full per-page structural/visual/interaction suite that requires real
  * pages to exist first.
  */
-const ROUTES = ['/', '/design-system'];
+const ROUTES = ['/'];
 
 for (const route of ROUTES) {
   for (const viewport of VIEWPORT_MATRIX) {

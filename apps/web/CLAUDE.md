@@ -36,9 +36,10 @@ Astro site, `output: 'static'`, depending on `@ukbt/truth` as
 - `src/pages/` — one `.astro` file per route: `index`, `about`, `players`,
   `tournaments`, `franchises`, `news` (list) + `news/[slug].astro` (detail),
   `membership`, `join`, `services`, `coaching`, `community`, `club-captain`,
-  `contact`, `faq`, `design-system`, `404`. Route set is governed by
+  `contact`, `faq`, `404`. Route set is governed by
   `contracts/ROUTE-CONTRACT.md` — adding/removing a route needs that
-  contract updated, not just a new file.
+  contract updated, not just a new file. (`design-system` was removed
+  2026-09-11: internal verification page, must not ship to production.)
 - `src/content/*-data.ts` — page content as typed data modules, **not** an
   Astro content collection. Each module is shaped against
   `@ukbt/truth`'s `src/schema/` types, so a change to page content is a

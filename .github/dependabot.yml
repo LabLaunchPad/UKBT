@@ -1,0 +1,16 @@
+# Security-only dependency automation (P0/P1 hardening, 2026-09-11).
+# Monthly schedule + small open-PR cap: security updates still arrive
+# promptly via Dependabot alerts, without weekly version-churn noise.
+# All dependency additions remain subject to the name-allowlist gate
+# (scripts/check-dependency-allowlist.mjs) regardless of source.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: monthly
+    open-pull-requests-limit: 5
+    target-branch: main
+    labels:
+      - dependencies
+      - security

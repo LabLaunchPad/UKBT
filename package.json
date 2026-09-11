@@ -8,6 +8,12 @@
     "pnpm": ">=10.0.0"
   },
   "packageManager": "pnpm@10.33.0",
+  "pnpm": {
+    "overrides": {
+      "sharp": "^0.35.4",
+      "qs": "^6.16.0"
+    }
+  },
   "scripts": {
     "build": "pnpm --filter @ukbt/truth tokens:build && pnpm --filter @ukbt/web build && node scripts/generate-sitemap.mjs",
     "dev": "pnpm --filter ./apps/web dev",
