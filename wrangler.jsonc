@@ -36,7 +36,13 @@
   "observability": {
     "enabled": false,
     "head_sampling_rate": 1,
-    "redact_query_string": false,
+    // 2026-09-11 (P0/P1 hardening, F-06): redact query strings from
+    // persisted invocation logs. Verified safe — the static site has no
+    // query-string-dependent runtime behavior (no forms, no search, no
+    // URLSearchParams/location.search anywhere in apps/web/src, no
+    // query-bearing redirects or analytics). See
+    // docs/security/query-log-redaction.md.
+    "redact_query_string": true,
     "logs": {
       "enabled": true,
       "head_sampling_rate": 1,

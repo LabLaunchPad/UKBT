@@ -83,8 +83,6 @@ export const SEO_ROUTES: SeoRoute[] = [
   { path: '/join', indexable: false },
   // Offline shell (PWA-lite): not public content.
   { path: '/offline', indexable: false },
-  // Internal verification page, not public content.
-  { path: '/design-system', indexable: false },
 ];
 
 export const ORG_ID = `${SITE}/#organization`;
