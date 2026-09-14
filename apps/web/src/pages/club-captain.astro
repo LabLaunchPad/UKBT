@@ -67,10 +67,9 @@ const bannerBackground = {
   // at wide slots; narrow slots barely crop horizontally either way.
   focus: '50% 20%',
 };
-// Athlete-hero identity line: nationality only (owner direction
-// 2026-09-12 — batting style stays in the facts table below, not the
-// identity line). Verbatim gated value, no new claim composed.
-const identityLine = captain.nationality;
+// Identity line removed (owner direction 2026-09-12): the nationality
+// already appears in the facts table below — no duplicate line needed.
+const identityLine: string | undefined = undefined;
 // ProfilePage+Person graph via the central SEO emitter — gated name/role
 // only (see src/lib/seo.ts).
 const structuredData = captainGraph({
