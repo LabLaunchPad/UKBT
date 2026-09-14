@@ -280,6 +280,4 @@ html[data-astro-transition='back']::view-transition-new(root) {
     transform: translateY(calc(-1 * var(--ukbt-motion-distance-sm)));
   }
 }
-.ukbt-section {
-  background-image: url();
-}
+
