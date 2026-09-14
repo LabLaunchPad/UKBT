@@ -78,6 +78,22 @@ describe('truth gate — evaluate()', () => {
     ]);
   });
 
+  it('FAIL: empty sources array bypasses no sources — should fail T1', () => {
+    const result = evaluate(
+      record({
+        field: 'player_name',
+        status: 'approved',
+        sources: [],
+        approver: 'someone',
+      }),
+      options,
+    );
+    expect(result.passed).toBe(false);
+    expect(result.reasons).toEqual([
+      { rule: 'T1', detail: expect.stringContaining('missing provenance') },
+    ]);
+  });
+
   it('FAIL: missing authority (T4-tier source)', () => {
     const result = evaluate(
       record({

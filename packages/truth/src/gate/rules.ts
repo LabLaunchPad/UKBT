@@ -52,7 +52,7 @@ export function evaluate(
     });
   }
 
-  if (record.sources == null) {
+  if (record.sources == null || record.sources.length === 0) {
     if (record.status === 'published' && record.approver == null) {
       reasons.push({
         rule: 'T1',
