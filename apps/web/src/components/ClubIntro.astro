@@ -1,7 +1,16 @@
 ---
 // ClubIntro — re-art-directed. Editorial composition:
-// large image, large statement, supporting copy, typographic statistics.
+// large TEAM slideshow, large statement, supporting copy, typographic statistics.
 // No cards, no overlay, no boxes around numbers.
+//
+// TEAM-ONLY enforcement: this section must show ONLY multi-player team
+// pictures (≥2 players in frame) with no trophy/award as the subject.
+// Single-player portraits (club-feature.webp / gallery-07, gallery-01,
+// gallery-03, gallery-12-17, etc.) and trophy-centric frames
+// (gallery-06, -10, -11, gallery-05 plaque, founder-trophy) are explicitly
+// forbidden here — see artifacts/brand/raw/images/gallery review and
+// MANIFEST.md Client-authorised photography notes. The array below is the
+// single source of truth; adding an individual or trophy image is a defect.
 interface Stat {
   value: string;
   label: string;
@@ -12,17 +21,91 @@ interface Props {
   founded: string;
 }
 const { lede, stats, founded } = Astro.props;
+
+// 5 team moments, no trophy, no individual — auto-rotating, see slideshow notes.
+// All are genuine multi-player shots (3–11 players), not portraits.
+// Sources all CLIENT_REQ_010 / EV-20260826-032 or owner-confirmed banner assets
+// (gallery-04/-08) — no third-party watermark is scrubbed; owner confirmed
+// publication rights where a mark exists (see MANIFEST.md).
+const TEAM_SLIDES = [
+  {
+    src: '/media/team-huddle.webp',
+    width: 1080,
+    height: 720,
+    alt: 'UK Bangla Tigers squad in a team huddle on the field',
+  },
+  {
+    src: '/media/team-night-action.webp',
+    width: 1132,
+    height: 720,
+    alt: 'UK Bangla Tigers bowler appealing during a night match with teammates in frame',
+  },
+  {
+    src: '/media/gallery-04.webp',
+    width: 1400,
+    height: 934,
+    alt: 'UK Bangla Tigers match action with bowler delivering and batters at the crease',
+  },
+  {
+    src: '/media/gallery-08.webp',
+    width: 1400,
+    height: 933,
+    alt: 'UK Bangla Tigers squad team photo in light blue kit on the field',
+  },
+  {
+    src: '/media/gallery-09.webp',
+    width: 1400,
+    height: 933,
+    alt: 'UK Bangla Tigers batters together at the crease during a match',
+  },
+];
 ---
 
 <div class="ukbt-about">
-  <div class="ukbt-about__image">
-    <img
-      src="/media/club-feature.webp"
-      width="1400"
-      height="933"
-      alt="A UK Bangla Tigers player on the field"
-      loading="lazy"
-    />
+  <div
+    class="ukbt-about__slideshow"
+    role="region"
+    aria-roledescription="carousel"
+    aria-label="UK Bangla Tigers team moments"
+    data-slideshow
+  >
+    <div class="ukbt-about__slides">
+      {
+        TEAM_SLIDES.map((s, i) => (
+          <div
+            class={`ukbt-about__slide${i === 0 ? ' is-active' : ''}`}
+            data-slide={i}
+            aria-hidden={i === 0 ? 'false' : 'true'}
+            aria-label={`Team photo ${i + 1} of ${TEAM_SLIDES.length}`}
+          >
+            <img
+              src={s.src}
+              width={s.width}
+              height={s.height}
+              alt={s.alt}
+              loading={i === 0 ? 'eager' : 'lazy'}
+              fetchpriority={i === 0 ? 'high' : undefined}
+              decoding="async"
+            />
+          </div>
+        ))
+      }
+    </div>
+    <div class="ukbt-about__dots" role="tablist" aria-label="Team photo navigation">
+      {
+        TEAM_SLIDES.map((_, i) => (
+          <button
+            type="button"
+            class={`ukbt-about__dot${i === 0 ? ' is-active' : ''}`}
+            role="tab"
+            aria-label={`Go to team photo ${i + 1}`}
+            aria-selected={i === 0 ? 'true' : 'false'}
+            data-dot={i}
+          />
+        ))
+      }
+    </div>
+    <p class="ukbt-about__live sr-only" aria-live="polite" aria-atomic="true" />
   </div>
   <div class="ukbt-about__content">
     <h2 class="ukbt-about__headline">A Club With<br />Purpose</h2>
@@ -49,6 +132,96 @@ const { lede, stats, founded } = Astro.props;
     flex-direction: column;
     gap: var(--ukbt-space-gap-5);
   }
+  /* Slideshow — team-only, auto-rotating, accessible */
+  .ukbt-about__slideshow {
+    position: relative;
+    width: 100%;
+    border-radius: var(--ukbt-radius-ref-card);
+    overflow: hidden;
+    background: #001e3a;
+  }
+  /* Aspect-ratio via padding-bottom hack: bulletproof across all browsers
+     and immune to the max-height / aspect-ratio interaction bug that
+     leaves cream gaps at wide viewports. 3:2 matches the widest common
+     cricket photo ratio. */
+  .ukbt-about__slides {
+    position: relative;
+    width: 100%;
+    padding-bottom: 66.67%;
+    overflow: hidden;
+  }
+  .ukbt-about__slide {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity var(--ukbt-motion-duration-slow) var(--ukbt-motion-easing-standard);
+    pointer-events: none;
+  }
+  .ukbt-about__slide.is-active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .ukbt-about__slide img {
+    display: block;
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 30%;
+  }
+  .ukbt-about__dots {
+    position: absolute;
+    left: 50%;
+    bottom: 14px;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    z-index: 1;
+    padding: 6px 10px;
+    border-radius: var(--ukbt-radius-pill);
+    background: rgba(0, 30, 58, 0.28);
+    backdrop-filter: blur(6px);
+  }
+  .ukbt-about__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.9);
+    background: rgba(255, 255, 255, 0.45);
+    padding: 0;
+    cursor: pointer;
+    transition:
+      background var(--ukbt-motion-duration-fast) var(--ukbt-motion-easing-standard),
+      transform var(--ukbt-motion-duration-fast) var(--ukbt-motion-easing-standard);
+  }
+  .ukbt-about__dot.is-active {
+    background: #fff;
+    transform: scale(1.25);
+  }
+  .ukbt-about__dot:focus-visible {
+    outline: 2px solid var(--ukbt-color-brand-accent);
+    outline-offset: 2px;
+  }
+  /* visually-hidden live region */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ukbt-about__slide {
+      transition: none;
+    }
+  }
+  /* retain legacy single-image hooks harmlessly if ever referenced */
   .ukbt-about__image {
     width: 100%;
   }
@@ -109,8 +282,8 @@ const { lede, stats, founded } = Astro.props;
   }
 
   @media screen and (max-width: 767px) {
-    .ukbt-about__image img {
-      max-height: 20rem;
+    .ukbt-about__slides {
+      padding-bottom: 75%;
     }
     .ukbt-about__stats {
       flex-direction: column;
@@ -118,3 +291,82 @@ const { lede, stats, founded } = Astro.props;
     }
   }
 </style>
+
+<script>
+  // Auto-slideshow: 5 team slides, ~4s per slide, pause on hover/focus/hidden/reduced-motion.
+  // No external deps; runs once per ClubIntro instance (homepage has one).
+  (function () {
+    const root = document.querySelector('[data-slideshow]');
+    if (!root) return;
+    const slides = Array.from(root.querySelectorAll('[data-slide]'));
+    const dots = Array.from(root.querySelectorAll('[data-dot]'));
+    const live = root.querySelector('.ukbt-about__live');
+    if (slides.length <= 1) return;
+
+    let index = 0;
+    let timer: number | null = null;
+    const INTERVAL = 4000;
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    function show(n: number) {
+      index = (n + slides.length) % slides.length;
+      slides.forEach((el, i) => {
+        const active = i === index;
+        el.classList.toggle('is-active', active);
+        el.setAttribute('aria-hidden', active ? 'false' : 'true');
+      });
+      dots.forEach((el, i) => {
+        const active = i === index;
+        el.classList.toggle('is-active', active);
+        el.setAttribute('aria-selected', active ? 'true' : 'false');
+        el.setAttribute('tabindex', active ? '0' : '-1');
+      });
+      if (live) live.textContent = `Team photo ${index + 1} of ${slides.length}`;
+    }
+
+    function start() {
+      if (reduceMotion) return;
+      stop();
+      timer = window.setInterval(() => show(index + 1), INTERVAL);
+    }
+    function stop() {
+      if (timer !== null) {
+        clearInterval(timer);
+        timer = null;
+      }
+    }
+
+    dots.forEach((btn, i) => {
+      btn.addEventListener('click', () => {
+        show(i);
+        start();
+      });
+    });
+
+    root.addEventListener('mouseenter', stop);
+    root.addEventListener('mouseleave', start);
+    root.addEventListener('focusin', stop);
+    root.addEventListener('focusout', start);
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) stop();
+      else start();
+    });
+
+    // Keyboard: arrow keys when dots have focus
+    root.addEventListener('keydown', (e: Event) => {
+      const ke = e as KeyboardEvent;
+      if (ke.key === 'ArrowRight') {
+        ke.preventDefault();
+        show(index + 1);
+        start();
+      } else if (ke.key === 'ArrowLeft') {
+        ke.preventDefault();
+        show(index - 1);
+        start();
+      }
+    });
+
+    show(0);
+    start();
+  })();
+</script>
