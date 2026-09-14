@@ -35,6 +35,11 @@ if (!existsSync(headersPath)) {
     'X-Content-Type-Options',
     'Referrer-Policy',
     'Permissions-Policy',
+    // Added 2026-09-11 closing a B/80 third-party audit: COOP/CORP
+    // isolate the document and its subresources. HSTS stays without
+    // includeSubDomains until the subdomain inventory is validated.
+    'Cross-Origin-Opener-Policy',
+    'Cross-Origin-Resource-Policy',
   ]) {
     if (!headers.includes(name)) fail('header-missing', name);
   }
