@@ -506,3 +506,25 @@ observation; apply with judgment, do not generalize further.
   all-slash, links gate 749 checked zero drift, SEO PASS, production
   smoke post-merge.
 - **Status:** VERIFIED.
+
+## AL-029 -- loading=lazy on hidden/chrome imagery hangs capture harness
+
+- **Observation:** Adding loading="lazy" to the off-canvas drawer crest
+  hung homepage-delivery's decode wait (never intersects while closed,
+  onload never fires, 30s timeout, CI + local repro). Lazy on footer
+  chrome risked empty boxes in assertion-free review captures.
+- **Outcome:** Reverted both; chrome imagery stays eager by convention.
+  Below-fold SEOmator lazy warnings on tiny crests accepted as-is.
+- **Cause:** loading=lazy defers fetch until intersection; hidden
+  elements never intersect; the harness waits for every incomplete
+  image.
+- **Counterexample:** Content images below the fold on scrolled pages
+  (ClubIntro i>0, galleries) safely use lazy — the scroll-walk reaches
+  them. Only never-intersecting (drawer) and review-artifact chrome
+  must stay eager.
+- **Rule:** Never lazy-load imagery inside hidden/off-canvas chrome;
+  keep header/drawer/footer brand marks eager unless a capture-spec
+  run proves otherwise.
+- **Verified-by:** CI failure + local repro, revert, motion/seo specs
+  27/27 local green.
+- **Status:** VERIFIED.

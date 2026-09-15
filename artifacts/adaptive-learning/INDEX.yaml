@@ -29,3 +29,4 @@ index:
   AL-026: [production 404, adapter output moved, wrangler mapping, serve mapping, dist client]
   AL-027: [perf budget message stale, css js global sum, transfer vs raw bytes, tina bridge admin]
   AL-028: [canonical trailing slash, sitemap redirect, 307 platform, served url mismatch]
+  AL-029: [lazy hidden image, drawer crest, capture hang, decode wait, eager chrome]

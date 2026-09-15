@@ -42,7 +42,7 @@ import SubHeading from './SubHeading.astro';
     {
       sponsors.map((s) => (
         <div class="ukbt-sponsors__item">
-          <img src={s.logo} width="160" height="160" alt={s.logoAlt} loading="lazy" />
+          <img src={s.logo} width="160" height="160" alt={s.logoAlt} />
           <div>
             <h3 class="ukbt-sponsors__name">{s.name}</h3>
             {s.tagline && <p class="ukbt-sponsors__tagline">{s.tagline}</p>}
