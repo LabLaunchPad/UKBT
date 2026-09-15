@@ -221,18 +221,7 @@ const TEAM_SLIDES = [
       transition: none;
     }
   }
-  /* retain legacy single-image hooks harmlessly if ever referenced */
-  .ukbt-about__image {
-    width: 100%;
-  }
-  .ukbt-about__image img {
-    display: block;
-    width: 100%;
-    height: auto;
-    max-height: 36rem;
-    object-fit: cover;
-    border-radius: var(--ukbt-radius-ref-card);
-  }
+  /* legacy image hooks removed — no route references them */
   .ukbt-about__content {
     display: flex;
     flex-direction: column;
@@ -280,6 +269,8 @@ const TEAM_SLIDES = [
     font-size: var(--ukbt-font-size-0);
     color: var(--ukbt-color-neutral-700);
   }
+
+  /* bridge removed for budget — continuity via hero line only */
 
   @media screen and (max-width: 767px) {
     .ukbt-about__slides {

@@ -56,6 +56,26 @@ const {
     class="ukbt-hero__bg ukbt-hero__bg--alt"
   />
   <div class="ukbt-hero__scrim" aria-hidden="true"></div>
+  <!-- Field Continuity — cricket-ground geometry as editorial depth (Concept B).
+       Two SVG layers: boundary arc + pitch/crease. Pure CSS animation,
+       transform/opacity only, token-driven, static under reduced motion.
+       Decorative: aria-hidden, no layout impact. -->
+  <div class="ukbt-hero__field" aria-hidden="true" style="animation:ukbt-hero-rise var(--ukbt-motion-duration-signature) var(--ukbt-motion-easing-emphasized) 200ms backwards">
+    <svg class="ukbt-hero__field-svg" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice" focusable="false" style="opacity:0.70">
+      <!-- Boundary arc — outer stadium ellipse, very low opacity -->
+      <ellipse cx="600" cy="820" rx="780" ry="520" fill="none" stroke="currentColor" stroke-width="1.2" opacity="0.14"></ellipse>
+      <!-- Inner field arc -->
+      <ellipse cx="600" cy="820" rx="540" ry="360" fill="none" stroke="currentColor" stroke-width="1" opacity="0.10"></ellipse>
+      <!-- Pitch rectangle -->
+      <rect x="540" y="360" width="120" height="220" rx="2" fill="none" stroke="currentColor" stroke-width="1.1" opacity="0.18"></rect>
+      <!-- Crease lines -->
+      <line x1="540" y1="405" x2="660" y2="405" stroke="currentColor" stroke-width="0.9" opacity="0.20"></line>
+      <line x1="540" y1="535" x2="660" y2="535" stroke="currentColor" stroke-width="0.9" opacity="0.20"></line>
+      <!-- Centre line -->
+      <line x1="600" y1="360" x2="600" y2="580" stroke="currentColor" stroke-width="0.6" opacity="0.10"></line>
+    </svg>
+  </div>
+  <div class="ukbt-hero__continuity" aria-hidden="true" style="animation:ukbt-hero-rise var(--ukbt-motion-duration-slow) var(--ukbt-motion-easing-emphasized) 550ms backwards"></div>
   <div class="ukbt-container ukbt-hero__inner">
     <div class="ukbt-hero__content">
       {eyebrow && <p class="ukbt-hero__eyebrow ukbt-eyebrow ukbt-eyebrow--on-dark" data-tina-field="eyebrow">{eyebrow}</p>}
@@ -260,11 +280,37 @@ const {
     margin: var(--ukbt-space-4) 0 0 0;
   }
 
+  /* Field geometry — cricket depth (Concept B). Minimal positioning;
+     entrance reuses existing ukbt-hero-rise via inline style so no new
+     keyframes are emitted. */
+  .ukbt-hero__field {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    color: var(--ukbt-color-brand-accent);
+    pointer-events: none;
+  }
+  .ukbt-hero__field-svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+  .ukbt-hero__continuity {
+    position: absolute;
+    left: var(--ukbt-space-section-wrapper, 24px);
+    right: var(--ukbt-space-section-wrapper, 24px);
+    bottom: 0;
+    height: 1px;
+    z-index: 1;
+    background: var(--ukbt-color-brand-accent);
+    opacity: 0.22;
+  }
   @media screen and (max-width: 767px) {
-  /* Club-identity eyebrow: the shared on-dark eyebrow grammar (see
-     base.css); nothing local except the entrance delay above. Renders
-     nothing when the prop is omitted. */
-  .ukbt-hero__headline {
+    .ukbt-hero__continuity {
+      left: var(--ukbt-space-section-wrapper-sm, 16px);
+      right: var(--ukbt-space-section-wrapper-sm, 16px);
+    }
+    .ukbt-hero__headline {
       font-size: clamp(2rem, 1.2rem + 4vw, 3rem);
     }
     /* Match the Section component's mobile step-down (120px -> 80px) so
