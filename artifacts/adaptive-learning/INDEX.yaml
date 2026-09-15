@@ -31,3 +31,4 @@ index:
   AL-028: [canonical trailing slash, sitemap redirect, 307 platform, served url mismatch]
   AL-029: [lazy hidden image, drawer crest, capture hang, decode wait, eager chrome]
   AL-030: [eager roster grid, squadcard lazy, image requests, below fold grid]
+  AL-031: [css budget overrun, scoped duplication, motion keyframes, gradient weight, inline animation]
