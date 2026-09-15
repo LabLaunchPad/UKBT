@@ -1,0 +1,15 @@
+{
+  "heroSubline": "Building a legacy of cricket excellence in the United Kingdom",
+  "storyBody": {
+    "type": "root",
+    "children": [
+      { "type": "p", "children": [{ "type": "text", "text": "We are not only a team, but also an institute for learning. Founded in 2020, UK Bangla Tigers Cricket Club CIC brings players from many nations together to compete on international stages while building pathways for hardworking talent.", "marks": [] }] },
+      { "type": "p", "children": [{ "type": "text", "text": "From the Asian Challengers Trophy in Nepal to the Safari International T20 Cup in Dubai, the club creates opportunities for players who missed out through lack of support — now competing across Nordic Lights, the Nordic Smash T20 and beyond.", "marks": [] }] }
+    ]
+  },
+  "aboutImage": "/media/founder-trophy.webp",
+  "aboutImageAlt": "Mohammad Chowdhury holding the Safari T20 Cup trophy",
+  "leadershipIntro": "Led by founder and CEO Mohammad Chowdhury, UK Bangla Tigers was founded in 2020 to open pathways for players to compete on international stages. Acting Chairman Shahidul Alam Ratan brings over 25 years of global cricket development; Vice-Chairman Sayem Rahman, a British-Bangladeshi entrepreneur and community leader, drives growth across business, media and sport. More committee roles to be announced.",
+  "managementImage": "/media/management-team.webp",
+  "managementImageAlt": "Club graphic introducing the management team: Mohammad Chowdhury (Founder and CEO), MD Shahidul Alam Ratan (Acting Chairman) and Sayem Rahman (Vice-Chairman)"
+}

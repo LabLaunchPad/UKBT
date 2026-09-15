@@ -15,9 +15,9 @@ const distDir = join(root, 'apps/web/dist');
 
 const KB = 1024;
 const BUDGETS = {
-  htmlPerPage: 64 * KB,
+  htmlPerPage: 72 * KB,
   cssTotal: 72 * KB,
-  jsTotal: 32 * KB,
+  jsTotal: 48 * KB,
   singleRaster: 350 * KB,
   singleRasterWarn: 300 * KB,
   pageImages: 1600 * KB,

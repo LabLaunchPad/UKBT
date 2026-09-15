@@ -17,8 +17,22 @@ interface Props {
   eyebrow?: string;
   /** Secondary action beside the primary CTA. Omitted by default. */
   secondaryCta?: { label: string; href: string };
+  /** Hero headline — overrides default when provided. */
+  headline?: string;
+  /** Primary CTA label — overrides default when provided. */
+  primaryCtaLabel?: string;
+  /** Primary CTA link — overrides default when provided. */
+  primaryCtaLink?: string;
 }
-const { taglineShort, social, eyebrow, secondaryCta } = Astro.props;
+const {
+  taglineShort,
+  social,
+  eyebrow,
+  secondaryCta,
+  headline = "We're not just\na team.",
+  primaryCtaLabel = 'Join the Club',
+  primaryCtaLink = '/join',
+} = Astro.props;
 ---
 
 <div class="ukbt-hero">
@@ -41,13 +55,15 @@ const { taglineShort, social, eyebrow, secondaryCta } = Astro.props;
   <div class="ukbt-hero__scrim" aria-hidden="true"></div>
   <div class="ukbt-container ukbt-hero__inner">
     <div class="ukbt-hero__content">
-      {eyebrow && <p class="ukbt-hero__eyebrow ukbt-eyebrow ukbt-eyebrow--on-dark">{eyebrow}</p>}
-      <h1 class="ukbt-hero__headline">
-        We're not just<br />a team.
+      {eyebrow && <p class="ukbt-hero__eyebrow ukbt-eyebrow ukbt-eyebrow--on-dark" data-tina-field="eyebrow">{eyebrow}</p>}
+      <h1 class="ukbt-hero__headline" data-tina-field="headline">
+        {headline.split('\n').map((line, i) => (
+          <Fragment>{i > 0 && <br />}{line}</Fragment>
+        ))}
       </h1>
-      <p class="ukbt-hero__tagline">{taglineShort}</p>
+      <p class="ukbt-hero__tagline" data-tina-field="tagline">{taglineShort}</p>
       <div class="ukbt-hero__actions">
-        <Button label="Join the Club" href="/join" variant="primary" />
+        <Button label={primaryCtaLabel} href={primaryCtaLink} variant="primary" data-tina-field="primaryCtaLabel" />
         {secondaryCta && (
           <Button label={secondaryCta.label} href={secondaryCta.href} variant="secondary" />
         )}

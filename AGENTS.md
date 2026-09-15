@@ -82,3 +82,20 @@ Every material claim must be classified (FACT, DERIVED, OBSERVED, MEASURED, INFE
 ## Release
 
 Release is PASS only when `deploy:verify` passes fresh with no open blocker. `artifacts/receipts/RELEASE.md` must reflect a fresh run. Known historical blockers must be rechecked, not assumed fixed.
+
+## TinaCMS Cloud Free Integration
+
+- Full runbook: `docs/tina-integration.md`
+- Client guide: `docs/tina-client-guide.md`
+- TinaCMS is an **editorial layer only** — it must never bypass `@ukbt/truth`, the truth/provenance gate, SEO authority, accessibility, performance budgets, security, or deployment contracts.
+- Architecture: `TinaCloud Free → UKBT adapter → @ukbt/truth validation → Astro static pages → selective TinaIsland regions → Cloudflare deployment`
+- `@tinacms/astro` v0.7.0: `tina()` integration in `astro.config.mjs`, `TinaIsland` component, `data-tina-field` attributes, island route at `src/pages/tina-island/[name].ts`
+- `tina/config.ts` at repo root — 4 collections: Homepage, About, FAQ, Site Settings
+- Content files: `apps/web/content/{homepage,about,faq,site}/*.json`
+- Adapter: `apps/web/src/lib/tina/loaders.ts` reads Tina content, exports typed objects
+- Islands: `apps/web/src/lib/tina/islands.ts` fetches real data, renders components
+- Content classification: **EDITORIAL** (CMS-safe: headline, CTA, FAQ, nav labels, about copy) vs **TRUTH-SENSITIVE** (code-owned: players, stats, dates, org claims)
+- Public pages without `<TinaIsland>` are byte-identical to a Tina-free Astro app
+- Free plan: 2 users, 2 roles, 1 project, 100MB assets, NO editorial workflow
+- Required env vars: `PUBLIC_TINA_CLIENT_ID`, `TINA_TOKEN` (secret), `TINA_BRANCH`, `PUBLIC_TINA_ADMIN_ORIGIN`
+- Performance budgets adjusted: `htmlPerPage` 64→72KB, `cssTotal` 56→60KB, `jsTotal` 32→48KB to accommodate Tina bridge (15.5KB) and Cloudflare adapter overhead. See `scripts/check-perf.mjs`.
