@@ -43,26 +43,11 @@ import { tinaHomepage } from '../lib/tina/loaders';
 
 const [mainEvent, ...otherEvents] = homepage.upcomingTournaments;
 
-// Each restates a fact already established elsewhere in this repository.
-// Nothing here is a new claim about the club.
-const reasons = [
-  {
-    title: 'International Competition',
-    body: 'Competing across the Safari International T20 Cup, Nordic Smash T20 and the Asian Challengers Trophy.',
-  },
-  {
-    title: 'A Learning Institute',
-    body: 'The club describes itself as not only a team, but an institute for learning.',
-  },
-  {
-    title: 'A Franchise Network',
-    body: 'One family across two nations, alongside sister franchise Uppsala Tigers in Sweden.',
-  },
-  {
-    title: 'A Registered Club',
-    body: 'Founded in 2020 · registered as UK Bangla Tigers Cricket Club CIC.',
-  },
-];
+// WhyChooseUs reasons from Tina CMS — client can edit these via admin.
+const reasons = tinaHomepage.whyChooseUs.map((r: { title: string; body: string }) => ({
+  title: r.title,
+  body: r.body,
+}));
 
 const academyCounters = [
   { value: homepage.stats.players, label: 'Players across the squad' },
@@ -95,10 +80,11 @@ const structuredData = homepageGraph({
       primaryCtaLabel={tinaHomepage.primaryCtaLabel}
       primaryCtaLink={tinaHomepage.primaryCtaLink}
       secondaryCta={tinaHomepage.secondaryCtaLabel ? { label: tinaHomepage.secondaryCtaLabel, href: tinaHomepage.secondaryCtaLink || '/tournaments' } : undefined}
+      heroImage={tinaHomepage.heroImage}
     />
 
     <Section>
-      <ClubIntro lede="A registered cricket club, competing across international tournaments since 2020." founded={homepage.founded} />
+      <ClubIntro lede={tinaHomepage.clubIntroLede} founded={homepage.founded} />
     </Section>
 
     <Section surface="alt" wrapper={true}>

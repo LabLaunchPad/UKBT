@@ -23,8 +23,10 @@ interface Image {
 interface Props {
   leaders: Leader[];
   intro: string;
+  /** Tina visual editing field name for the leadership intro. */
+  'data-tina-field'?: string;
 }
-const { leaders, intro } = Astro.props;
+const { leaders, intro, 'data-tina-field': tinaField } = Astro.props;
 import SubHeading from './SubHeading.astro';
 ---
 
@@ -56,7 +58,7 @@ import SubHeading from './SubHeading.astro';
   <div class="ukbt-leadership__title">
     <SubHeading label="Our Leadership" />
     <h2>Meet the People Behind the Tigers</h2>
-    <p>{intro}</p>
+    <p {...tinaField ? { 'data-tina-field': tinaField } : {}}>{intro}</p>
   </div>
 </div>
 

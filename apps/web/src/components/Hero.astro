@@ -23,6 +23,8 @@ interface Props {
   primaryCtaLabel?: string;
   /** Primary CTA link — overrides default when provided. */
   primaryCtaLink?: string;
+  /** Hero background image path — overrides default when provided. */
+  heroImage?: string;
 }
 const {
   taglineShort,
@@ -32,12 +34,13 @@ const {
   headline = "We're not just\na team.",
   primaryCtaLabel = 'Join the Club',
   primaryCtaLink = '/join',
+  heroImage = '/media/team-huddle.webp',
 } = Astro.props;
 ---
 
 <div class="ukbt-hero">
   <img
-    src="/media/team-huddle.webp"
+    src={heroImage}
     width="1080"
     height="720"
     alt=""
