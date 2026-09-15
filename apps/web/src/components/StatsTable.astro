@@ -33,12 +33,12 @@ const { caption, headers, rows } = Astro.props;
             height="20"
             aria-hidden="true"
           >
-            <circle cx="12" cy="12" r="8.5" fill="#C8A04A" />
-            <circle cx="12" cy="12" r="8.5" fill="none" stroke="#8C6A1A" stroke-opacity="0.35" />
+            <circle cx="12" cy="12" r="8.5" fill="var(--ukbt-color-brand-accent)" />
+            <circle cx="12" cy="12" r="8.5" fill="none" stroke="var(--ukbt-color-brand-accent-active)" stroke-opacity="0.35" />
             <path
               d="M8 8.5 Q12 12 16 15.5"
               fill="none"
-              stroke="#FFF"
+              stroke="var(--ukbt-color-neutral-0)"
               stroke-width="1.2"
               stroke-linecap="round"
               opacity="0.95"
@@ -46,7 +46,7 @@ const { caption, headers, rows } = Astro.props;
             <path
               d="M9.5 10 Q12.2 12.2 14.5 14"
               fill="none"
-              stroke="#FFF"
+              stroke="var(--ukbt-color-neutral-0)"
               stroke-width="0.7"
               stroke-linecap="round"
               opacity="0.55"
@@ -60,10 +60,10 @@ const { caption, headers, rows } = Astro.props;
             aria-hidden="true"
           >
             <g transform="rotate(-30 12 12)">
-              <rect x="10.6" y="2" width="2.8" height="7.5" rx="1.1" fill="#DDB66A" stroke="#8C6A1A" stroke-width="0.6" />
-              <rect x="9.2" y="9" width="5.6" height="13" rx="1.6" fill="#E8C88A" stroke="#8C6A1A" stroke-width="0.6" />
-              <line x1="9.2" y1="12.2" x2="14.8" y2="12.2" stroke="#8C6A1A" stroke-width="0.4" opacity="0.5" />
-              <line x1="9.2" y1="15" x2="14.8" y2="15" stroke="#8C6A1A" stroke-width="0.4" opacity="0.5" />
+              <rect x="10.6" y="2" width="2.8" height="7.5" rx="1.1" fill="var(--ukbt-color-brand-accent)" stroke="var(--ukbt-color-brand-accent-active)" stroke-width="0.6" />
+              <rect x="9.2" y="9" width="5.6" height="13" rx="1.6" fill="var(--ukbt-color-brand-accent)" stroke="var(--ukbt-color-brand-accent-active)" stroke-width="0.6" />
+              <line x1="9.2" y1="12.2" x2="14.8" y2="12.2" stroke="var(--ukbt-color-brand-accent-active)" stroke-width="0.4" opacity="0.5" />
+              <line x1="9.2" y1="15" x2="14.8" y2="15" stroke="var(--ukbt-color-brand-accent-active)" stroke-width="0.4" opacity="0.5" />
             </g>
           </svg>
         )
@@ -103,11 +103,11 @@ const { caption, headers, rows } = Astro.props;
 
 <style>
   .ukbt-stats-card {
-    background: #fff;
-    border: 1px solid #ece6d9;
+    background: var(--ukbt-color-neutral-0);
+    border: 1px solid var(--ukbt-color-neutral-100);
     border-radius: 10px;
     overflow: hidden;
-    box-shadow: 0 1px 0 rgba(0, 30, 58, 0.04);
+    box-shadow: 0 1px 0 rgba(var(--ukbt-color-brand-primary-rgb, 0, 30, 58), 0.04);
   }
   .ukbt-stats-card__head {
     display: flex;
@@ -126,14 +126,14 @@ const { caption, headers, rows } = Astro.props;
     font-weight: 800;
     font-size: 1.35rem;
     line-height: 1.1;
-    color: #0f2a44;
+    color: var(--ukbt-color-brand-primary);
     letter-spacing: -0.01em;
     flex: none;
   }
   .ukbt-stats-card__rule {
     flex: 1;
     height: 1px;
-    background: #e8d5a3;
+    background: var(--ukbt-color-brand-accent);
     margin-inline: 6px 8px;
     align-self: center;
   }
@@ -143,7 +143,7 @@ const { caption, headers, rows } = Astro.props;
     font-weight: 700;
     letter-spacing: 0.14em;
     /* #7A5600 on white = 7.1:1, passes 4.5:1 where #c9a04a (2.43:1) failed */
-    color: #7a5600;
+    color: var(--ukbt-color-feedback-warning);
     white-space: nowrap;
   }
   .ukbt-stats-table-wrap {
@@ -170,15 +170,15 @@ const { caption, headers, rows } = Astro.props;
   .ukbt-stats-table td {
     padding: 11px var(--ukbt-space-3);
     text-align: right;
-    border-bottom: 1px solid #f0ece2;
+    border-bottom: 1px solid var(--ukbt-color-neutral-100);
     white-space: nowrap;
   }
   /* Header bar — navy pill */
   .ukbt-stats-table thead tr {
-    background: #0a2342;
+    background: var(--ukbt-color-brand-primary);
   }
   .ukbt-stats-table thead th {
-    color: #fff;
+    color: var(--ukbt-color-neutral-0);
     font-weight: 600;
     font-size: 0.78rem;
     letter-spacing: 0.02em;
@@ -186,7 +186,7 @@ const { caption, headers, rows } = Astro.props;
     padding-block: 11px;
   }
   .ukbt-stats-table thead th:first-child {
-    color: #e8c88a;
+    color: var(--ukbt-color-brand-accent);
     text-align: left;
     font-weight: 700;
     border-radius: 0;
@@ -205,10 +205,10 @@ const { caption, headers, rows } = Astro.props;
   .ukbt-stats-table th[scope='row'] {
     text-align: left;
     font-weight: 700;
-    color: #0f2a44;
+    color: var(--ukbt-color-brand-primary);
   }
   .ukbt-stats-table td {
-    color: #2b3a4f;
+    color: var(--ukbt-color-neutral-700);
     font-variant-numeric: tabular-nums;
   }
   /* Keep gold rule aligned with header bar */
