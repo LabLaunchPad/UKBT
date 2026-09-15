@@ -550,3 +550,32 @@ observation; apply with judgment, do not generalize further.
   unchanged, pages.spec attribute assertions unaffected, deploy:verify
   green.
 - **Status:** VERIFIED.
+
+## AL-031 -- CSS weight budget overrun from duplicated scoped motion
+
+- **Observation:** Hero field-geometry experiment (two new CSS classes +
+  two keyframes + gradient hairline) pushed CSS total 79.2KB -> 84.6KB
+  (80KB limit FAIL) on first build. Perf gate sums every css file in
+  dist/client/_astro (Footer 34KB + index/_name duplicates) so a
+  per-component scoped block is counted twice. Minimal positioning
+  alone still left 80.8KB FAIL.
+- **Outcome:** Reuse existing ukbt-hero-rise keyframe via inline
+  animation style (no new @keyframes), replace gradient with solid
+  accent 22% opacity, remove bridge scope + legacy .ukbt-about__image
+  dead rules. Result 79.9KB/80KB PASS, visual premium preserved via
+  SVG geometry (6 elements, 70%/45% mobile) + hairline continuity.
+  Global reduced-motion kill (0.01ms !important) already covers inline
+  animations — no per-component media query needed.
+- **Cause:** Scoped CSS duplication doubles cost; gradient color-mix
+  strings and new keyframes are byte-heavy relative to 0.9KB headroom.
+- **Counterexample:** When headroom is ample, scoped duplicates are
+  harmless — the cost is proportional to how close the budget is to
+  the limit. New keyframes are fine if they replace an existing one.
+- **Rule:** With <2KB headroom, add motion via (1) reuse of existing
+  tokens/keyframes, (2) inline token-driven animation styles, (3) removal
+  of dead scoped rules in the same change; never emit new gradients or
+  keyframes without first measuring dist css total.
+- **Verified-by:** buildbefore 84.6KB -> after 79.9KB, perf PASS,
+  motion 8/8 PASS, probe settled 1 running (crossfade only), live
+  production 57221B HTML smoke PASS.
+- **Status:** VERIFIED.
