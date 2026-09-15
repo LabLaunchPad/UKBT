@@ -33,7 +33,7 @@
     "check:security": "node scripts/check-security.mjs",
     "check:perf": "node scripts/check-perf.mjs",
     "check:deploy-mapping": "node scripts/check-deploy-mapping.mjs",
-    "test:failure-injection": "node scripts/test-deploy-failure-injection.mjs",
+    "test:failure-injection": "node scripts/test-deploy-failure-injection.mjs && node scripts/test-perf-failure-injection.mjs",
     "check:control-plane": "node scripts/check-control-plane.mjs",
     "smoke:deploy": "node scripts/smoke-deploy.mjs",
     "check:governance-scaffold": "node scripts/scaffold-self-test.mjs",

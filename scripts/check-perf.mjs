@@ -1,16 +1,24 @@
 #!/usr/bin/env node
-// Performance-budget gate — transfer-weight budgets over the BUILT output
-// plus the LCP fetchpriority structural rule. Budgets were set 2026-09-06
-// from measured baselines with ~25% headroom (see docs/12-roadmap-and-open-items.md
-// §2.13): tight enough to catch regressions, loose enough to never fail
-// on innocent content growth. Warnings flag optimization candidates.
+// Performance-budget gate — file-weight budgets over the BUILT output
+// plus the LCP fetchpriority structural rule. Sizes are raw bytes, which
+// overstate gzip/brotli transfer (conservative direction: a PASS here
+// cannot hide a transfer-weight regression). Budgets were set 2026-09-06
+// from measured baselines with ~25% headroom, then re-approved upward for
+// Stacki compat (css 56→72), Tina (html 64→72, js 32→48) and the
+// Cloudflare adapter (css 72→80) — see docs/12-roadmap-and-open-items.md
+// §2.13. Any further numeric change is a re-approval event, not a drive-by
+// edit. Warnings flag optimization candidates.
 // Output ends with:
 //   PERF_STATUS = PASS | FAIL
 import { existsSync, globSync, readFileSync, statSync } from 'node:fs';
-import { dirname, join } from 'node:path';
+import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const root = dirname(dirname(fileURLToPath(import.meta.url)));
+// Sandbox override for scripts/test-perf-failure-injection.mjs (same
+// pattern as check-deploy-mapping.mjs). Production behavior unchanged.
+const root = process.env.UKBT_CHECK_ROOT
+  ? resolve(process.env.UKBT_CHECK_ROOT)
+  : dirname(dirname(fileURLToPath(import.meta.url)));
 // With @astrojs/cloudflare adapter, static output goes to dist/client/.
 // Without adapter, it goes to dist/. Check both locations.
 const distDirClient = join(root, 'apps/web/dist/client');
@@ -47,7 +55,7 @@ for (const file of globSync('**/*.html', { cwd: distDir })) {
   const html = readFileSync(join(distDir, file), 'utf8');
   const htmlBytes = Buffer.byteLength(html);
   if (htmlBytes > BUDGETS.htmlPerPage) {
-    fail('html-weight', `${file}: ${kb(htmlBytes)} > 64KB`);
+    fail('html-weight', `${file}: ${kb(htmlBytes)} > 72KB`);
   }
   const seen = new Set(
     [...html.matchAll(/<img\b[^>]*src="(\/[^"]+)"/g)].map((m) => m[1]),
@@ -88,8 +96,8 @@ for (const f of globSync('**/*.css', { cwd: distDir })) {
 for (const f of globSync('**/*.js', { cwd: distDir })) {
   js += statSync(join(distDir, f)).size;
 }
-if (css > BUDGETS.cssTotal) fail('css-weight', `${kb(css)} > 56KB`);
-if (js > BUDGETS.jsTotal) fail('js-weight', `${kb(js)} > 32KB`);
+if (css > BUDGETS.cssTotal) fail('css-weight', `${kb(css)} > 80KB`);
+if (js > BUDGETS.jsTotal) fail('js-weight', `${kb(js)} > 48KB`);
 
 // LCP rule: the homepage hero image must keep fetchpriority="high".
 try {
