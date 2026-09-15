@@ -13,7 +13,7 @@ Key OKF layers:
 | Knowledge corpus | `knowledge/*.yaml` + `knowledge/00-KNOWLEDGE-CONTRACT.md` |
 | Frozen contracts | `contracts/` (21 Markdown files) |
 | Evidence artifacts | `artifacts/` (21 directories) |
-| Agent roles | `.opencode/agents/` (32 definitions) + `knowledge/09-AGENT-HARNESS-POLICY.yaml` |
+| Agent roles | `.opencode/agents/` (9 UKBT motion advisors) + `.opencode/skills/` (9 vendored skills with UKBT overlays) + `knowledge/09-AGENT-HARNESS-POLICY.yaml` |
 | Visual truth | `knowledge/11-VISUAL-TRUTH-POLICY.yaml` + `docs/13-visual-truth-system.md` |
 
 ## Quick start

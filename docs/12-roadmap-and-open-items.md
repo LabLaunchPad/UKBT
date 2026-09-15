@@ -973,3 +973,13 @@ no new branch — direct continuation):
     records), MOTION/UI PASS, motion+pages 98/98, players captures 7/7
     reviewed at 1440/390. Perf: no new failure (players page under the
     page-image budget).
+19. **Motion skills + advisors (new branch `feat/opencode-motion-skills`,
+    owner direction 2026-09-15, EV-20260915-001).** All 9 skills vendored
+    from `iart-ai/web-animation-skills` @ `b6dba3e` (MIT) into
+    `.opencode/skills/` with license frontmatter + binding UKBT overlays
+    (ADOPT: 60fps, accessible-remapped, svg-CSS/SMIL, micro-CSS;
+    CONDITIONAL: glassmorphism; REFERENCE ONLY: gsap-web,
+    page-transition-animation, lottie-animation, ascii-animation) + 9
+    read-only advisors in `.opencode/agents/` + `THIRD-PARTY-NOTICES.md`.
+    Known harness-policy conflict (ADV-004) proceeds under owner waiver,
+    recorded in EV-20260915-001. Zero npm deps, nothing under `apps/web/`.
