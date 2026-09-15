@@ -138,7 +138,7 @@ const TEAM_SLIDES = [
     width: 100%;
     border-radius: var(--ukbt-radius-ref-card);
     overflow: hidden;
-    background: #001e3a;
+    background: var(--ukbt-color-brand-primary);
   }
   /* Aspect-ratio via padding-bottom hack: bulletproof across all browsers
      and immune to the max-height / aspect-ratio interaction bug that
@@ -181,15 +181,15 @@ const TEAM_SLIDES = [
     z-index: 1;
     padding: 6px 10px;
     border-radius: var(--ukbt-radius-pill);
-    background: rgba(0, 30, 58, 0.28);
+    background: rgba(var(--ukbt-color-brand-primary-rgb, 0, 30, 58), 0.28);
     backdrop-filter: blur(6px);
   }
   .ukbt-about__dot {
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    border: 1px solid rgba(255, 255, 255, 0.9);
-    background: rgba(255, 255, 255, 0.45);
+    border: 1px solid rgba(var(--ukbt-color-neutral-0-rgb, 255, 255, 255), 0.9);
+    background: rgba(var(--ukbt-color-neutral-0-rgb, 255, 255, 255), 0.45);
     padding: 0;
     cursor: pointer;
     transition:
@@ -197,7 +197,7 @@ const TEAM_SLIDES = [
       transform var(--ukbt-motion-duration-fast) var(--ukbt-motion-easing-standard);
   }
   .ukbt-about__dot.is-active {
-    background: #fff;
+    background: var(--ukbt-color-neutral-0);
     transform: scale(1.25);
   }
   .ukbt-about__dot:focus-visible {

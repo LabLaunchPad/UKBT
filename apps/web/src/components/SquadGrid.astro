@@ -198,8 +198,8 @@ const visibleFilters = allFilters.filter((f) => f.key === 'a' || f.count > 0);
   }
   .ukbt-squad__filter {
     appearance: none;
-    border: 1px solid var(--ukbt-color-neutral-200, #e5e0d2);
-    background: var(--ukbt-color-surface, #ffffff);
+    border: 1px solid var(--ukbt-color-neutral-100);
+    background: var(--ukbt-color-neutral-0);
     color: var(--ukbt-color-brand-primary);
     border-radius: 999px;
     /* ~39px tall: comfortably above the 24px minimum target with room
@@ -214,7 +214,7 @@ const visibleFilters = allFilters.filter((f) => f.key === 'a' || f.count > 0);
   .ukbt-squad__filter[aria-pressed='true'] {
     background: var(--ukbt-color-brand-primary);
     border-color: var(--ukbt-color-brand-primary);
-    color: #ffffff;
+    color: var(--ukbt-color-neutral-0);
   }
   .ukbt-squad__count {
     margin: 0;
