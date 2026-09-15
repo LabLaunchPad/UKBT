@@ -199,19 +199,21 @@ p {
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .ukbt-hero__headline,
-  .ukbt-hero__tagline,
-  .ukbt-hero__actions,
-  .ukbt-hero__social,
-  .ukbt-page-banner__inner {
-    animation: ukbt-soft-fade var(--ukbt-motion-duration-base)
-      var(--ukbt-motion-easing-standard) backwards !important;
-  }
-  html.ukbt-motion-js [data-motion='reveal'] {
-    transition: opacity var(--ukbt-motion-duration-base)
-      var(--ukbt-motion-easing-standard) !important;
-  }
-}
+   .ukbt-hero__headline,
+   .ukbt-hero__tagline,
+   .ukbt-hero__actions,
+   .ukbt-hero__social,
+   .ukbt-hero__field,
+   .ukbt-hero__continuity,
+   .ukbt-page-banner__inner {
+     animation: ukbt-soft-fade var(--ukbt-motion-duration-base)
+       var(--ukbt-motion-easing-standard) backwards !important;
+   }
+   html.ukbt-motion-js [data-motion='reveal'] {
+     transition: opacity var(--ukbt-motion-duration-base)
+       var(--ukbt-motion-easing-standard) !important;
+   }
+ }
 
 /* Scroll-reveal utility: content renders fully visible by default and
    only hides when the motion controller has explicitly armed the page
