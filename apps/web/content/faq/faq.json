@@ -1,0 +1,21 @@
+{
+  "pageHeading": "Questions About the Club",
+  "pageEyebrow": "FAQ",
+  "items": [
+    {
+      "question": "How do I join UK Bangla Tigers?",
+      "answer": { "type": "root", "children": [{ "type": "p", "children": [{ "type": "text", "text": "Visit the Join page or contact us at info@ukbanglatigers.co.uk. Trials and training details are shared via our social channels.", "marks": [] }] }] },
+      "visible": true
+    },
+    {
+      "question": "Where are training sessions held?",
+      "answer": { "type": "root", "children": [{ "type": "p", "children": [{ "type": "text", "text": "Training venues are confirmed seasonally. Check the Community and Coaching pages, or message the club on social media for current details.", "marks": [] }] }] },
+      "visible": true
+    },
+    {
+      "question": "What age groups do you cater for?",
+      "answer": { "type": "root", "children": [{ "type": "p", "children": [{ "type": "text", "text": "The club fields senior internationals and supports development pathways. Contact the coaching team for the latest academy and junior provision.", "marks": [] }] }] },
+      "visible": true
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "siteTaglineShort": "United by Passion. Driven by Cricket.",
+  "footerTagline": "United by Passion. Driven by Cricket.",
+  "contact": {
+    "email": "info@ukbanglatigers.co.uk",
+    "phoneDisplay": "+44 7827 627997",
+    "phoneHref": "tel:+447827627997"
+  },
+  "social": [
+    { "platform": "facebook", "url": "https://www.facebook.com/UKBanglaTigers" },
+    { "platform": "instagram", "url": "https://www.instagram.com/ukbanglatigers/" },
+    { "platform": "tiktok", "url": "https://www.tiktok.com/@uk.bangla.tigers" },
+    { "platform": "x", "url": "https://x.com/ukbanglatigers" }
+  ],
+  "socialCard": "/social-card.jpg"
+}
