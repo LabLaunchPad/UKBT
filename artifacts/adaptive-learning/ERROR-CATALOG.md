@@ -528,3 +528,25 @@ observation; apply with judgment, do not generalize further.
 - **Verified-by:** CI failure + local repro, revert, motion/seo specs
   27/27 local green.
 - **Status:** VERIFIED.
+
+## AL-030 -- Eager roster grids fetched 59 images on one page load
+
+- **Observation:** /players/ fetched 66 requests / 59 images on initial
+  load; SquadCard photos had no loading attribute (browser-default
+  eager). ~497KB roster thumbs + 1.9MB Uppsala squad competed with
+  critical resources on content-heavy routes.
+- **Outcome:** loading="lazy" on SquadCard photos (single choke point
+  via SquadGrid: covers /players and /franchises/uppsala-tigers).
+  Measured: 66/59 down to 40/31 initial requests/images, LCP unchanged
+  (banner, 244ms). LCP-critical imagery (hero, banner, portrait) and
+  chrome stay eager; hidden-chrome lazy stays forbidden (AL-029).
+- **Cause:** Card component authored without loading policy; grid scale
+  (40+ photos) made the default expensive.
+- **Counterexample:** Above-fold card imagery and LCP candidates keep
+  eager + fetchpriority; lazy is for below-fold grids only.
+- **Rule:** Every image rendered in a grid/list of more than a viewport
+  carries loading="lazy" unless it is the page LCP.
+- **Verified-by:** request/image-count probe before/after, LCP
+  unchanged, pages.spec attribute assertions unaffected, deploy:verify
+  green.
+- **Status:** VERIFIED.
