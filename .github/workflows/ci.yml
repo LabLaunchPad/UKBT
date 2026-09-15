@@ -57,6 +57,20 @@ jobs:
       - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5 (SHA-pinned 2026-09-10; node24 runtime)
       - run: node scripts/check-dependency-allowlist.mjs
 
+  control-plane:
+    name: Control plane self-audit
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5 (SHA-pinned 2026-09-10; node24 runtime)
+      - run: node scripts/check-control-plane.mjs
+
+  failure-injection:
+    name: Deploy failure injection
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5 (SHA-pinned 2026-09-10; node24 runtime)
+      - run: node scripts/test-deploy-failure-injection.mjs
+
   lint:
     name: Lint (Biome)
     runs-on: ubuntu-24.04

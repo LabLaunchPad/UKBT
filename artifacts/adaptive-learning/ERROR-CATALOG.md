@@ -435,3 +435,25 @@ observation; apply with judgment, do not generalize further.
   crop; CTA frame capped 48rem: 70%→~12% crop); captures inspected
   at 390/768/1440, full e2e green.
 - **Status:** VERIFIED.
+
+## AL-026 -- Cloudflare adapter activated without serve-mapping update (production 100% 404)
+
+- **Observation:** PR #65 activated `@astrojs/cloudflare`; production
+  homepage plus all routes returned platform-level 404 while all 15 CI
+  gates stayed green. Custom 404 and _headers never served.
+- **Outcome:** PR #66 wired root wrangler.jsonc to the generated output
+  (main to dist/server/entry.mjs, assets.directory to dist/client/) and
+  added pre-deploy mapping gate plus post-deploy smoke script.
+- **Cause:** Adapter moved static output dist/ to dist/client/ plus
+  Worker dist/server/entry.mjs; root wrangler.jsonc still served
+  ./apps/web/dist with no main. No gate validated serve mapping; Workers
+  Builds promotes on main-merge with no smoke check.
+- **Counterexample:** Adapter upgrades that preserve the dist/ layout need
+  no mapping change; the gate derives paths from generated artifacts, so
+  a layout-preserving upgrade still passes without edits.
+- **Rule:** Never activate, upgrade, or remove a build adapter without
+  running check-deploy-mapping and smoke-deploy; green build output is
+  never proof of a servable deployment.
+- **Verified-by:** wrangler deploy --dry-run (185 files), wrangler dev
+  runtime checks, production smoke-deploy 6/6 PASS post-merge.
+- **Status:** VERIFIED.

@@ -53,6 +53,16 @@ five gates — `check:seo`, `check:ui`, `check:motion`, `check:security`,
 historical record, not the current gate state; a fresh Stage-10-style
 receipt (including the CI-only browser suites) has not been cut.
 
+**Control-plane update (2026-09-15):** after the production 404 (adapter
+activated, serve mapping unexamined — AL-026), `deploy:verify` grew three
+more steps: `check:control-plane` (AI control-plane self-audit per
+`contracts/AI-EXECUTION-CONTRACT.md`), `check:deploy-mapping`
+(pre-deploy serve-mapping gate), and `test:failure-injection` (9-case
+proof the mapping gate fails on bad topologies). Post-deploy HTTP proof
+is `scripts/smoke-deploy.mjs` (6 assertions; production 6/6 PASS after
+PR #66). Full `deploy:verify` green with the new steps; CI gains
+`control-plane` and `failure-injection` jobs.
+
 ---
 
 ## 2. Open engineering to-dos (owner: this repo / whoever drives it next)
