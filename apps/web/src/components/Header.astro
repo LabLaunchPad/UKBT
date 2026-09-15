@@ -13,8 +13,14 @@ interface Props {
 }
 const { nav, cta } = Astro.props;
 const currentPath = Astro.url.pathname;
+// Compare slash-insensitively: nav hrefs use the canonical trailing-slash
+// form while Astro.url.pathname has no trailing slash at build time.
+const norm = (p: string) => (p.length > 1 ? p.replace(/\/$/, '') : p);
+const currentNorm = norm(currentPath);
 const isActive = (href: string) =>
-  href === '/' ? currentPath === '/' : currentPath.startsWith(href);
+  href === '/'
+    ? currentNorm === '/'
+    : currentNorm.startsWith(norm(href));
 ---
 
 <a href="#main-content" class="ukbt-skip-link">Skip to main content</a>

@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { SEO_ROUTES, SITE } from '../../src/lib/seo';
+import { SEO_ROUTES, SITE, canonicalFor } from '../../src/lib/seo';
 
 /**
  * Production SEO contract tests — assert the built output, not source.
@@ -28,7 +28,7 @@ for (const route of indexable) {
       .locator('link[rel="canonical"]')
       .getAttribute('href');
     expect(canonical, 'absolute production canonical').toBe(
-      `${SITE}${route.path}`,
+      canonicalFor(route.path),
     );
 
     const robots = await page
@@ -88,7 +88,7 @@ test('sitemap lists exactly the indexable canonicals', async ({ request }) => {
   expect(res.status(), 'sitemap serves').toBe(200);
   const xml = await res.text();
   for (const route of indexable) {
-    const url = `${SITE}${route.path}`;
+    const url = canonicalFor(route.path);
     const occurrences = xml.split(`<loc>${url}</loc>`).length - 1;
     expect(occurrences, `${url} appears exactly once`).toBe(1);
   }

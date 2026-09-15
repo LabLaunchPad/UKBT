@@ -72,6 +72,19 @@ export default defineConfig({
             },
           },
           {
+            type: 'string',
+            name: 'metaDescription',
+            label: 'Homepage meta description (SEO)',
+            description: 'Search-result snippet for the homepage. Factual club summary, 120-160 characters.',
+            required: false,
+            ui: {
+              component: 'textarea',
+              validate: (v: string) => {
+                if (v && (v.length < 120 || v.length > 160)) return 'Keep 120-160 characters';
+              },
+            },
+          },
+          {
             type: 'image',
             name: 'heroImage',
             label: 'Hero background image',

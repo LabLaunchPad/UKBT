@@ -306,6 +306,21 @@ deployment: # established 2026-09-15 — PR #66 postmortem, contracts/DEPLOYMENT
     hydration: "none (no client: directives; interactivity is inline scripts + ClientRouter)"
     production: "gzip on (55KB HTML -> 8.9KB transfer); HTML must-revalidate edge HIT; assets immutable/30d HIT"
     unmeasured: "LCP/CLS/INP lab+field values (no repo tooling; requires Lighthouse/WebPageTest + RUM)"
+  seo_remediation_20260915: # Semrush+SEOmator 2026-09-15 reconciled against live HTTP + source
+    canonical_form: "trailing slash (platform 307s no-slash routes; canonical == served URL)"
+    sitemap: "12 URLs, all slash-form, derived from page canonicals by construction"
+    robots_served: "Cloudflare-managed (Content-Signal + AI-trainer blocks); repo public/robots.txt is NOT what edge serves — dashboard-owned"
+    robots_repo: "minimal Allow + sitemap reference (correct; no code change)"
+    www_host: "dead (no DNS) — owner action: www CNAME + redirect or accept apex-only"
+    join_blocked: "intended (noindex, follow; no canonical by design)"
+    single_incoming_links: "tool artifact — all strategic pages have 17/17 incoming page-links via nav"
+    compression_warnings: "false positives — gzip verified live (55KB -> 8.9KB), alt-svc h3 present"
+    lcp_preload_srcset: "rejected/deferred (hero fetchpriority-high in initial HTML; no image pipeline)"
+    hsts_preload: "rejected (irreversible; couples to www fix)"
+    external_403s: "stat-provider bot-wall (cricinfo/cricheroes 403 even with browser UA); links kept as user citations"
+    thin_pages_eeat_legal: "BLOCKED_REQUIRES_CONTENT — no filler, no fabricated address/authors/dates/policies"
+    llms_txt: "added (verified facts only)"
+    homepage_meta: "144 chars via Tina metaDescription field (was 37-char tagline)"
 
 unknowns:
   total: 27

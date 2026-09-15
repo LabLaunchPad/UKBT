@@ -75,6 +75,18 @@ repo tooling). No src/ changes; motion reduced-motion model verified
 nuanced (kill + opacity-only restoration), ClientRouter listeners
 verified guarded.
 
+**SEO remediation (2026-09-15):** Semrush/SEOmator reports reconciled
+against live HTTP. Root fix: trailing-slash canonical architecture
+(canonical == served URL; AL-028) clearing the 11-sitemap + 144-redirect
+cluster at its cause. Gates flipped + 8-case SEO failure-injection.
+Added llms.txt (verified facts), Tina homepage metaDescription (144
+chars), below-fold lazy. Falsified as tool artifacts: single-incoming
+links (17/17 actual), compression warnings (gzip live). Platform-owned
+(not code): Cloudflare-managed robots.txt, dead www DNS. Blocked on
+owner content: thin pages, privacy/terms/address/dates (no filler, no
+fabrication). Rejected with reasons: HSTS preload, LCP preload, srcset
+pipeline, share buttons, filler content.
+
 ---
 
 ## 2. Open engineering to-dos (owner: this repo / whoever drives it next)
