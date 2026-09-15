@@ -1,4 +1,5 @@
 # Copy per task. Schema: docs/04-task-contract.md
+# Normative execution rules: contracts/AI-EXECUTION-CONTRACT.md.
 # A task is invalid if goal and acceptance criteria cannot be stated without guessing.
 id: ""
 goal: ""
@@ -25,3 +26,19 @@ reapproval_triggers:
   - "file outside allowed_paths"
   - "side_effect_class escalation"
   - "gate or test modification"
+# Required evidence record (AI-EXECUTION-CONTRACT.md §3). Unfilled = UNKNOWN.
+repository_sha: ""
+files_inspected: []
+git_history_inspected: []
+dependencies_inspected: []
+platform_research: []
+current_behavior: ""
+desired_behavior: ""
+risks: []
+blockers: []
+change_plan: ""
+affected_contracts: []
+test_plan: ""
+rollback_plan: ""
+verification_results: []
+task_state: "REQUESTED" # one of the §2 states; advance only with exit evidence

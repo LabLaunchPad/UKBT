@@ -13,7 +13,15 @@ pnpm test:e2e                   # playwright, apps/web only
 pnpm deploy:verify              # full release gate (see below)
 ```
 
-`deploy:verify` order: scaffold-self-test → check:deps → lint → tokens:build → typecheck → test:unit → build → check:deploy-mapping → check:links → check:seo → check:ui → check:motion → check:security → check:perf. This is the authoritative release gate — never claim a subset of it passing equals a release pass.
+`deploy:verify` order: scaffold-self-test → check:control-plane → check:deps → lint → tokens:build → typecheck → test:unit → build → check:deploy-mapping → test:failure-injection → check:links → check:seo → check:ui → check:motion → check:security → check:perf. This is the authoritative release gate — never claim a subset of it passing equals a release pass.
+
+## AI execution contract
+
+Non-trivial work follows `contracts/AI-EXECUTION-CONTRACT.md` (task state
+machine, evidence record, impact matrix, budgets, adversarial review;
+compact rules in `knowledge/12-AI-CONTROL-PLANE.yaml`). No code before
+grounding; no later state without its exit evidence; final status is
+exactly VERIFIED / VERIFIED_WITH_LIMITATIONS / BLOCKED / FAILED.
 
 ## Architecture
 
@@ -39,7 +47,7 @@ pnpm monorepo. Node ≥22, pnpm ≥10.
 ## Verification order
 
 ```
-scaffold-self-test → check:deps → lint → tokens:build → typecheck → test:unit → build → check:deploy-mapping → check:links → check:seo → check:ui → check:motion → check:security → check:perf
+scaffold-self-test → check:control-plane → check:deps → lint → tokens:build → typecheck → test:unit → build → check:deploy-mapping → test:failure-injection → check:links → check:seo → check:ui → check:motion → check:security → check:perf
 ```
 
 For e2e: `pnpm test:e2e` (requires `playwright install chromium` first in CI; some envs pre-install at `/opt/pw-browsers/chromium`).

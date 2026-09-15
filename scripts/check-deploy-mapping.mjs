@@ -17,7 +17,12 @@ import { globSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const root = dirname(dirname(fileURLToPath(import.meta.url)));
+// Sandbox override for scripts/test-deploy-failure-injection.mjs: point the
+// gate at a fixture tree instead of the real repo. Production behavior
+// unchanged (env var unset in CI and deploy:verify).
+const root = process.env.UKBT_CHECK_ROOT
+  ? resolve(process.env.UKBT_CHECK_ROOT)
+  : dirname(dirname(fileURLToPath(import.meta.url)));
 const failures = [];
 const fail = (rule, detail) => failures.push({ rule, detail });
 

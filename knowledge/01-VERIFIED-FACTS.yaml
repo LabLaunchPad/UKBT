@@ -286,6 +286,16 @@ blockers:
   BL-03: {state: RESOLVED, blocks: "application code — no frozen architecture", evidence: "contracts/REPOSITORY-CONTRACT.md Status: FROZEN", note: "superseded from OPEN — see architecture block above"}
   BL-05: {state: RESOLVED_BY_DECISION, blocks: "adoption of Isotope (moot — decided DO_NOT_ADOPT)", evidence: EV-20260826-005, note: "state label corrected from OPEN; the DO_NOT_ADOPT decision was already recorded in this same entry"}
 
+deployment: # established 2026-09-15 — PR #66 postmortem, contracts/DEPLOYMENT-CONTRACT.md amendment
+  adapter: "@astrojs/cloudflare active (production dependency); output is dist/client/ + dist/server/entry.mjs"
+  worker_entry: "apps/web/dist/server/entry.mjs"
+  assets_directory: "apps/web/dist/client"
+  on_demand_routes: ["src/pages/tina-island/[name].ts (sole prerender=false POST route)"]
+  mapping_gate: "scripts/check-deploy-mapping.mjs (CI deploy-mapping job, deploy:verify step)"
+  smoke_gate: "scripts/smoke-deploy.mjs <base-url> (SMOKE_STATUS; production 6/6 PASS 2026-09-15)"
+  failure_injection: "scripts/test-deploy-failure-injection.mjs (9 cases, all must pass)"
+  control_plane: "contracts/AI-EXECUTION-CONTRACT.md FROZEN; knowledge/12-AI-CONTROL-PLANE.yaml; scripts/check-control-plane.mjs"
+
 unknowns:
   total: 27
   open: 22    # U-02 CLOSED, EV-20260826-026; none of U-01/03/04/05/06 fully close, so open count is unchanged by EV-029
