@@ -457,3 +457,27 @@ observation; apply with judgment, do not generalize further.
 - **Verified-by:** wrangler deploy --dry-run (185 files), wrangler dev
   runtime checks, production smoke-deploy 6/6 PASS post-merge.
 - **Status:** VERIFIED.
+
+## AL-027 -- Perf-gate diagnostics overstated budgets; global sums mask per-page cost
+
+- **Observation:** scripts/check-perf.mjs enforced the right numbers
+  (72/80/48KB) but its failure strings named superseded budgets
+  (64/56/32KB), and its header claimed transfer weights while measuring
+  raw bytes. Separately, css/js totals sum every file in dist/, so a new
+  route's CSS raises the global total without any page getting heavier.
+- **Outcome:** Strings corrected to enforced values; header documents raw
+  bytes as conservative vs gzip transfer (production: 55KB HTML served
+  as 8.9KB gzip). Tina bridge (15.5KB) proven admin-only in built HTML,
+  zero site-wide cost. Perf failure-injection suite (7 cases) added and
+  chained into test:failure-injection.
+- **Cause:** Budget bumps (Stacki/Tina/adapter) updated numbers but not
+  messages; metric design predates multi-route code-split CSS.
+- **Counterexample:** Raw-bytes conservatism is a safe direction (PASS
+  here cannot hide a transfer regression); global sums still catch
+  runaway growth, just without per-page attribution.
+- **Rule:** When re-approving a budget number, update every string that
+  names it; read gate failures against enforced values, not messages,
+  until this catalog entry confirms the fix.
+- **Verified-by:** test-perf-failure-injection.mjs 7/7, check-perf.mjs
+  PASS on real dist, production gzip/cache headers observed.
+- **Status:** VERIFIED.

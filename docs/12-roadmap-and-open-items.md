@@ -63,6 +63,18 @@ is `scripts/smoke-deploy.mjs` (6 assertions; production 6/6 PASS after
 PR #66). Full `deploy:verify` green with the new steps; CI gains
 `control-plane` and `failure-injection` jobs.
 
+**Performance hardening (2026-09-15):** branch protection now requires
+18 checks (added deploy-mapping, control-plane, failure-injection, and
+perf-gate — verified by re-reading protection). perf-gate assessed
+trustworthy: deterministic, fail-closed, raw-bytes conservative vs
+transfer; misleading diagnostic strings fixed (AL-027), 7-case perf
+failure-injection chained into `test:failure-injection`. Baseline:
+CSS 79.2/80KB (next CSS addition forces explicit budget re-approval),
+JS 39.5/48KB, HTML max 65.5/72KB. LCP/CLS/INP remain UNMEASURED (no
+repo tooling). No src/ changes; motion reduced-motion model verified
+nuanced (kill + opacity-only restoration), ClientRouter listeners
+verified guarded.
+
 ---
 
 ## 2. Open engineering to-dos (owner: this repo / whoever drives it next)
