@@ -51,9 +51,14 @@ Astro site, `output: 'static'`, depending on `@ukbt/truth` as
 - `tests/visual/` — Playwright + `@axe-core/playwright` specs covering both
   visual regression and accessibility; see `contracts/VISUAL-REGRESSION-CONTRACT.md`
   and `contracts/ACCESSIBILITY-CONTRACT.md`.
-- `@astrojs/cloudflare` is a devDependency but **not** an active adapter —
-  it activates only once a real form needs Cloudflare Pages Functions
-  (`contracts/FORM-CONTRACT.md`). Don't wire it up speculatively.
+- `@astrojs/cloudflare` is a production dependency and the ACTIVE adapter
+  (`adapter: cloudflare()` in `astro.config.mjs`, required for the
+  `tina-island/[name].ts` on-demand route). Active since 2026-09-15
+  (production-404 recovery): it moves static output to `dist/client/` and
+  emits the Worker entry at `dist/server/entry.mjs` — root `wrangler.jsonc`
+  (`main` + `assets.directory`) must mirror that generated layout, enforced
+  by `scripts/check-deploy-mapping.mjs`. Don't remove the adapter or the
+  island route to "simplify" deployment.
 - Deployment is Cloudflare Workers (static assets), configured by the
   **root-level** `wrangler.jsonc` (not one inside `apps/web/`) — see the
   comments in that file and in `astro.config.mjs` for the CI failures that

@@ -1,5 +1,5 @@
 {
-  // Cloudflare Workers static-assets deployment target for @ukbt/web.
+  // Worker + static-assets deployment target for @ukbt/web.
   // See contracts/DEPLOYMENT-CONTRACT.md's 2026-08-27 amendment: HOST is
   // Cloudflare Workers (static assets), not Cloudflare Pages as originally
   // frozen — the owner connected this exact pre-provisioned Worker via the
@@ -15,16 +15,29 @@
   // directory". Keeping it here means `npx wrangler deploy` and
   // `npx wrangler versions upload` both work unmodified.
   //
-  // No `main` entry: this is a pure static site (apps/web/astro.config.mjs
-  // `output: 'static'`), so there is no Worker script to run — Cloudflare
-  // serves `assets.directory` directly. Confirmed against Cloudflare's own
-  // docs (developers.cloudflare.com/workers/framework-guides/web-apps/astro/,
-  // "If you want to use Astro as a static site generator, you do not need
-  // the Astro Cloudflare adapter").
+  // 2026-09-15 (production 404 recovery): `@astrojs/cloudflare` IS active
+  // (apps/web/astro.config.mjs `adapter: cloudflare()`, Astro `output:
+  // 'static'`). The adapter relocates static output to `dist/client/` and
+  // emits the Worker entry at `dist/server/entry.mjs` — verified against a
+  // clean local build, which also yields the adapter-generated
+  // `dist/server/wrangler.json` (`main: "entry.mjs"`, assets `"../client"`,
+  // relative to `dist/server/`). This root config mirrors that generated
+  // truth with paths relative to the repository root. The previous
+  // assets-only revision (`assets.directory: ./apps/web/dist`, no `main`)
+  // served a directory containing only `client/` + `server/` subfolders —
+  // no `index.html`, no `404.html`, no `_headers` at its root — so every
+  // route 404'd at the platform layer. `main` is required because exactly
+  // one production route is on-demand: `tina-island/[name].ts`
+  // (`export const prerender = false`, POST island handler); all other
+  // routes are prerendered and served as static assets. `name` keeps the
+  // dashboard Worker's exact name (`ukbt-uk-bangla-tigers`); the adapter-
+  // generated `ukbt-web` name must NOT be adopted.
   "name": "ukbt-uk-bangla-tigers",
   "compatibility_date": "2026-09-14",
+  "main": "./apps/web/dist/server/entry.mjs",
   "assets": {
-    "directory": "./apps/web/dist",
+    "binding": "ASSETS",
+    "directory": "./apps/web/dist/client",
     "not_found_handling": "404-page"
   },
   // Mirrors the dashboard's current Observability settings for this Worker

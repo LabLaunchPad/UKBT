@@ -32,8 +32,10 @@
     "check:motion": "node scripts/check-motion.mjs",
     "check:security": "node scripts/check-security.mjs",
     "check:perf": "node scripts/check-perf.mjs",
+    "check:deploy-mapping": "node scripts/check-deploy-mapping.mjs",
+    "smoke:deploy": "node scripts/smoke-deploy.mjs",
     "check:governance-scaffold": "node scripts/scaffold-self-test.mjs",
-    "deploy:verify": "pnpm run check:governance-scaffold && pnpm run check:deps && pnpm lint && pnpm run tokens:build && pnpm typecheck && pnpm test:unit && pnpm run build && pnpm run check:links && pnpm run check:seo && pnpm run check:ui && pnpm run check:motion && pnpm run check:security && pnpm run check:perf"
+    "deploy:verify": "pnpm run check:governance-scaffold && pnpm run check:deps && pnpm lint && pnpm run tokens:build && pnpm typecheck && pnpm test:unit && pnpm run build && pnpm run check:deploy-mapping && pnpm run check:links && pnpm run check:seo && pnpm run check:ui && pnpm run check:motion && pnpm run check:security && pnpm run check:perf"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",

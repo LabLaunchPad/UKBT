@@ -13,7 +13,7 @@ pnpm test:e2e                   # playwright, apps/web only
 pnpm deploy:verify              # full release gate (see below)
 ```
 
-`deploy:verify` order: scaffold-self-test → check:deps → lint → tokens:build → typecheck → test:unit → build → check:links → check:seo → check:ui → check:motion → check:security → check:perf. This is the authoritative release gate — never claim a subset of it passing equals a release pass.
+`deploy:verify` order: scaffold-self-test → check:deps → lint → tokens:build → typecheck → test:unit → build → check:deploy-mapping → check:links → check:seo → check:ui → check:motion → check:security → check:perf. This is the authoritative release gate — never claim a subset of it passing equals a release pass.
 
 ## Architecture
 
@@ -21,7 +21,7 @@ pnpm monorepo. Node ≥22, pnpm ≥10.
 
 - **`packages/truth` (`@ukbt/truth`)** — Zod content schemas, provenance types, truth gate, design tokens. No UI code. Exports: `.`, `./gate`, `./schema`.
 - **`apps/web` (`@ukbt/web`)** — Astro static site (`output: 'static'`). One `.astro` per route. Typed content data modules (not Astro content collections). Playwright visual/accessibility specs.
-- **`wrangler.jsonc`** — at repo root (not `apps/web/`). Cloudflare Workers static assets. Must stay at root because CI deploys from `/`.
+- **`wrangler.jsonc`** — at repo root (not `apps/web/`). Cloudflare Worker + static assets (`main` → adapter-generated entry, `assets.directory` → adapter-generated client dir). Must stay at root because CI deploys from `/`. Mapping enforced by `scripts/check-deploy-mapping.mjs`.
 - **`contracts/`** — frozen Markdown contracts per concern. Changing one is a re-approval event.
 - **`knowledge/`** — compact evidence-linked decision substrate. Read before any project-level decision.
 - **`docs/10-fresh-repo-pipeline.md`** — stage/gate sequence. Don't hand-roll a different build order.
@@ -39,7 +39,7 @@ pnpm monorepo. Node ≥22, pnpm ≥10.
 ## Verification order
 
 ```
-scaffold-self-test → check:deps → lint → tokens:build → typecheck → test:unit → build → check:links → check:seo → check:ui → check:motion → check:security → check:perf
+scaffold-self-test → check:deps → lint → tokens:build → typecheck → test:unit → build → check:deploy-mapping → check:links → check:seo → check:ui → check:motion → check:security → check:perf
 ```
 
 For e2e: `pnpm test:e2e` (requires `playwright install chromium` first in CI; some envs pre-install at `/opt/pw-browsers/chromium`).
