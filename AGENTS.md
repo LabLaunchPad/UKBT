@@ -1,5 +1,21 @@
 # UKBT Agent Guide
 
+## OKF (Open Knowledge Format) Index
+
+This repo follows Google's Open Knowledge Format v0.2. Start at
+`index.md` for the full knowledge bundle map. The decision substrate
+lives in `knowledge/`; read `knowledge/00-KNOWLEDGE-CONTRACT.md` first
+to understand how knowledge files are structured and governed.
+
+Key OKF layers:
+| Layer | Where |
+|---|---|
+| Knowledge corpus | `knowledge/*.yaml` + `knowledge/00-KNOWLEDGE-CONTRACT.md` |
+| Frozen contracts | `contracts/` (21 Markdown files) |
+| Evidence artifacts | `artifacts/` (21 directories) |
+| Agent roles | `.opencode/agents/` (32 definitions) + `knowledge/09-AGENT-HARNESS-POLICY.yaml` |
+| Visual truth | `knowledge/11-VISUAL-TRUTH-POLICY.yaml` + `docs/13-visual-truth-system.md` |
+
 ## Quick start
 
 ```bash
@@ -64,6 +80,14 @@ schema): `ERROR-CATALOG.md` (20 entries: symptom → cause → fix),
 `INDEX.yaml` (keyword lookup). Scan the index before non-trivial work;
 on recurrence, quote the catalog ID and apply the recorded fix first.
 
+## Visual truth & anti-drift
+
+Per `knowledge/11-VISUAL-TRUTH-POLICY.yaml` and `docs/13-visual-truth-system.md`:
+- Authority: `CURRENT REPO + FRESH EXECUTED MEASUREMENTS + FRESH LIVE-SITE OBSERVATION > CURRENT APPROVED CONTRACTS > CURRENT EVIDENCE RECORDS > GOVERNED VISUAL ARTIFACTS > PAST CHAT`
+- A prior chat instruction is not an approval; a previous PASS is not a current PASS; an old screenshot is not the current baseline.
+- Visual tasks additionally record: `HEAD_SHA`, `VISUAL_DIFFS`, `VIEWPORTS`, `ACCESSIBILITY_RESULTS`, `RESPONSIVE_RESULTS`, `INTERACTION_RESULTS`, `REDTEAM_RESULT`.
+- `schemas/receipt.schema.json` is the machine-checkable minimum for visual receipts.
+
 ## Hard invariants
 
 These are non-negotiable. See `CLAUDE.md` for the full contract.
@@ -86,6 +110,25 @@ Every material claim must be classified (FACT, DERIVED, OBSERVED, MEASURED, INFE
 - Five evidence kinds or NOT_VERIFIED: structural, visual, responsive, interaction, accessibility.
 - Never prove mobile quality by shrinking desktop — audit at real viewports.
 - Past chat ranks below current evidence records. A prior instruction is not an approval.
+
+## Evidence classification (from `knowledge/04-EVIDENCE-POLICY.yaml`)
+
+| Class | Meaning | Publishable? |
+|---|---|---|
+| VERIFIED | Authoritative or reproducible evidence | Yes |
+| DERIVED | Deterministically derived from verified | According to policy |
+| STATED_BUT_UNVERIFIED | Explicitly stated, not independently verified | No |
+| ASSUMPTION | Working hypothesis | No |
+| UNKNOWN | Not established | No |
+
+## Agent topology (from `knowledge/09-AGENT-HARNESS-POLICY.yaml`)
+
+- Roles are accountability vocabulary, NOT a spawn list.
+- "Do not create an agent merely because a task exists."
+- Independence requires SEPARATE_SESSION, not subagent — a subagent sharing this context provides none of it.
+- Single writer for application code.
+- `.claude/agents/` is empty by design.
+- Specialist agents added only after foundation stage passes and a named failure mode justifies one.
 
 ## Release
 
