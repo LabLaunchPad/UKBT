@@ -13,6 +13,8 @@ interface Props {
   title: string;
   crumbs: Crumb[];
   lede?: string;
+  /** Tina visual editing field name for the lede paragraph. */
+  'data-tina-field'?: string;
   /* Optional photographic backdrop (About banner, owner direction
      2026-09-11). Absent everywhere else — default preserves the plain
      navy rendering on all other pages. When present, a token-native
@@ -31,7 +33,7 @@ interface Props {
     focus?: string;
   };
 }
-const { title, crumbs, lede, background } = Astro.props;
+const { title, crumbs, lede, background, 'data-tina-field': tinaField } = Astro.props;
 ---
 
 <div class="ukbt-page-banner">
@@ -50,7 +52,7 @@ const { title, crumbs, lede, background } = Astro.props;
   )}
   <div class="ukbt-container ukbt-page-banner__inner">
     <h1>{title}</h1>
-    {lede && <p class="ukbt-page-banner__lede">{lede}</p>}
+    {lede && <p class="ukbt-page-banner__lede" {...tinaField ? { 'data-tina-field': tinaField } : {}}>{lede}</p>}
     <Breadcrumb crumbs={crumbs} tone="on-dark" />
   </div>
 </div>

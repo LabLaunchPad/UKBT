@@ -1,35 +1,56 @@
 ---
-// Mirrors the reference's `faq.html` (Banner â†’ FAQ â†’ Membership CTA â†’
+// Mirrors the reference's `faq.html` (Banner → FAQ → Membership CTA →
 // Blog). Route added under CLIENT_REQ_009 / ROUTE-CONTRACT Amendment 01.
 //
-// SHELL. Not `noindex`: an FAQ page is a generic page type for any club
-// and makes no claim about services offered, so condition 2 does not
-// apply. But no question has been answered by the club yet, and an
-// invented FAQ answer is an invented fact about the club stated in its
-// own voice.
+// FAQ content sourced from Tina CMS via faq.json. The visible flag
+// allows the client to hide questions without deleting them.
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/Header.astro';
 import PageBanner from '../components/PageBanner.astro';
 import Section from '../components/Section.astro';
 import SectionHeader from '../components/SectionHeader.astro';
-import PendingContent from '../components/PendingContent.astro';
 import AboutCTA from '../components/AboutCTA.astro';
 import Footer from '../components/Footer.astro';
 import { homepage } from '../content/homepage-data';
+import { tinaFaq } from '../lib/tina/loaders';
+
+const visibleItems = tinaFaq.items.filter((item) => item.visible !== false);
+
+interface RichTextNode {
+  children?: Array<{ text?: string }>;
+}
+
+function renderAnswer(answer: unknown): string {
+  if (answer && typeof answer === 'object' && 'children' in (answer as Record<string, unknown>)) {
+    const nodes = (answer as { children: RichTextNode[] }).children;
+    return nodes.map((p) => {
+      const text = (p.children || []).map((t) => t.text || '').join('');
+      return `<p>${text}</p>`;
+    }).join('');
+  }
+  return `<p>${String(answer)}</p>`;
+}
 ---
 
-<BaseLayout title="Frequently Asked Questions â€” UK Bangla Tigers" description="Answers to common questions about UK Bangla Tigers.">
+<BaseLayout title={`${tinaFaq.pageHeading} — UK Bangla Tigers`} description="Answers to common questions about UK Bangla Tigers.">
   <Header nav={homepage.nav} cta={homepage.primaryCta} />
   <main id="main-content" tabindex="-1">
     <PageBanner title="Frequently Asked Questions" crumbs={[{ label: 'Home', href: '/' }, { label: 'FAQ' }]} />
 
     <Section>
-      <SectionHeader eyebrow="FAQ" heading="Questions About the Club" />
-      <PendingContent
-        what="No questions are answered yet."
-        detail="Answers will be published here as the club confirms them. Nothing is filled in speculatively."
-        minHeight="12rem"
-      />
+      <SectionHeader eyebrow={tinaFaq.pageEyebrow || 'FAQ'} heading={tinaFaq.pageHeading} />
+      {visibleItems.length > 0 ? (
+        <div class="ukbt-faq-list">
+          {visibleItems.map((item) => (
+            <details class="ukbt-faq-item">
+              <summary class="ukbt-faq-question" data-tina-field="items.question">{item.question}</summary>
+              <div class="ukbt-faq-answer" set:html={renderAnswer(item.answer)} />
+            </details>
+          ))}
+        </div>
+      ) : (
+        <p class="ukbt-faq-empty">No questions are answered yet. Answers will be published here as the club confirms them.</p>
+      )}
     </Section>
 
     <Section surface="alt" paddingBottom="normal">
@@ -38,3 +59,64 @@ import { homepage } from '../content/homepage-data';
   </main>
   <Footer social={homepage.social} nav={homepage.nav} secondaryNav={homepage.secondaryNav} />
 </BaseLayout>
+
+<style>
+  .ukbt-faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ukbt-space-4);
+    max-width: 48rem;
+  }
+  .ukbt-faq-item {
+    border-bottom: 1px solid var(--ukbt-color-neutral-200);
+    padding-bottom: var(--ukbt-space-4);
+  }
+  .ukbt-faq-item[open] {
+    padding-bottom: var(--ukbt-space-2);
+  }
+  .ukbt-faq-question {
+    font-family: var(--ukbt-font-family-heading);
+    font-size: var(--ukbt-font-size-2);
+    font-weight: 600;
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: var(--ukbt-space-2);
+    min-height: 44px;
+  }
+  .ukbt-faq-question::before {
+    content: '+';
+    font-size: 1.25em;
+    font-weight: 700;
+    color: var(--ukbt-color-brand-accent);
+    flex-shrink: 0;
+  }
+  .ukbt-faq-item[open] .ukbt-faq-question::before {
+    content: '−';
+  }
+  .ukbt-faq-question::-webkit-details-marker {
+    display: none;
+  }
+  .ukbt-faq-question:focus-visible {
+    outline: 2px solid var(--ukbt-color-brand-accent);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+  .ukbt-faq-answer {
+    padding: var(--ukbt-space-3) 0 var(--ukbt-space-2) 0;
+    color: var(--ukbt-color-neutral-700);
+    line-height: 1.6;
+  }
+  .ukbt-faq-answer :global(p) {
+    margin: 0 0 var(--ukbt-space-3) 0;
+  }
+  .ukbt-faq-answer :global(p:last-child) {
+    margin-bottom: 0;
+  }
+  .ukbt-faq-empty {
+    color: var(--ukbt-color-neutral-500);
+    font-style: italic;
+    max-width: 48rem;
+  }
+</style>
