@@ -146,18 +146,21 @@ decision needs it.
 
 ## Agent Topology
 
-### OpenCode Agents (`.opencode/agents/`)
+### OpenCode Agents (`.opencode/agents/`) and Skills (`.opencode/skills/`)
 
-32 specialist agents defined. Key UKBT-specific roles:
+9 motion advisors (read-only subagents, `edit: deny`, `bash: deny`, one skill each) vendored from `iart-ai/web-animation-skills` @ `b6dba3e` (MIT; see `THIRD-PARTY-NOTICES.md`). Each skill carries a binding `## UKBT overlay` subordinating upstream guidance to `contracts/MOTION-CONTRACT.md`. Added 2026-09-15 under owner direction (EV-20260915-001); the harness-policy exception is recorded there.
 
-| Agent | Purpose |
-|---|---|
-| `agents-orchestrator` | Pipeline manager, coordinates workflow |
-| `engineering-senior-developer` | Premium implementation specialist |
-| `engineering-code-reviewer` | Code review and quality assurance |
-| `testing-reality-checker` | Evidence-based certification, defaults to NEEDS WORK |
-| `security-architect` | Threat modeling and secure architecture |
-| `marketing-seo-specialist` | Search engine optimization |
+| Agent | Skill | Verdict |
+|---|---|---|
+| `ukbt-60fps` | `60fps-animation` | ADOPT (transform/opacity discipline) |
+| `ukbt-accessible-motion` | `accessible-animation` | ADOPT with UKBT two-tier remap |
+| `ukbt-svg-motion` | `svg-animation` | ADOPT CSS/SMIL subset; morph/path libs BLOCKED |
+| `ukbt-micro-interaction` | `micro-interaction` | ADOPT CSS subset; Framer/springs BLOCKED |
+| `ukbt-gsap-reference` | `gsap-web` | REFERENCE ONLY (GSAP BLOCKED on site) |
+| `ukbt-page-transition-reference` | `page-transition-animation` | REFERENCE ONLY (Astro ClientRouter owns transitions) |
+| `ukbt-glass-reference` | `glassmorphism` | CONDITIONAL (paint cost, zero CSS headroom) |
+| `ukbt-lottie-reference` | `lottie-animation` | REFERENCE ONLY (runtimes BLOCKED) |
+| `ukbt-ascii-reference` | `ascii-animation` | REFERENCE ONLY (restraint list; terminal contexts) |
 
 ### Governance Model
 
@@ -203,7 +206,9 @@ contracts/        → Frozen Markdown contracts (21 files)
 knowledge/        → Decision substrate (13 files)
 artifacts/        → Evidence and receipts (21 directories)
 scripts/          → Verification scripts
-.opencode/agents/ → 32 specialist agent definitions
+.opencode/agents/ → 9 UKBT motion advisors (read-only subagents)
+.opencode/skills/ → 9 vendored motion skills + binding UKBT overlays
+THIRD-PARTY-NOTICES.md → vendored-work attribution (MIT, iart.ai)
 ```
 
 ## Build Pipeline
