@@ -104,6 +104,15 @@ const cases = [
     expectPass: false,
     expectRule: 'image-missing',
   },
+  {
+    name: 'query-string-asset-resolves',
+    setup: (w) =>
+      w(
+        'index.html',
+        '<html><body><img class="ukbt-hero__bg" src="/media/hero.webp?v=2" fetchpriority="high"></body></html>',
+      ),
+    expectPass: true,
+  },
 ];
 
 for (const c of cases) {

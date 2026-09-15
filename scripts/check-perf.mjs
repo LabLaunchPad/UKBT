@@ -62,10 +62,14 @@ for (const file of globSync('**/*.html', { cwd: distDir })) {
   );
   let imgBytes = 0;
   for (const src of seen) {
+    // Query/hash variants address the same file (cache-bust `?v=`,
+    // CMS-generated URLs). Resolving the file must ignore them, or a
+    // valid asset false-fails as missing (gate-attack 2026-09-15).
+    const fileSrc = src.split('?')[0].split('#')[0];
     try {
-      const b = statSync(join(distDir, src)).size;
+      const b = statSync(join(distDir, fileSrc)).size;
       imgBytes += b;
-      if (/\.(jpe?g|png|webp)$/i.test(src)) {
+      if (/\.(jpe?g|png|webp)$/i.test(fileSrc)) {
         if (b > BUDGETS.singleRaster) {
           fail('image-weight', `${src}: ${kb(b)} > 350KB`);
         } else if (b > BUDGETS.singleRasterWarn && !warnedAssets.has(src)) {
