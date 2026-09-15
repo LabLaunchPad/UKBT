@@ -39,7 +39,7 @@ const { posts = [] } = Astro.props;
               <span class="ukbt-news__meta">
                 {p.date} · {p.category}
               </span>
-              <h4>{p.title}</h4>
+              <h3>{p.title}</h3>
             </div>
           </a>
         ))}
@@ -88,7 +88,7 @@ const { posts = [] } = Astro.props;
     gap: var(--ukbt-space-gap-2);
     padding: 0 var(--ukbt-space-gap-3) var(--ukbt-space-gap-3);
   }
-  .ukbt-news__card h4 {
+  .ukbt-news__card h3 {
     margin: 0;
   }
   /* Reference `.meta-data`: accent-coloured, on the dark card. */
