@@ -15,8 +15,10 @@ interface Stat {
 interface Props {
   paragraphs: string[];
   stats: Stat[];
+  /** Tina visual editing field name for the story body. */
+  'data-tina-field'?: string;
 }
-const { paragraphs, stats } = Astro.props;
+const { paragraphs, stats, 'data-tina-field': tinaField } = Astro.props;
 import SubHeading from './SubHeading.astro';
 ---
 
@@ -36,7 +38,7 @@ import SubHeading from './SubHeading.astro';
   <div class="ukbt-story__content-side">
     <SubHeading label="Our Story" />
     <h2>More Than Just a Cricket Club, It's a Community.</h2>
-    <div class="ukbt-story__paragraphs">
+    <div class="ukbt-story__paragraphs" {...tinaField ? { 'data-tina-field': tinaField } : {}}>
       {paragraphs.map((p) => <p>{p}</p>)}
     </div>
     <div class="ukbt-story__stats">

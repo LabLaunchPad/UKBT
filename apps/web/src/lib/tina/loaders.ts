@@ -1,4 +1,4 @@
-import aboutData from '../../../content/about/about.json' with { type: 'json' };
+import { z } from 'zod';
 import faqData from '../../../content/faq/faq.json' with { type: 'json' };
 import homepageData from '../../../content/homepage/homepage.json' with {
   type: 'json',
@@ -7,46 +7,48 @@ import siteData from '../../../content/site/siteSettings.json' with {
   type: 'json',
 };
 
-export interface HomepageTina {
-  eyebrow: string;
-  headline: string;
-  tagline: string;
-  heroImage?: string;
-  primaryCtaLabel: string;
-  primaryCtaLink: string;
-  secondaryCtaLabel?: string;
-  secondaryCtaLink?: string;
-  clubIntroLede: string;
-  whyChooseUs: { title: string; body: string }[];
-}
+const HomepageSchema = z.object({
+  eyebrow: z.string().optional(),
+  headline: z.string(),
+  tagline: z.string(),
+  heroImage: z.string().optional(),
+  primaryCtaLabel: z.string(),
+  primaryCtaLink: z.string(),
+  secondaryCtaLabel: z.string().optional(),
+  secondaryCtaLink: z.string().optional(),
+  clubIntroLede: z.string(),
+  whyChooseUs: z.array(z.object({ title: z.string(), body: z.string() })),
+});
 
-export interface FaqItemTina {
-  question: string;
-  answer: unknown;
-  visible: boolean;
-}
+const FaqItemSchema = z.object({
+  question: z.string(),
+  answer: z.unknown(),
+  visible: z.boolean(),
+});
 
-export interface FaqTina {
-  pageHeading: string;
-  pageEyebrow?: string;
-  items: FaqItemTina[];
-}
+const FaqSchema = z.object({
+  pageHeading: z.string(),
+  pageEyebrow: z.string().optional(),
+  items: z.array(FaqItemSchema),
+});
 
-export const tinaHomepage = homepageData as unknown as HomepageTina;
-export const tinaAbout = aboutData as unknown as {
-  heroSubline: string;
-  storyBody: unknown;
-  aboutImage?: string;
-  aboutImageAlt?: string;
-  leadershipIntro?: string;
-  managementImage?: string;
-  managementImageAlt?: string;
-};
-export const tinaFaq = faqData as unknown as FaqTina;
-export const tinaSite = siteData as unknown as {
-  siteTaglineShort: string;
-  footerTagline?: string;
-  contact: { email: string; phoneDisplay: string; phoneHref: string };
-  social: { platform: string; url: string }[];
-  socialCard?: string;
-};
+const SiteSettingsSchema = z.object({
+  siteTaglineShort: z.string(),
+  footerTagline: z.string().optional(),
+  contact: z.object({
+    email: z.string(),
+    phoneDisplay: z.string(),
+    phoneHref: z.string(),
+  }),
+  social: z.array(z.object({ platform: z.string(), url: z.string() })),
+  socialCard: z.string().optional(),
+});
+
+export type HomepageTina = z.infer<typeof HomepageSchema>;
+export type FaqItemTina = z.infer<typeof FaqItemSchema>;
+export type FaqTina = z.infer<typeof FaqSchema>;
+export type SiteSettingsTina = z.infer<typeof SiteSettingsSchema>;
+
+export const tinaHomepage = HomepageSchema.parse(homepageData);
+export const tinaFaq = FaqSchema.parse(faqData);
+export const tinaSite = SiteSettingsSchema.parse(siteData);

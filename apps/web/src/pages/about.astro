@@ -1,16 +1,18 @@
 ---
-// About Us page â€” implements artifacts/pages/ABOUT-CONTRACT.md. Content
+// About Us page — implements artifacts/pages/ABOUT-CONTRACT.md. Content
 // bound to @ukbt/truth's gate (src/content/about-data.ts); shared nav/
 // social come from homepage-data.ts so they are gated exactly once.
 // Each section's geometry mirrors the reference's actual measured layout
-// (checked directly against the Adelux `about.html`/`main.css` source â€”
+// (checked directly against the Adelux `about.html`/`main.css` source —
 // see per-component comments), reimplemented with UKBT content/branding.
 // No Adelux code, content, or branding appears anywhere below.
 //
 // Sponsors section (EV-20260831-007) reinstates the reference's
 // partner-logo panel (`.partnership-container`) right where
 // MissionWelcome.astro's own header comment noted its omission "no
-// sponsor is evidenced" â€” now one is.
+// sponsor is evidenced" — now one is.
+//
+// data-tina-field attributes added for visual editing in Tina admin.
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/Header.astro';
 import PageBanner from '../components/PageBanner.astro';
@@ -72,7 +74,7 @@ const structuredData = aboutGraph({
   <Header nav={homepage.nav} cta={homepage.primaryCta} />
 
   <main id="main-content" tabindex="-1">
-    <PageBanner title="About Us" crumbs={crumbs} lede={about.heroSubline} background={bannerBackground} />
+    <PageBanner title="About Us" crumbs={crumbs} lede={about.heroSubline} background={bannerBackground} data-tina-field="heroSubline" />
 
     <Section density="compact">
       <MissionWelcome tagline={about.tagline} facts={about.missionFacts} />
@@ -83,7 +85,7 @@ const structuredData = aboutGraph({
     </Section>
 
     <Section density="compact">
-      <AboutStory paragraphs={about.storyParagraphs} stats={storyStats} />
+      <AboutStory paragraphs={about.storyParagraphs} stats={storyStats} data-tina-field="storyBody" />
     </Section>
 
     <Section density="compact">
@@ -119,6 +121,7 @@ const structuredData = aboutGraph({
       <LeadershipGrid
         leaders={about.leaders}
         intro={about.leadershipIntro}
+        data-tina-field="leadershipIntro"
       />
     </Section>
 

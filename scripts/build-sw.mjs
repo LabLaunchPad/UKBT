@@ -7,12 +7,16 @@
 // Falls back to 'dev' when git is unavailable (local preview), which
 // keeps the mechanism identical while never colliding with releases.
 import { execSync } from 'node:child_process';
-import { readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
-const distSw = join(root, 'apps/web/dist/sw.js');
+// With @astrojs/cloudflare adapter, static output goes to dist/client/.
+// Without adapter, it goes to dist/. Check both locations.
+const distSwClient = join(root, 'apps/web/dist/client/sw.js');
+const distSwLegacy = join(root, 'apps/web/dist/sw.js');
+const distSw = existsSync(distSwClient) ? distSwClient : distSwLegacy;
 
 let buildId = 'dev';
 try {

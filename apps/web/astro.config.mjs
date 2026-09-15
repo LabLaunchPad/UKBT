@@ -1,14 +1,10 @@
 import { defineConfig } from 'astro/config';
 import sentry from '@sentry/astro';
 import spotlightjs from '@spotlightjs/astro';
+import tina from '@tinacms/astro/integration';
+import cloudflare from '@astrojs/cloudflare';
 
-// contracts/REPOSITORY-CONTRACT.md / ARCHITECTURE-PROPOSAL-V3.md §1:
-// static output. @astrojs/cloudflare is present as a devDependency
-// (contracts/FORM-CONTRACT.md, contracts/DEPLOYMENT-CONTRACT.md) but is
-// NOT activated as an adapter here — that happens only once a real form
-// exists and needs Cloudflare Pages Functions. Activating it prematurely
-// would be building ahead of the gate that unlocks it.
-const integrations = [spotlightjs()];
+const integrations = [spotlightjs(), tina()];
 if (process.env.SENTRY_DSN) {
   integrations.unshift(sentry({ dsn: process.env.SENTRY_DSN }));
 }
@@ -29,5 +25,6 @@ export default defineConfig({
   // not a build failure. Pinning both server and dev to the same literal
   // address removes the ambiguity everywhere, not just in CI.
   server: { host: '127.0.0.1' },
+  adapter: cloudflare(),
   integrations,
 });

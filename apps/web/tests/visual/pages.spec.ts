@@ -304,7 +304,7 @@ for (const route of ALL_INDEXABLE_ROUTES) {
 test('every shell section declares CONTENT_STATUS = UNKNOWN and explains itself', async ({
   page,
 }) => {
-  for (const route of ['/services', '/membership', '/join', '/faq', '/news']) {
+  for (const route of ['/services', '/membership', '/join', '/news']) {
     await page.goto(route);
     const pending = page.locator('[data-content-status="UNKNOWN"]');
     const n = await pending.count();

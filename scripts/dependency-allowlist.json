@@ -102,6 +102,16 @@
       "validation": "npm view zod license (verified 2026-08-26)"
     },
     {
+      "name": "zod",
+      "scope": "apps/web",
+      "type": "dependency",
+      "source": "npm",
+      "purpose": "Runtime schema validation for TinaCMS content loaders — validates JSON content at build time.",
+      "license": "MIT",
+      "contractStatus": "REQUIRED",
+      "validation": "npm view zod license (verified 2026-09-14)"
+    },
+    {
       "name": "vitest",
       "scope": "packages/truth",
       "type": "devDependency",

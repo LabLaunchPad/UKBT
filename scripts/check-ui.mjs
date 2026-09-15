@@ -8,7 +8,11 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
-const distDir = join(root, 'apps/web/dist');
+// With @astrojs/cloudflare adapter, static output goes to dist/client/.
+// Without adapter, it goes to dist/. Check both locations.
+const distDirClient = join(root, 'apps/web/dist/client');
+const distDirLegacy = join(root, 'apps/web/dist');
+const distDir = existsSync(distDirClient) ? distDirClient : distDirLegacy;
 const compDir = join(root, 'apps/web/src/components');
 const contentDir = join(root, 'apps/web/src/content');
 
