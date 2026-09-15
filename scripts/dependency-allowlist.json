@@ -150,6 +150,46 @@
       "license": "Apache-2.0",
       "contractStatus": "REQUIRED",
       "validation": "installed package.json license field (verified 2026-09-05)"
+    },
+    {
+      "name": "@tinacms/astro",
+      "scope": "apps/web",
+      "type": "dependency",
+      "source": "npm",
+      "purpose": "TinaCMS Astro integration — provides tina() integration, TinaIsland component, data-tina-field attributes for visual editing.",
+      "license": "Apache-2.0",
+      "contractStatus": "REQUIRED",
+      "validation": "npm view @tinacms/astro license (verified 2026-09-14)"
+    },
+    {
+      "name": "@tinacms/bridge",
+      "scope": "apps/web",
+      "type": "dependency",
+      "source": "npm",
+      "purpose": "TinaCMS bridge — enables visual editing communication between Tina admin and the site.",
+      "license": "Apache-2.0",
+      "contractStatus": "REQUIRED",
+      "validation": "npm view @tinacms/bridge license (verified 2026-09-14)"
+    },
+    {
+      "name": "tinacms",
+      "scope": "apps/web",
+      "type": "dependency",
+      "source": "npm",
+      "purpose": "TinaCMS core — content management, schema definitions, admin interface for client editing.",
+      "license": "Apache-2.0",
+      "contractStatus": "REQUIRED",
+      "validation": "npm view tinacms license (verified 2026-09-14)"
+    },
+    {
+      "name": "@tinacms/cli",
+      "scope": "apps/web",
+      "type": "devDependency",
+      "source": "npm",
+      "purpose": "TinaCMS CLI — provides tinacms binary for audit, build, dev, init commands.",
+      "license": "Apache-2.0",
+      "contractStatus": "REQUIRED",
+      "validation": "npm view @tinacms/cli license (verified 2026-09-14)"
     }
   ],
   "permanently_blocked": [
