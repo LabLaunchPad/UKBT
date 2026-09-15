@@ -2,7 +2,7 @@
 
 ## Current State
 
-**Repo**: `C:\ukbt-uk-bangla-tigers\UKBT-src` (git: `LabLaunchPad/UKBT.git`)
+**Repo**: `LabLaunchPad/UKBT.git` (local checkout: `C:\UKBT\UKBT-main`)
 **Branch**: `main` (merged at commit `51bb451`)
 **PR**: #76 — `feat: add OKF knowledge bundle index, update AGENTS.md, add opencode.json`
 **All 18/18 CI checks PASSED**
@@ -17,11 +17,12 @@
 ### Key Details
 - **pnpm monorepo**: `apps/*` and `packages/*` workspaces, Node >=22, pnpm >=10.33.0
 - **deploy:verify order**: scaffold-self-test → check:control-plane → check:deps → lint → tokens:build → typecheck → test:unit → build → check:deploy-mapping → test:failure-injection → check:links → check:seo → check:ui → check:motion → check:security → check:perf
-- **All 18 checks passed**: Build, Control plane, Dependency allowlist, Deploy failure injection, Deploy mapping, Governance scaffold, Install, Internal link integrity, Lint (Biome), Motion gate, Performance budgets, Playwright (4m22s), SEO gate, Secret scan, Security headers, Typecheck, UI gate, Unit/integration tests, Workers Builds
-- **opencode.json**: Valid JSON with `instructions: ["AGENTS.md", "README.md", "index.md"]` and `username: "ukbt-agent"`
-- **32 opencode agents** defined in `.opencode/agents/`
-- **knowledge/ directory**: 13 YAML files with evidence-linked decision substrate
-- **contracts/ directory**: 21 frozen Markdown contracts
+- **All 18 required checks passed + Workers Builds**: Build, Control plane, Dependency allowlist, Deploy failure injection, Deploy mapping, Governance scaffold, Install, Internal link integrity, Lint (Biome), Motion gate, Performance budgets, Playwright (3m54s on PR #77 run 34951850100), SEO gate, Secret scan, Security headers, Typecheck, UI gate, Unit/integration tests, plus Workers Builds
+- **opencode.json**: Valid JSON with `instructions: ["AGENTS.md", "README.md", "index.md", "artifacts/HANDOFF.md"]` (3 on main, 4th added by this PR) and `username: "ukbt-agent"`
+- **`.opencode/agents/` does NOT exist on main @51bb451** (verified `Test-Path .opencode` = False) — agent definitions referenced below are PROPOSED, not present
+- **knowledge/ directory**: 12 YAML files (01-12) + `00-KNOWLEDGE-CONTRACT.md`
+- **contracts/ directory**: 19 Markdown files (17× `*-CONTRACT.md` + `README.md` + `evidence-contract.md`)
+- **artifacts/ directory**: 19 subdirectories (verified)
 
 ### Agent Roles (from `knowledge/09-AGENT-HARNESS-POLICY.yaml`)
 - Roles are accountability vocabulary, NOT a spawn list
@@ -34,7 +35,7 @@
 ## Recommended Agents for Next Steps
 
 ### 1. `engineering-knowledge-graph-engineer` — HIGH PRIORITY
-**Why**: The `knowledge/` directory has 13 YAML files that could benefit from graph-based structuring. The `index.md` maps them but they're still flat files. This agent should:
+**Why**: The `knowledge/` directory has 12 YAML files (01-12) that could benefit from graph-based structuring. The `index.md` maps them but they're still flat files. This agent should:
 - Structure the knowledge corpus as interconnected entity-relationship nodes
 - Add provenance edges linking each knowledge file to its evidence sources (EV-xxxxx IDs)
 - Build a queryable graph from the knowledge YAML files
@@ -93,9 +94,8 @@
 ## Other Recommended Things
 
 ### OpenCode Config Notes
-- `opencode.json` has `instructions` array loading AGENTS.md, README.md, index.md
-- 32 agents in `.opencode/agents/` are auto-loaded by opencode
-- No `.opencode/skills/` or `.opencode/commands/` directories exist yet
+- `opencode.json` has `instructions` array loading AGENTS.md, README.md, index.md (+ artifacts/HANDOFF.md via this PR)
+- `.opencode/` does NOT exist on main @51bb451 — no bundled agents/skills/commands yet; agent names below are PROPOSED roles per `knowledge/09-AGENT-HARNESS-POLICY.yaml`, not present definitions
 - Consider adding `.opencode/skills/` for OKF-specific skills
 
 ### Knowledge Base Gaps to Address
@@ -121,15 +121,15 @@
 
 - [ ] `pnpm install` completed (deps verified)
 - [ ] `pnpm deploy:verify` all 18 checks passed
-- [ ] `opencode.json` valid JSON with 3 instructions
+- [ ] `opencode.json` valid JSON with 4 instructions (3 on main + HANDOFF.md via this PR)
 - [ ] `index.md` has valid YAML frontmatter with `okf_version: "0.2"`
 - [ ] `AGENTS.md` has OKF section at top (lines 3-17)
 - [ ] Git branch `main` synced with `origin/main`
 - [ ] PR #76 merged at commit `51bb451`
-- [ ] All 32 `.opencode/agents/` definitions intact
-- [ ] `knowledge/` directory has 13 YAML files
-- [ ] `contracts/` directory has 21 Markdown files
-- [ ] `artifacts/` directory has 21 subdirectories
+- [ ] `.opencode/` absent on main verified (no bundled agents — names above are PROPOSED)
+- [ ] `knowledge/` directory has 12 YAML files (01-12) + `00-KNOWLEDGE-CONTRACT.md`
+- [ ] `contracts/` directory has 19 Markdown files
+- [ ] `artifacts/` directory has 19 subdirectories
 
 ---
 
