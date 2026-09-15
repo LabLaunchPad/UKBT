@@ -66,7 +66,7 @@ const structuredData = homepageGraph({
 
 <BaseLayout
   title="UK Bangla Tigers — Cricket Club"
-  description={homepage.taglineShort}
+  description={tinaHomepage.metaDescription || homepage.taglineShort}
   structuredData={structuredData}
 >
   <Header nav={homepage.nav} cta={homepage.primaryCta} />
@@ -79,7 +79,7 @@ const structuredData = homepageGraph({
       headline={tinaHomepage.headline}
       primaryCtaLabel={tinaHomepage.primaryCtaLabel}
       primaryCtaLink={tinaHomepage.primaryCtaLink}
-      secondaryCta={tinaHomepage.secondaryCtaLabel ? { label: tinaHomepage.secondaryCtaLabel, href: tinaHomepage.secondaryCtaLink || '/tournaments' } : undefined}
+      secondaryCta={tinaHomepage.secondaryCtaLabel ? { label: tinaHomepage.secondaryCtaLabel, href: tinaHomepage.secondaryCtaLink || '/tournaments/' } : undefined}
       heroImage={tinaHomepage.heroImage}
     />
 
@@ -100,7 +100,7 @@ const structuredData = homepageGraph({
         eyebrow="Upcoming Tournament"
         heading="Join Us on the International Stage"
         ctaLabel="All tournaments"
-        ctaHref="/tournaments"
+        ctaHref="/tournaments/"
       />
       <TournamentGrid mainEvent={mainEvent} otherEvents={otherEvents} />
     </Section>

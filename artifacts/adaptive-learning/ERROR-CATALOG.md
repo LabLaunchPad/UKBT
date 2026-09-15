@@ -481,3 +481,28 @@ observation; apply with judgment, do not generalize further.
 - **Verified-by:** test-perf-failure-injection.mjs 7/7, check-perf.mjs
   PASS on real dist, production gzip/cache headers observed.
 - **Status:** VERIFIED.
+
+## AL-028 -- No-slash canonicals disagreed with served URLs (sitemap + redirect cluster)
+
+- **Observation:** Semrush 2026-09-15: 11 incorrect sitemap URLs plus 144
+  temporary-redirect warnings. Sitemap listed no-slash URLs while the
+  platform serves trailing-slash URLs via 307; page canonicals matched
+  the sitemap, not the served URL. The repo's own SEO gate enforced the
+  no-slash form (canonical-trailing-slash FAIL).
+- **Outcome:** Canonical architecture flipped to trailing slash
+  (normalizePath appends); nav data, literals, dynamic hrefs, crumbs,
+  Tina CTA links, and Header isActive updated; gates flipped (seo
+  requires slash, links gate flags no-slash route hrefs); Playwright
+  expectations derive from canonicalFor; 8-case SEO failure-injection
+  suite added.
+- **Cause:** No-slash convention predates the Cloudflare Workers adapter;
+  Workers static assets 307 no-slash route URLs, and nobody re-examined
+  the convention after the platform change (same class as AL-026).
+- **Counterexample:** File URLs (assets, sitemap.xml, robots.txt) and the
+  root keep non-slash form; fragments/queries are judged on path only.
+- **Rule:** Canonical must equal served URL — verify with live HTTP, not
+  convention; any adapter/hosting change re-opens the slash question.
+- **Verified-by:** live /players 307 vs /players/ 200, rebuilt sitemap
+  all-slash, links gate 749 checked zero drift, SEO PASS, production
+  smoke post-merge.
+- **Status:** VERIFIED.

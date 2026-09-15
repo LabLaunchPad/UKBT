@@ -4,10 +4,14 @@
 //   SEO_STATUS = PASS | FAIL
 // plus machine-readable detail as JSON.
 import { existsSync, globSync, readFileSync } from 'node:fs';
-import { dirname, join } from 'node:path';
+import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const root = dirname(dirname(fileURLToPath(import.meta.url)));
+// Sandbox override for scripts/test-seo-failure-injection.mjs (same pattern
+// as the deploy/perf gates). Production behavior unchanged.
+const root = process.env.UKBT_CHECK_ROOT
+  ? resolve(process.env.UKBT_CHECK_ROOT)
+  : dirname(dirname(fileURLToPath(import.meta.url)));
 // With @astrojs/cloudflare adapter, static output goes to dist/client/.
 // Without adapter, it goes to dist/. Check both locations.
 const distDirClient = join(root, 'apps/web/dist/client');
@@ -62,8 +66,11 @@ for (const file of globSync('**/*.html', { cwd: distDir })) {
     }
   }
 
-  // Canonical: present iff indexable; absolute, https, production host,
-  // normalized (no trailing slash except root).
+  // Canonical: present iff indexable; absolute, https, production host.
+  // Trailing-slash form is REQUIRED (root excepted): the platform
+  // 307-redirects no-slash route URLs to their slash form, so a no-slash
+  // canonical disagrees with the served URL and puts redirecting URLs in
+  // the sitemap (Semrush 2026-09-15). See src/lib/seo.ts normalizePath.
   const canonical = pick(html, /<link rel="canonical" href="([^"]+)"\s*\/?>/);
   if (noindex) {
     if (canonical) {
@@ -75,8 +82,8 @@ for (const file of globSync('**/*.html', { cwd: distDir })) {
       if (!canonical.startsWith(`${SITE}/`)) {
         fail(file, 'canonical-host', canonical);
       }
-      if (canonical !== `${SITE}/` && canonical.endsWith('/')) {
-        fail(file, 'canonical-trailing-slash', canonical);
+      if (canonical !== `${SITE}/` && !canonical.endsWith('/')) {
+        fail(file, 'canonical-missing-slash', canonical);
       }
     }
   }

@@ -11,6 +11,7 @@ const HomepageSchema = z.object({
   eyebrow: z.string().optional(),
   headline: z.string(),
   tagline: z.string(),
+  metaDescription: z.string().optional(),
   heroImage: z.string().optional(),
   primaryCtaLabel: z.string(),
   primaryCtaLink: z.string(),

@@ -13,8 +13,14 @@ interface Props {
 }
 const { nav, cta } = Astro.props;
 const currentPath = Astro.url.pathname;
+// Compare slash-insensitively: nav hrefs use the canonical trailing-slash
+// form while Astro.url.pathname has no trailing slash at build time.
+const norm = (p: string) => (p.length > 1 ? p.replace(/\/$/, '') : p);
+const currentNorm = norm(currentPath);
 const isActive = (href: string) =>
-  href === '/' ? currentPath === '/' : currentPath.startsWith(href);
+  href === '/'
+    ? currentNorm === '/'
+    : currentNorm.startsWith(norm(href));
 ---
 
 <a href="#main-content" class="ukbt-skip-link">Skip to main content</a>
@@ -107,7 +113,7 @@ const isActive = (href: string) =>
   <div class="ukbt-header__overlay" id="ukbt-nav-overlay"></div>
   <div class="ukbt-header__drawer" id="ukbt-nav-drawer" role="dialog" aria-label="Site menu" aria-modal="true" inert>
     <div class="ukbt-header__drawer-head">
-      <img src="/brand/crest-256.webp" width="44" height="60" alt="" />
+      <img src="/brand/crest-256.webp" width="44" height="60" alt="" loading="lazy" />
       <button type="button" class="ukbt-header__close" id="ukbt-nav-close" aria-label="Close menu">
         <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
           <path d="M5 5l14 14M19 5L5 19" stroke-linecap="round" />
