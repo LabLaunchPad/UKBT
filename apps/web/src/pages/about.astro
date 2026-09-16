@@ -38,8 +38,9 @@ const storyStats = [
 // About Phase 1 (legacy S2 port): founder career aggregates. Distinct
 // fields from the club aggregates above (career matches, active subset
 // of the registered squad) — no T8 conflict by construction. Per
-// EV-20260910-003 both the club aggregate and the active subset read 40+
-// (growth, not a conflict); labels and sections stay distinct.
+// EV-20260916-001 the club aggregate reads 50+ while the active subset
+// stays 40+ per EV-20260910-003 (growth, not a conflict); labels and
+// sections stay distinct.
 // `icon` is presentation mapping for R-A (form restore of the legacy
 // stat cards) — not gated data; values stay canonical.
 const founderStats: { value: string; label: string; icon: 'trophy' | 'people' }[] = [

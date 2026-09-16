@@ -20,6 +20,11 @@ const registry = createRegistry([
     tier: 'T1',
     url: 'artifacts/evidence/EV-20260909-001.yaml',
   },
+  {
+    id: 'EV-0916-01',
+    tier: 'T1',
+    url: 'artifacts/evidence/EV-20260916-001.yaml',
+  },
 ]);
 
 const exemptFields = new Set([
@@ -72,8 +77,8 @@ const facts = {
   },
   statPlayers: {
     field: 'org.stat_players',
-    value: '40+',
-    sources: ['EV-026', 'EV-0909-01'],
+    value: '50+',
+    sources: ['EV-026', 'EV-0909-01', 'EV-0916-01'],
   },
   statCountries: {
     field: 'org.stat_countries',

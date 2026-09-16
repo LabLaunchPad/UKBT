@@ -29,7 +29,7 @@ project:
   formats_played: [T10, T20, "50-Over"]  # EV-20260826-026, from the Club Captain's career statistics tables
   sister_franchises: ["Uppsala Tigers (Sweden)"]  # EV-20260826-026 — "Our Franchises" nav section
   aggregate_stats:                   # site-wide banner copy — not individually itemized
-    players: "40+"                    # EV-20260909-001 (client direct 2026-09-09), supersedes EV-20260826-026's "30+"
+    players: "50+"                    # EV-20260916-001 (owner direct 2026-09-16), supersedes EV-20260909-001's "40+"
     countries_internationals: "15+"
     international_tournaments: "7+"
   official_social_media:             # EV-20260826-026
