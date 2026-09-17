@@ -66,6 +66,7 @@ for (const s of [
   'scripts/check-deploy-mapping.mjs',
   'scripts/smoke-deploy.mjs',
   'scripts/test-deploy-failure-injection.mjs',
+  'scripts/check-content-trust.mjs',
 ]) {
   if (!has(s)) fail('gate-script-missing', s);
 }

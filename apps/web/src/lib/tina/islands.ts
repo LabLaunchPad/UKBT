@@ -33,11 +33,11 @@ export const islands = {
     wrapper: { tag: 'section' },
     propsFromData: (data: unknown, _params: URLSearchParams) => {
       const d = data as Record<string, unknown>;
+      // REM-004: fallbacks are truth-controlled, not hard-coded factual
+      // assertions — homepage.* below are gated @ukbt/truth values.
       return {
-        lede:
-          d.clubIntroLede ||
-          'A registered cricket club, competing across international tournaments since 2020.',
-        founded: '2020',
+        lede: d.clubIntroLede || homepage.taglineShort,
+        founded: homepage.founded,
       };
     },
   },

@@ -34,11 +34,12 @@
     "check:perf": "node scripts/check-perf.mjs",
     "check:deploy-mapping": "node scripts/check-deploy-mapping.mjs",
     "check:release-path": "node scripts/check-release-path.mjs",
-    "test:failure-injection": "node scripts/test-deploy-failure-injection.mjs && node scripts/test-perf-failure-injection.mjs && node scripts/test-seo-failure-injection.mjs && node scripts/test-smoke-failure-injection.mjs",
+    "check:content-trust": "node scripts/check-content-trust.mjs",
+    "test:failure-injection": "node scripts/test-deploy-failure-injection.mjs && node scripts/test-perf-failure-injection.mjs && node scripts/test-seo-failure-injection.mjs && node scripts/test-smoke-failure-injection.mjs && node scripts/test-content-trust-injection.mjs",
     "check:control-plane": "node scripts/check-control-plane.mjs",
     "smoke:deploy": "node scripts/smoke-deploy.mjs",
     "check:governance-scaffold": "node scripts/scaffold-self-test.mjs",
-    "deploy:verify": "pnpm run check:governance-scaffold && pnpm run check:control-plane && pnpm run check:deps && pnpm lint && pnpm run tokens:build && pnpm typecheck && pnpm test:unit && pnpm run build && pnpm run check:deploy-mapping && pnpm run check:release-path && pnpm run test:failure-injection && pnpm run check:links && pnpm run check:seo && pnpm run check:ui && pnpm run check:motion && pnpm run check:security && pnpm run check:perf"
+    "deploy:verify": "pnpm run check:governance-scaffold && pnpm run check:control-plane && pnpm run check:deps && pnpm lint && pnpm run tokens:build && pnpm typecheck && pnpm test:unit && pnpm run build && pnpm run check:deploy-mapping && pnpm run check:release-path && pnpm run check:content-trust && pnpm run test:failure-injection && pnpm run check:links && pnpm run check:seo && pnpm run check:ui && pnpm run check:motion && pnpm run check:security && pnpm run check:perf"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
