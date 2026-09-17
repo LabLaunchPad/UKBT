@@ -10,6 +10,10 @@
   "include": [".astro/types.d.ts", "**/*"],
   "exclude": [
     "dist",
+    // public/ holds gitignored build output (tinacms admin bundle, 5.5MB
+    // index chunk) — astro check OOM'd inside public/admin assets
+    // (exit 134, heap 8072MB, 2026-09-17). Never source; excluded 2026-09-17.
+    "public",
     "node_modules",
     "tests/visual/**",
     "playwright-report",
