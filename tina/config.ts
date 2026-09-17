@@ -2,7 +2,10 @@ import { defineConfig } from 'tinacms';
 
 export default defineConfig({
   branch: process.env.TINA_BRANCH || process.env.GITHUB_BRANCH || 'main',
-  clientId: process.env.PUBLIC_TINA_CLIENT_ID || null,
+  // PUBLIC_TINA_CLIENT_ID is the Astro-convention name; TINA_CLIENT_ID is
+  // accepted as a fallback because Tina's own docs use that name and a
+  // mismatched variable name otherwise fails closed at build time.
+  clientId: process.env.PUBLIC_TINA_CLIENT_ID || process.env.TINA_CLIENT_ID || null,
   token: process.env.TINA_TOKEN || null,
   build: {
     outputFolder: 'admin',
