@@ -6,3 +6,7 @@
 - 2026-09-18 CORRECTION (red-team): P0-1 downgraded PINNED-UNVERIFIED — ID value never API/databoard-checked; deploy-mapping validates shape only, not ID existence. NO-GO on merge push until one human confirmation (KV list or dashboard screenshot). Confidence: High.
 - 2026-09-18 CORRECTION: push strategy — NO-GO on pushing 19 commits to main; instead: backup feature branch push, then squash-merge fixes-only PR (8322de1, 68c672e, ddfb40f, de3bfa1-if-confirmed, 4f850ee, 64f89e6). Audit docs stay out of main.
 - 2026-09-18: No push until Gate 1 passes. Rollback SHA: 67ba098.
+- 2026-09-18: P0-1 CLOSED — owner confirmed SESSION ID in dashboard + production deploy with pin succeeded (main CI smoke SUCCESS, no 10014). deploy-mapping shape + platform behavior both green.
+- 2026-09-18: P0-3 CLOSED in CI — PR #87 build gate SUCCESS (tinacms build with secrets, no OOM) + main CI SUCCESS. Local full deploy:verify remains unproven but superseded by CI evidence.
+- 2026-09-18: INCIDENT_01 decision — observe-first; capture one failing login's network timing before any config change. No PUBLIC_TINA_ADMIN_ORIGIN/CSP/_headers changes (research: none address timeout).
+- 2026-09-18: INCIDENT_02 decision — homepage-hero pilot only, after P0-2 save proof; About divergence resolved first. Public HTML must stay byte-identical + perf gate PASS.
