@@ -64,6 +64,7 @@ jobs:
       - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5 (SHA-pinned 2026-09-10; node24 runtime)
       - run: node scripts/check-control-plane.mjs
       - run: node scripts/check-release-path.mjs
+      - run: node scripts/check-content-trust.mjs
 
   failure-injection:
     name: Deploy failure injection
@@ -74,6 +75,7 @@ jobs:
       - run: node scripts/test-perf-failure-injection.mjs
       - run: node scripts/test-seo-failure-injection.mjs
       - run: node scripts/test-smoke-failure-injection.mjs
+      - run: node scripts/test-content-trust-injection.mjs
 
   lint:
     name: Lint (Biome)

@@ -118,13 +118,20 @@ if (!/test-smoke-failure-injection\.mjs/.test(ci)) {
   );
 }
 
-// The guard must itself be invoked: control-plane job runs this script, so
-// removing the invocation breaks a required check instead of going unnoticed.
+// The content-trust gate must itself be invoked: control-plane job runs it,
+// so removing the invocation breaks a required check instead of going
+// unnoticed (REM-004 wiring guard).
 const controlPlane = jobBlock(ci, 'control-plane');
 if (!/check-release-path\.mjs/.test(controlPlane)) {
   fail(
     'guard-unwired',
     'control-plane job must run scripts/check-release-path.mjs',
+  );
+}
+if (!/check-content-trust\.mjs/.test(controlPlane)) {
+  fail(
+    'content-trust-unwired',
+    'control-plane job must run scripts/check-content-trust.mjs',
   );
 }
 
