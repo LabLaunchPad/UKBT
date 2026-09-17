@@ -36,25 +36,25 @@
   "compatibility_date": "2026-09-14",
   "compatibility_flags": ["nodejs_compat"],
   "main": "./apps/web/dist/server/entry.mjs",
-    "assets": {
-      "binding": "ASSETS",
-      "directory": "./apps/web/dist/client",
-      "not_found_handling": "404-page"
-    },
-    // SESSION KV namespace pin (P0-1)
-    "kv_namespaces": [
-      {
-        "binding": "SESSION",
-        "id": "3435716ffa0e4616b01e2b0faf96ddd5"
-      }
-    ],
-    // Mirrors the dashboard's current Observability settings for this Worker
-    // (Settings > Observability), so `wrangler deploy`/`versions upload` from
-    // CI don't silently reset them to defaults on the next deploy. Logs are
-    // on; the top-level `enabled: false` and `traces.enabled: false` disable
-    // the (separate, paid) Workers Logs/Traces *analytics engine* pipeline,
-    // not `logs` itself.
-    "observability": {
+  "assets": {
+    "binding": "ASSETS",
+    "directory": "./apps/web/dist/client",
+    "not_found_handling": "404-page"
+  },
+  // SESSION KV namespace pin (P0-1)
+  "kv_namespaces": [
+    {
+      "binding": "SESSION",
+      "id": "3435716ffa0e4616b01e2b0faf96ddd5"
+    }
+  ],
+  // Mirrors the dashboard's current Observability settings for this Worker
+  // (Settings > Observability), so `wrangler deploy`/`versions upload` from
+  // CI don't silently reset them to defaults on the next deploy. Logs are
+  // on; the top-level `enabled: false` and `traces.enabled: false` disable
+  // the (separate, paid) Workers Logs/Traces *analytics engine* pipeline,
+  // not `logs` itself.
+  "observability": {
     "enabled": false,
     "head_sampling_rate": 1,
     // 2026-09-11 (P0/P1 hardening, F-06) intent was query-string redaction
