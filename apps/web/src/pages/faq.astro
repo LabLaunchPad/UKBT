@@ -13,23 +13,9 @@ import AboutCTA from '../components/AboutCTA.astro';
 import Footer from '../components/Footer.astro';
 import { homepage } from '../content/homepage-data';
 import { tinaFaq } from '../lib/tina/loaders';
+import { renderFaqAnswer } from '../lib/faq-answer';
 
 const visibleItems = tinaFaq.items.filter((item) => item.visible !== false);
-
-interface RichTextNode {
-  children?: Array<{ text?: string }>;
-}
-
-function renderAnswer(answer: unknown): string {
-  if (answer && typeof answer === 'object' && 'children' in (answer as Record<string, unknown>)) {
-    const nodes = (answer as { children: RichTextNode[] }).children;
-    return nodes.map((p) => {
-      const text = (p.children || []).map((t) => t.text || '').join('');
-      return `<p>${text}</p>`;
-    }).join('');
-  }
-  return `<p>${String(answer)}</p>`;
-}
 ---
 
 <BaseLayout title={`${tinaFaq.pageHeading} — UK Bangla Tigers`} description="Answers to common questions about UK Bangla Tigers.">
@@ -41,10 +27,12 @@ function renderAnswer(answer: unknown): string {
       <SectionHeader eyebrow={tinaFaq.pageEyebrow || 'FAQ'} heading={tinaFaq.pageHeading} />
       {visibleItems.length > 0 ? (
         <div class="ukbt-faq-list">
-          {visibleItems.map((item) => (
+              {visibleItems.map((item) => (
             <details class="ukbt-faq-item">
               <summary class="ukbt-faq-question" data-tina-field="items.question">{item.question}</summary>
-              <div class="ukbt-faq-answer" set:html={renderAnswer(item.answer)} />
+              {/* REM-001: set:html is safe ONLY because renderFaqAnswer escapes
+                  all CMS text first — see apps/web/src/lib/faq-answer.ts. */}
+              <div class="ukbt-faq-answer" set:html={renderFaqAnswer(item.answer)} />
             </details>
           ))}
         </div>
