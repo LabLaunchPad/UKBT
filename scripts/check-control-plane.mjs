@@ -77,7 +77,12 @@ for (const s of [
 const ci = has('.github/workflows/ci.yml')
   ? read('.github/workflows/ci.yml')
   : '';
-for (const job of ['deploy-mapping', 'failure-injection', 'control-plane']) {
+for (const job of [
+  'deploy-mapping',
+  'failure-injection',
+  'control-plane',
+  'smoke-verify',
+]) {
   if (!new RegExp(`^  ${job}:`, 'm').test(ci)) {
     fail('ci-job-missing', `ci.yml lacks job key '${job}:'`);
   }
