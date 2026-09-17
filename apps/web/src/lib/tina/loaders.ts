@@ -6,6 +6,15 @@ import homepageData from '../../../content/homepage/homepage.json' with {
 import siteData from '../../../content/site/siteSettings.json' with {
   type: 'json',
 };
+// REM-003: CMS-controlled navigation values are validated against the URL
+// allowlist at build time (fail-closed: a violation throws and breaks the
+// build). UI-side Tina checks are client-only and never re-enforced here.
+import {
+  isEmailValue,
+  isHttpsUrl,
+  isSiteRelativeUrl,
+  isTelUrl,
+} from '../allowed-urls';
 
 const HomepageSchema = z.object({
   eyebrow: z.string().optional(),
@@ -14,9 +23,16 @@ const HomepageSchema = z.object({
   metaDescription: z.string().optional(),
   heroImage: z.string().optional(),
   primaryCtaLabel: z.string(),
-  primaryCtaLink: z.string(),
+  primaryCtaLink: z.string().refine(isSiteRelativeUrl, {
+    message: 'primaryCtaLink must be a site-relative URL',
+  }),
   secondaryCtaLabel: z.string().optional(),
-  secondaryCtaLink: z.string().optional(),
+  secondaryCtaLink: z
+    .string()
+    .optional()
+    .refine((v) => v === undefined || isSiteRelativeUrl(v), {
+      message: 'secondaryCtaLink must be a site-relative URL',
+    }),
   clubIntroLede: z.string(),
   whyChooseUs: z.array(z.object({ title: z.string(), body: z.string() })),
 });
@@ -37,11 +53,22 @@ const SiteSettingsSchema = z.object({
   siteTaglineShort: z.string(),
   footerTagline: z.string().optional(),
   contact: z.object({
-    email: z.string(),
+    email: z.string().refine(isEmailValue, {
+      message: 'contact.email must be a mailbox address',
+    }),
     phoneDisplay: z.string(),
-    phoneHref: z.string(),
+    phoneHref: z
+      .string()
+      .refine(isTelUrl, { message: 'contact.phoneHref must be a tel: URL' }),
   }),
-  social: z.array(z.object({ platform: z.string(), url: z.string() })),
+  social: z.array(
+    z.object({
+      platform: z.string(),
+      url: z
+        .string()
+        .refine(isHttpsUrl, { message: 'social.url must be an https: URL' }),
+    }),
+  ),
   socialCard: z.string().optional(),
 });
 
