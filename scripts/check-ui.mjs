@@ -133,6 +133,35 @@ try {
   fail('cta-source', 'index.html unreadable');
 }
 
+// 6. FAQ sink wiring (REM-001): CMS answers must pass through the escaping
+// renderer; no new raw-HTML sinks may appear unnoticed.
+const pagesDir = join(root, 'apps/web/src/pages');
+const layoutsDir = join(root, 'apps/web/src/layouts');
+try {
+  const faq = readFileSync(join(pagesDir, 'faq.astro'), 'utf8');
+  if (!/renderFaqAnswer\(item\.answer\)/.test(faq)) {
+    fail(
+      'faq-sink-wiring',
+      'faq.astro no longer routes answers through renderFaqAnswer',
+    );
+  }
+} catch {
+  fail('faq-source', 'faq.astro unreadable');
+}
+let setHtmlUses = 0;
+for (const dir of [pagesDir, compDir, layoutsDir]) {
+  for (const f of globSync('**/*.astro', { cwd: dir })) {
+    const src = readFileSync(join(dir, f), 'utf8');
+    setHtmlUses += (src.match(/set:html=\{/g) ?? []).length;
+  }
+}
+if (setHtmlUses !== 2) {
+  fail(
+    'raw-sink-count',
+    `expected 2 set:html uses (faq + BaseLayout), found ${setHtmlUses}`,
+  );
+}
+
 const result = {
   UI_STATUS: failures.length === 0 ? 'PASS' : 'FAIL',
   failures,
