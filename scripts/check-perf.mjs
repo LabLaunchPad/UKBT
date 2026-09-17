@@ -51,7 +51,16 @@ if (!existsSync(distDir)) {
 const kb = (n) => `${(n / 1024).toFixed(1)}KB`;
 
 // Per-page HTML weight + referenced image weight.
-for (const file of globSync('**/*.html', { cwd: distDir })) {
+// Tina admin bundle is an authenticated app shell, not public content:
+// excluded from transfer budgets (separately unbounded; never counted
+// against the public-site css/js/html budgets). Prefix match covers both
+// posix and win32 separators (glob returns backslashes on Windows, which
+// `ignore:` patterns do not match — hence explicit filtering).
+const ADMIN_OWNED = (f) =>
+  f === 'admin' || f.startsWith('admin/') || f.startsWith('admin\\');
+const distHtml = (pattern) =>
+  globSync(pattern, { cwd: distDir }).filter((f) => !ADMIN_OWNED(f));
+for (const file of distHtml('**/*.html')) {
   const html = readFileSync(join(distDir, file), 'utf8');
   const htmlBytes = Buffer.byteLength(html);
   if (htmlBytes > BUDGETS.htmlPerPage) {
@@ -94,10 +103,10 @@ for (const file of globSync('**/*.html', { cwd: distDir })) {
 // Global CSS/JS transfer weight.
 let css = 0;
 let js = 0;
-for (const f of globSync('**/*.css', { cwd: distDir })) {
+for (const f of distHtml('**/*.css')) {
   css += statSync(join(distDir, f)).size;
 }
-for (const f of globSync('**/*.js', { cwd: distDir })) {
+for (const f of distHtml('**/*.js')) {
   js += statSync(join(distDir, f)).size;
 }
 if (css > BUDGETS.cssTotal) fail('css-weight', `${kb(css)} > 80KB`);

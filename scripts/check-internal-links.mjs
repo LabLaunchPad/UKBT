@@ -30,9 +30,14 @@ if (!existsSync(distDir)) {
   process.exit(1);
 }
 
-const htmlFiles = globSync('**/*.html', { cwd: distDir }).map((f) =>
-  join(distDir, f),
-);
+const htmlFiles = globSync('**/*.html', { cwd: distDir })
+  // Tina admin is an authenticated SPA shell; its hash-routed links are not
+  // site content and must not trip link integrity. Prefix match covers both
+  // posix and win32 separators.
+  .filter(
+    (f) => f !== 'admin' && !f.startsWith('admin/') && !f.startsWith('admin\\'),
+  )
+  .map((f) => join(distDir, f));
 
 const hrefPattern = /href=["']([^"'#][^"']*)["']/g;
 const brokenLinks = [];

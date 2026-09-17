@@ -27,8 +27,12 @@ if (!existsSync(distDir)) {
   process.exit(1);
 }
 
-// 1. Heading order + single h1 (skip 404).
-for (const file of globSync('**/*.html', { cwd: distDir })) {
+// 1. Heading order + single h1 (skip 404; skip Tina admin app shell).
+const siteHtml = (pattern) =>
+  globSync(pattern, { cwd: distDir }).filter(
+    (f) => f !== 'admin' && !f.startsWith('admin/') && !f.startsWith('admin\\'),
+  );
+for (const file of siteHtml('**/*.html')) {
   if (file === '404.html' || file.endsWith('/404.html')) continue;
   const html = readFileSync(join(distDir, file), 'utf8');
   const tags = [...html.matchAll(/<(h[1-6])[\s>]/g)].map((m) => m[1]);
@@ -46,8 +50,8 @@ for (const file of globSync('**/*.html', { cwd: distDir })) {
   }
 }
 
-// 2. Images: every meaningful <img> needs alt + dimensions.
-for (const file of globSync('**/*.html', { cwd: distDir })) {
+// 2. Images: every meaningful <img> needs alt + dimensions (admin skipped).
+for (const file of siteHtml('**/*.html')) {
   const html = readFileSync(join(distDir, file), 'utf8');
   for (const m of html.matchAll(/<img\b([^>]+)>/g)) {
     const tag = m[1];

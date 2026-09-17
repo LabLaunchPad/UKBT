@@ -36,7 +36,10 @@ const pickAll = (html, re) => [...html.matchAll(re)].map((m) => m[1]);
 const titles = new Map();
 const descriptions = new Map();
 
-for (const file of globSync('**/*.html', { cwd: distDir })) {
+for (const file of globSync('**/*.html', { cwd: distDir }).filter(
+  // Tina admin is an authenticated app shell, not indexable site content.
+  (f) => f !== 'admin' && !f.startsWith('admin/') && !f.startsWith('admin\\'),
+)) {
   if (file === '404.html' || file.endsWith('/404.html')) continue;
   const html = readFileSync(join(distDir, file), 'utf8');
   const robots = pick(html, /<meta name="robots" content="([^"]+)"\s*\/?>/);
@@ -169,7 +172,10 @@ if (!existsSync(sitemapPath)) {
   }
   // Every indexable canonical must appear exactly once; no noindex URL inside.
   const indexableCanonicals = [];
-  for (const file of globSync('**/*.html', { cwd: distDir })) {
+  for (const file of globSync('**/*.html', { cwd: distDir }).filter(
+    // Tina admin is an authenticated app shell, not indexable site content.
+    (f) => f !== 'admin' && !f.startsWith('admin/') && !f.startsWith('admin\\'),
+  )) {
     if (file === '404.html' || file.endsWith('/404.html')) continue;
     const html = readFileSync(join(distDir, file), 'utf8');
     const robots = pick(html, /<meta name="robots" content="([^"]+)"\s*\/?>/);

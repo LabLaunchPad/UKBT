@@ -15,7 +15,7 @@
     }
   },
   "scripts": {
-    "build": "pnpm --filter @ukbt/truth tokens:build && pnpm --filter @ukbt/web build && node scripts/generate-sitemap.mjs",
+    "build": "tinacms build --skip-cloud-checks --skip-search-index && pnpm --filter @ukbt/truth tokens:build && pnpm --filter @ukbt/web build && node scripts/generate-sitemap.mjs",
     "dev": "pnpm --filter ./apps/web dev",
     "typecheck": "pnpm -r typecheck",
     "lint": "biome check .",
@@ -43,6 +43,8 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
+    "@tinacms/cli": "^3.0.0",
+    "tinacms": "^3.14.0",
     "typescript": "^5.7.2",
     "wrangler": "^4.126.0"
   }
