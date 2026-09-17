@@ -65,7 +65,7 @@ TinaCloud Free (Git-backed)
 
 > **Notes:**
 > - `tina/config.ts:8` falls back to `TINA_CLIENT_ID` if `PUBLIC_TINA_CLIENT_ID` is not set — both names refer to the same value.
-> - `TINA_SEARCH_TOKEN` is NOT required — search is disabled by design (`tinacms build --skip-search-index`). See `tina/config.ts:20-27` and `docs/tina-audit/CMS_TRUST_MODEL.md`.
+> - `TINA_SEARCH_TOKEN` is NOT required — search is disabled by design (`tinacms build --skip-search-index`). See `tina/config.ts:23-30` and `docs/tina-audit/CMS_TRUST_MODEL.md`.
 > - `TINA_TOKEN` is a **build-time only** secret baked into the admin bundle by `tinacms build`. It is NOT a Workers runtime variable. Do not put it in `wrangler.jsonc` env_vars.
 
 ## Human TinaCloud Dashboard Steps
