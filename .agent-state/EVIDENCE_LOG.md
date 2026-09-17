@@ -1,0 +1,11 @@
+# EVIDENCE_LOG
+- 2026-09-18 Phase 0: HEAD 4f850ee, detached, 19 ahead / 0 behind origin/main(67ba098), tree clean tracked, 779 files, diff 21 files +3043/-7. Source: fresh git commands. Class: FACT.
+- 2026-09-18 Phase 0: check:security PASS, check:content-trust PASS, check:deploy-mapping PASS, lint PASS (73 files). Source: pnpm runs this session. Class: VERIFIED.
+- 2026-09-18: deploy:verify local FAIL at tinacms build "Missing clientId, token" — correct fail-closed, local shell uninjected. Class: OBSERVED (expected).
+- Prior: external-evidence/{tinacms,cloudflare,astro,github}/*_FINDINGS.md (T2 vendor docs, 2026-09-18). Class: VERIFIED (fetch-time).
+- Prior: artifacts/audit/tina-production-alignment/* 7 files (T1 repo audit). Class: VERIFIED.
+- 2026-09-18 Agents 2+3: tinacms-final-verification.md (6 claims: TINA_TOKEN canonical SUPPORTED, TINA_READ_ONLY_TOKEN REFUTED, build-baking SUPPORTED, Astro visual-editing reqs SUPPORTED, Free limits SUPPORTED, --skip-search-index SUPPORTED) + TINACMS_ARCHITECT_REPORT.md (8 PASS / 4 WARNING, 0 BLOCKER); cloudflare-final-verification.md (Builds/KV/secrets/assets/headers SUPPORTED, GitHub error-string UNCLEAR) + CLOUDFLARE_DEPLOYMENT_TRUTH_MATRIX.md (6 PASS / 1 WARNING). Class: VERIFIED (T2).
+- 2026-09-18 Agents 4+5: SECURITY_SIGNOFF_REPORT.md CONDITIONAL PASS; PRODUCTION_VERIFICATION_RUNBOOK.md (8 proofs, delegates save flow to TINA_HITL_RUNBOOK.md). Class: VERIFIED (files exist).
+- 2026-09-18 CORRECTION: Agent 4's `.gitignore` WARNING refuted — `git check-ignore -v` matches apps/web/public/admin/index.html via nested apps/web/public/admin/.gitignore:1, plus root .env + tina/__generated__/. No exposure. Class: FACT (command output).
+- 2026-09-18 Agent 6 RED_TEAM_REVIEW.md: push-19-to-main REFUTED (fixes-only squash PR instead); SESSION pin "verified" REFUTED (ID value never API-checked; mapping gate can't validate ID); OOM fix SUPPORTED; HITL gate SUPPORTED; line-rot SUPPORTED (fixed in 64f89e6). Class: VERIFIED (file).
+- 2026-09-18: 64f89e6 docs line-ref fixes; 4 gates PASS (security/content-trust/deploy-mapping/lint). Class: VERIFIED.
