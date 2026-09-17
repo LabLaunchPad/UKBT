@@ -15,6 +15,12 @@ importers:
       '@biomejs/biome':
         specifier: ^1.9.4
         version: 1.9.4
+      '@tinacms/cli':
+        specifier: ^3.0.0
+        version: 3.0.0(@codemirror/language@6.0.0)(@types/node@22.20.1)(abstract-level@1.0.4)(immer@10.2.0)(jiti@1.21.7)(lightningcss@1.33.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rollup@4.63.0)(scheduler@0.28.0)(slate-dom@0.114.0(slate@0.114.0))(slate@0.114.0)(use-sync-external-store@1.7.0(react@19.3.0))(yaml@2.9.0)
+      tinacms:
+        specifier: ^3.14.0
+        version: 3.14.0(@types/node@22.20.1)(abstract-level@1.0.4)(immer@10.2.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(scheduler@0.28.0)(slate-dom@0.114.0(slate@0.114.0))(slate@0.114.0)(use-sync-external-store@1.7.0(react@19.3.0))
       typescript:
         specifier: ^5.7.2
         version: 5.9.3

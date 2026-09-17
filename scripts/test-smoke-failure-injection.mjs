@@ -65,6 +65,11 @@ function serve(mode, swBuildId, flipAfter = 0) {
       res.end('<html><body>bowled out</body></html>');
       return;
     }
+    if (url.pathname === '/admin/' && mode !== 'broken-admin') {
+      res.writeHead(200, csp);
+      res.end('<html><body><div id="root"></div></body></html>');
+      return;
+    }
     res.writeHead(200, { 'content-type': 'text/html', ...csp });
     res.end('<html><body>UK Bangla Tigers</body></html>');
   });
@@ -157,6 +162,13 @@ await runCase('stale-then-fresh-waits-and-passes', {
   waitSecs: 60,
   flipAfter: 2,
   expectExit: 0,
+});
+await runCase('broken-admin-fails', {
+  mode: 'broken-admin',
+  sha: GOOD_SHA,
+  waitSecs: 0,
+  expectExit: 1,
+  expectRule: 'admin-content',
 });
 
 const failed = results.filter((r) => !r.pass);

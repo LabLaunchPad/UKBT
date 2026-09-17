@@ -3,6 +3,9 @@ dist/
 .astro/
 .wrangler/
 .tina/
+# TinaCMS v3 generated output (build intermediate). tina/tina-lock.json IS
+# committed (TinaCloud requires it); everything else generated stays out.
+tina/__generated__/
 *.log
 .env
 .env.*
