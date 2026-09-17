@@ -63,6 +63,7 @@ jobs:
     steps:
       - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5 (SHA-pinned 2026-09-10; node24 runtime)
       - run: node scripts/check-control-plane.mjs
+      - run: node scripts/check-release-path.mjs
 
   failure-injection:
     name: Deploy failure injection
@@ -72,6 +73,7 @@ jobs:
       - run: node scripts/test-deploy-failure-injection.mjs
       - run: node scripts/test-perf-failure-injection.mjs
       - run: node scripts/test-seo-failure-injection.mjs
+      - run: node scripts/test-smoke-failure-injection.mjs
 
   lint:
     name: Lint (Biome)
@@ -274,6 +276,20 @@ jobs:
       - uses: gitleaks/gitleaks-action@e0c47f4f8be36e29cdc102c57e68cb5cbf0e8d1e # v3 (SHA-pinned 2026-09-10; node24 runtime; upstream v3 tag itself unsigned, as was v2)
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  smoke-verify:
+    # REM-002: post-deploy live smoke. Post-merge ONLY (push) — it observes
+    # production AFTER Workers Builds publishes, so it cannot gate a PR.
+    # Explicitly NOT merge-blocking by design (see file header rule): its
+    # value is automatic execution + loud failure on main. Removal or
+    # weakening breaks `check-release-path` (control-plane job, required).
+    name: Post-deploy smoke (live production)
+    runs-on: ubuntu-24.04
+    needs: build
+    if: github.event_name == 'push'
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5 (SHA-pinned 2026-09-10; node24 runtime)
+      - run: node scripts/smoke-deploy.mjs https://ukbanglatigers.co.uk --expect-sha ${{ github.sha }} --wait-secs 600
 
   # NOTE 2026-09-10: the GitHub Actions `wrangler deploy` job
   # (workers-deploy) was removed as redundant — production deploys via
