@@ -59,6 +59,10 @@ TinaCloud project/APIs unaffected; no data loss.
 5. Login completion needs a TinaCloud seat (owner-tested, not automatable).
 6. Tokens in chat history: the Content-Readonly/Search values were pasted in
    this session — owner should rotate them after setup completes.
+7. Missing `tina/tina-lock.json` is SILENT, not loud: `tinacms build`
+   succeeds without it (proven 2026-09-17) while TinaCloud cannot index.
+   Guard: lockfile is committed; do not delete. Follow-up: existence
+   assertion in CI (tracked, not implemented).
 
 ## Production verification (post-merge, required before VERIFIED_WORKING)
 
