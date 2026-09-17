@@ -17,6 +17,9 @@ export default defineConfig({
       mediaRoot: 'media',
     },
   },
+  // Search disabled by design — build uses --skip-search-index
+  // (package.json:18, ci.yml:272). Do not provision TINA_SEARCH_TOKEN
+  // unless search is re-enabled per https://tina.io/docs/reference/search/overview
   search: {
     tina: {
       indexerToken: process.env.TINA_SEARCH_TOKEN || undefined,
