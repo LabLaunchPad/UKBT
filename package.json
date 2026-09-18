@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "description": "UK Bangla Tigers production website — monorepo root. See contracts/REPOSITORY-CONTRACT.md.",
   "engines": {
-    "node": ">=22.0.0",
+    "node": ">=22.22.0",
     "pnpm": ">=10.0.0"
   },
   "packageManager": "pnpm@10.33.0",
@@ -15,7 +15,7 @@
     }
   },
   "scripts": {
-    "build": "tinacms build --skip-cloud-checks --skip-search-index && pnpm --filter @ukbt/truth tokens:build && pnpm --filter @ukbt/web build && node scripts/generate-sitemap.mjs",
+    "build": "tinacms build --skip-cloud-checks --skip-search-index && pnpm --filter @ukbt/truth tokens:build && pnpm --filter @ukbt/web build",
     "dev": "pnpm --filter ./apps/web dev",
     "typecheck": "pnpm -r typecheck",
     "lint": "biome check .",
@@ -35,7 +35,7 @@
     "check:deploy-mapping": "node scripts/check-deploy-mapping.mjs",
     "check:release-path": "node scripts/check-release-path.mjs",
     "check:content-trust": "node scripts/check-content-trust.mjs",
-    "test:failure-injection": "node scripts/test-deploy-failure-injection.mjs && node scripts/test-perf-failure-injection.mjs && node scripts/test-seo-failure-injection.mjs && node scripts/test-smoke-failure-injection.mjs && node scripts/test-content-trust-injection.mjs",
+    "test:failure-injection": "node scripts/test-deploy-failure-injection.mjs && node scripts/test-perf-failure-injection.mjs && node scripts/test-seo-failure-injection.mjs && node scripts/test-smoke-failure-injection.mjs && node scripts/test-content-trust-injection.mjs && node scripts/test-security-failure-injection.mjs && node scripts/test-release-path-failure-injection.mjs",
     "check:control-plane": "node scripts/check-control-plane.mjs",
     "smoke:deploy": "node scripts/smoke-deploy.mjs",
     "check:governance-scaffold": "node scripts/scaffold-self-test.mjs",

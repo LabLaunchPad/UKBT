@@ -37,6 +37,7 @@ import CaptainSpotlight from '../components/CaptainSpotlight.astro';
 import FranchiseTeaser from '../components/FranchiseTeaser.astro';
 import AboutCTA from '../components/AboutCTA.astro';
 import Footer from '../components/Footer.astro';
+import TinaIsland from '@tinacms/astro/TinaIsland.astro';
 import { homepage } from '../content/homepage-data';
 import { homepageGraph } from '../lib/seo';
 import { tinaHomepage } from '../lib/tina/loaders';
@@ -72,19 +73,35 @@ const structuredData = homepageGraph({
   <Header nav={homepage.nav} cta={homepage.primaryCta} />
 
   <main id="main-content" tabindex="-1">
-    <Hero
-      taglineShort={homepage.taglineShort}
-      social={homepage.social}
-      eyebrow={tinaHomepage.eyebrow || 'UK Bangla Tigers Cricket Club'}
-      headline={tinaHomepage.headline}
-      primaryCtaLabel={tinaHomepage.primaryCtaLabel}
-      primaryCtaLink={tinaHomepage.primaryCtaLink}
-      secondaryCta={tinaHomepage.secondaryCtaLabel ? { label: tinaHomepage.secondaryCtaLabel, href: tinaHomepage.secondaryCtaLink || '/tournaments/' } : undefined}
-      heroImage={tinaHomepage.heroImage}
-    />
+    {/*
+      Visual editing (official @tinacms/astro static-site flow): the
+      hero and club-intro regions are wrapped in registered TinaIslands.
+      The wrapper emits a one-line inline bootstrap (hashed into the CSP
+      by scripts/stamp-csp.mjs) that loads /admin/bridge.js only inside
+      the admin iframe; the bridge primes /tina-island/hero and
+      /tina-island/aboutSection to pick up form payloads, and every
+      editor keystroke re-POSTs the island for a live swap. `primary`
+      makes the admin open the hero form on load. The wrapper tags match
+      the island registry (src/lib/tina/islands.ts) exactly — the bridge
+      swaps the whole wrapper element.
+    */}
+    <TinaIsland name="hero" wrapper={{ tag: 'div', className: 'ukbt-hero-island' }} primary>
+      <Hero
+        taglineShort={homepage.taglineShort}
+        social={homepage.social}
+        eyebrow={tinaHomepage.eyebrow || 'UK Bangla Tigers Cricket Club'}
+        headline={tinaHomepage.headline}
+        primaryCtaLabel={tinaHomepage.primaryCtaLabel}
+        primaryCtaLink={tinaHomepage.primaryCtaLink}
+        secondaryCta={tinaHomepage.secondaryCtaLabel ? { label: tinaHomepage.secondaryCtaLabel, href: tinaHomepage.secondaryCtaLink || '/tournaments/' } : undefined}
+        heroImage={tinaHomepage.heroImage}
+      />
+    </TinaIsland>
 
     <Section>
-      <ClubIntro lede={tinaHomepage.clubIntroLede} founded={homepage.founded} />
+      <TinaIsland name="aboutSection" wrapper={{ tag: 'div', className: 'ukbt-club-intro-island' }}>
+        <ClubIntro lede={tinaHomepage.clubIntroLede} founded={homepage.founded} />
+      </TinaIsland>
     </Section>
 
     <Section surface="alt" wrapper={true}>

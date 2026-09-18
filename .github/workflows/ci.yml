@@ -16,7 +16,10 @@ on:
 
 concurrency:
   group: ci-${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  # Never cancel in-flight main-branch runs: a fast second merge would kill
+  # an in-flight smoke-verify mid-wait (it observes the live deploy for up
+  # to 600s) and that deploy would never be smoked (audit 2026-09-18).
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
 env:
   # Pinned, never `-latest` — contracts/VISUAL-REGRESSION-CONTRACT.md
@@ -24,11 +27,18 @@ env:
   # deterministic, not just for the visual job but as a repo-wide rule.
   NODE_VERSION: '22'
   # TinaCMS Cloud admin build (PR #86): the `tinacms build` step inside
-  # `pnpm run build` fails closed without these. PUBLIC_TINA_CLIENT_ID is a
-  # public identifier (Actions variable); TINA_TOKEN is a read-only secret.
-  # Both are human-provisioned in repo Settings; never committed.
-  PUBLIC_TINA_CLIENT_ID: ${{ vars.PUBLIC_TINA_CLIENT_ID }}
-  TINA_TOKEN: ${{ secrets.TINA_TOKEN }}
+  # `pnpm run build` fails closed without these — VERIFIED 2026-09-18:
+  # `tinacms build --skip-cloud-checks --skip-search-index` exits with
+  # "Missing clientId, token" when either env is unset. Fork PRs receive
+  # no repository secrets (and may see no vars), so both values carry
+  # PR-ONLY fallbacks: the generated admin shell in a PR build is
+  # compile-only output (never deployed; the real clientId is public
+  # anyway). The fallback MUST NOT apply on push builds — there the
+  # fail-closed error is the signal that provisioning is broken
+  # (review 2026-09-18: a workflow-wide fallback would let a deleted
+  # secret ship an admin shell with a dead token).
+  PUBLIC_TINA_CLIENT_ID: ${{ vars.PUBLIC_TINA_CLIENT_ID || (github.event_name == 'pull_request' && 'fork-pr-client-id-fallback' || '') }}
+  TINA_TOKEN: ${{ secrets.TINA_TOKEN || (github.event_name == 'pull_request' && 'fork-pr-token-fallback' || '') }}
 
 # Least privilege: every job gets read-only contents by default; jobs
 # that upload/download artifacts elevate just the `actions` scope they
@@ -40,6 +50,7 @@ jobs:
   install:
     name: Install (frozen lockfile)
     runs-on: ubuntu-24.04
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5 (SHA-pinned 2026-09-10; node24 runtime)
       - uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v5 (SHA-pinned 2026-09-10; node24 runtime)
@@ -52,6 +63,7 @@ jobs:
   governance-scaffold:
     name: Governance scaffold self-test
     runs-on: ubuntu-24.04
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5 (SHA-pinned 2026-09-10; node24 runtime)
       - run: node scripts/scaffold-self-test.mjs
@@ -59,6 +71,7 @@ jobs:
   dependency-allowlist:
     name: Dependency allowlist
     runs-on: ubuntu-24.04
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5 (SHA-pinned 2026-09-10; node24 runtime)
       - run: node scripts/check-dependency-allowlist.mjs
@@ -66,6 +79,7 @@ jobs:
   control-plane:
     name: Control plane self-audit
     runs-on: ubuntu-24.04
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5 (SHA-pinned 2026-09-10; node24 runtime)
       - run: node scripts/check-control-plane.mjs
@@ -75,6 +89,7 @@ jobs:
   failure-injection:
     name: Deploy failure injection
     runs-on: ubuntu-24.04
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5 (SHA-pinned 2026-09-10; node24 runtime)
       - run: node scripts/test-deploy-failure-injection.mjs
@@ -82,10 +97,13 @@ jobs:
       - run: node scripts/test-seo-failure-injection.mjs
       - run: node scripts/test-smoke-failure-injection.mjs
       - run: node scripts/test-content-trust-injection.mjs
+      - run: node scripts/test-security-failure-injection.mjs
+      - run: node scripts/test-release-path-failure-injection.mjs
 
   lint:
     name: Lint (Biome)
     runs-on: ubuntu-24.04
+    timeout-minutes: 30
     needs: install
     steps:
       - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5 (SHA-pinned 2026-09-10; node24 runtime)
@@ -100,6 +118,7 @@ jobs:
   typecheck:
     name: Typecheck
     runs-on: ubuntu-24.04
+    timeout-minutes: 30
     needs: install
     steps:
       - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5 (SHA-pinned 2026-09-10; node24 runtime)
@@ -115,6 +134,7 @@ jobs:
   unit-tests:
     name: Unit / integration tests (truth gate + content schema)
     runs-on: ubuntu-24.04
+    timeout-minutes: 30
     needs: install
     steps:
       - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5 (SHA-pinned 2026-09-10; node24 runtime)
@@ -129,6 +149,7 @@ jobs:
   build:
     name: Build (tokens + Astro static output)
     runs-on: ubuntu-24.04
+    timeout-minutes: 30
     needs: install
     permissions:
       contents: read
@@ -142,115 +163,131 @@ jobs:
           cache: 'pnpm'
       - run: pnpm install --frozen-lockfile
       - run: pnpm run build
+      # Dist produced ONCE here; the seven dist-crawling gate jobs below
+      # download this artifact instead of each rebuilding the full
+      # Tina+Astro site (audit 2026-09-18: eight identical builds/push).
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6 (SHA-pinned 2026-09-10; node24 runtime)
+        with:
+          name: dist
+          path: apps/web/dist
+          retention-days: 3
 
   deploy-mapping:
     name: Deploy mapping (wrangler config vs build output)
     runs-on: ubuntu-24.04
+    timeout-minutes: 30
     needs: build
     steps:
       - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5 (SHA-pinned 2026-09-10; node24 runtime)
-      - uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v5 (SHA-pinned 2026-09-10; node24 runtime)
-      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5 (SHA-pinned 2026-09-10; node24 runtime)
+      # Gate scripts are pure Node (no workspace deps) — checkout plus the
+      # built dist is all they need. Dist comes from the build job's
+      # artifact, not a rebuild.
+      - uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6 (SHA-pinned 2026-09-18)
         with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'pnpm'
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm run build
-      - run: pnpm run check:deploy-mapping
+          name: dist
+          path: apps/web/dist
+      - run: node scripts/check-deploy-mapping.mjs
 
   link-integrity:
     name: Internal link integrity
     runs-on: ubuntu-24.04
+    timeout-minutes: 30
     needs: build
     steps:
       - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5 (SHA-pinned 2026-09-10; node24 runtime)
-      - uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v5 (SHA-pinned 2026-09-10; node24 runtime)
-      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5 (SHA-pinned 2026-09-10; node24 runtime)
+      # Gate scripts are pure Node (no workspace deps) — checkout plus the
+      # built dist is all they need. Dist comes from the build job's
+      # artifact, not a rebuild.
+      - uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6 (SHA-pinned 2026-09-18)
         with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'pnpm'
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm run build
-      - run: pnpm run check:links
+          name: dist
+          path: apps/web/dist
+      - run: node scripts/check-internal-links.mjs
 
   seo-gate:
     name: SEO gate (built-output crawl)
     runs-on: ubuntu-24.04
+    timeout-minutes: 30
     needs: build
     steps:
       - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5 (SHA-pinned 2026-09-10; node24 runtime)
-      - uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v5 (SHA-pinned 2026-09-10; node24 runtime)
-      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5 (SHA-pinned 2026-09-10; node24 runtime)
+      # Gate scripts are pure Node (no workspace deps) — checkout plus the
+      # built dist is all they need. Dist comes from the build job's
+      # artifact, not a rebuild.
+      - uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6 (SHA-pinned 2026-09-18)
         with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'pnpm'
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm run build
-      - run: pnpm run check:seo
+          name: dist
+          path: apps/web/dist
+      - run: node scripts/check-seo.mjs
 
   ui-gate:
     name: UI gate (headings, focus coverage, events, images)
     runs-on: ubuntu-24.04
+    timeout-minutes: 30
     needs: build
     steps:
       - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5 (SHA-pinned 2026-09-10; node24 runtime)
-      - uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v5 (SHA-pinned 2026-09-10; node24 runtime)
-      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5 (SHA-pinned 2026-09-10; node24 runtime)
+      # Gate scripts are pure Node (no workspace deps) — checkout plus the
+      # built dist is all they need. Dist comes from the build job's
+      # artifact, not a rebuild.
+      - uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6 (SHA-pinned 2026-09-18)
         with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'pnpm'
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm run build
+          name: dist
+          path: apps/web/dist
       - run: node scripts/check-ui.mjs
 
   security-gate:
     name: Security headers gate (dist policy + leakage)
     runs-on: ubuntu-24.04
+    timeout-minutes: 30
     needs: build
     steps:
       - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5 (SHA-pinned 2026-09-10; node24 runtime)
-      - uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v5 (SHA-pinned 2026-09-10; node24 runtime)
-      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5 (SHA-pinned 2026-09-10; node24 runtime)
+      # Gate scripts are pure Node (no workspace deps) — checkout plus the
+      # built dist is all they need. Dist comes from the build job's
+      # artifact, not a rebuild.
+      - uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6 (SHA-pinned 2026-09-18)
         with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'pnpm'
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm run build
-      - run: pnpm run check:security
+          name: dist
+          path: apps/web/dist
+      - run: node scripts/check-security.mjs
 
   perf-gate:
     name: Performance budgets (dist transfer weights)
     runs-on: ubuntu-24.04
+    timeout-minutes: 30
     needs: build
     steps:
       - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5 (SHA-pinned 2026-09-10; node24 runtime)
-      - uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v5 (SHA-pinned 2026-09-10; node24 runtime)
-      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5 (SHA-pinned 2026-09-10; node24 runtime)
+      # Gate scripts are pure Node (no workspace deps) — checkout plus the
+      # built dist is all they need. Dist comes from the build job's
+      # artifact, not a rebuild.
+      - uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6 (SHA-pinned 2026-09-18)
         with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'pnpm'
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm run build
-      - run: pnpm run check:perf
+          name: dist
+          path: apps/web/dist
+      - run: node scripts/check-perf.mjs
 
   motion-gate:
     name: Motion gate (tokens, reduced motion, reveal gating)
     runs-on: ubuntu-24.04
+    timeout-minutes: 30
     needs: build
     steps:
       - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5 (SHA-pinned 2026-09-10; node24 runtime)
-      - uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v5 (SHA-pinned 2026-09-10; node24 runtime)
-      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5 (SHA-pinned 2026-09-10; node24 runtime)
+      # Gate scripts are pure Node (no workspace deps) — checkout plus the
+      # built dist is all they need. Dist comes from the build job's
+      # artifact, not a rebuild.
+      - uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6 (SHA-pinned 2026-09-18)
         with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'pnpm'
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm run build
-      - run: pnpm run check:motion
+          name: dist
+          path: apps/web/dist
+      - run: node scripts/check-motion.mjs
 
   visual-and-accessibility:
     name: Playwright (structural / responsive / accessibility)
     runs-on: ubuntu-24.04
+    timeout-minutes: 30
     needs: build
     permissions:
       contents: read
@@ -281,6 +318,7 @@ jobs:
   secret-scan:
     name: Secret scan
     runs-on: ubuntu-24.04
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5 (SHA-pinned 2026-09-10; node24 runtime)
         with:
@@ -297,19 +335,64 @@ jobs:
     # weakening breaks `check-release-path` (control-plane job, required).
     name: Post-deploy smoke (live production)
     runs-on: ubuntu-24.04
-    needs: build
-    if: github.event_name == 'push'
+    timeout-minutes: 30
+    needs: [build, workers-deploy]
+    # workers-deploy skips while WORKERS_DEPLOY_VIA_CI is unset — !failure()
+    # lets smoke still run against the Workers Builds publish in that mode.
+    if: github.event_name == 'push' && !failure() && !cancelled()
     steps:
       - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5 (SHA-pinned 2026-09-10; node24 runtime)
       - run: node scripts/smoke-deploy.mjs https://ukbanglatigers.co.uk --expect-sha ${{ github.sha }} --wait-secs 600
 
-  # NOTE 2026-09-10: the GitHub Actions `wrangler deploy` job
-  # (workers-deploy) was removed as redundant — production deploys via
-  # git-connected Workers Builds, which publishes on every main merge
-  # independently of CI. The Action path only ever failed on an expired
-  # CLOUDFLARE_API_TOKEN and kept main-branch runs red, so it was
-  # deleted rather than re-credentialed. To restore, recover the job
-  # from git history with a fresh token.
+  # Reinstated 2026-09-18 (audit): the 2026-09-10 removal made production
+  # deploys bypass every gate — git-connected Workers Builds publishes on
+  # every main merge independently of CI, so a red-CI merge still ships.
+  # This job is the CI-gated deploy path. It is OPT-IN: it runs only once
+  # the owner sets the repository variable WORKERS_DEPLOY_VIA_CI=true and
+  # provisions CLOUDFLARE_API_TOKEN + CLOUDFLARE_ACCOUNT_ID secrets
+  # (token needs Workers Scripts:Edit), then disconnects the Workers
+  # Builds git integration in the dashboard — one deploy path, gated by
+  # every job above. While the flag is unset the job is skipped (honest
+  # absence, same convention as smoke-verify; check-release-path asserts
+  # this wiring exists and cannot be silently removed).
+  workers-deploy:
+    name: Deploy to Cloudflare Workers (gated)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    needs:
+      - build
+      - deploy-mapping
+      - link-integrity
+      - seo-gate
+      - ui-gate
+      - security-gate
+      - perf-gate
+      - motion-gate
+      - visual-and-accessibility
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && vars.WORKERS_DEPLOY_VIA_CI == 'true'
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5 (SHA-pinned 2026-09-10; node24 runtime)
+      - uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v5 (SHA-pinned 2026-09-10; node24 runtime)
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5 (SHA-pinned 2026-09-10; node24 runtime)
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+      - run: pnpm install --frozen-lockfile
+      # Deploy the SAME dist the gate jobs verified — downloaded from the
+      # build job's artifact (review 2026-09-18: without this, wrangler
+      # deploy would fail closed with "Missing entry-point", but the gates
+      # stayed green on a deploy path that could never succeed).
+      - uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6 (SHA-pinned 2026-09-18)
+        with:
+          name: dist
+          path: apps/web/dist
+      # wrangler is a lockfile-pinned devDependency — no unpinned runner.
+      # Deploys from the repo root, where wrangler.jsonc lives
+      # (contracts/DEPLOYMENT-CONTRACT.md amendment).
+      - run: pnpm exec wrangler deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
 
 # ---------------------------------------------------------------------------
 # CI-CONTRACT.md gates NOT wired yet, and why (ABSENT != PASS,
@@ -320,14 +403,16 @@ jobs:
 # 16 real routes and 12+ real organization facts landed; that stale
 # reasoning was itself a defect this receipt found and fixed:
 #
-#   - Content schema validation against real content: real Zod schemas
-#     exist (packages/truth/src/schema/content-types.ts) but no file
-#     under apps/web/src/content/ actually uses them — real content is
-#     validated only by the truth gate's provenance rules (T1-T8) and
-#     TypeScript's structural typing, not this schema layer. This is
-#     schema drift between CONTENT-CONTRACT.md and the shape actually in
-#     use, not a missing-content problem. See RELEASE.md for the two
-#     ways to close it.
+#   - Content schema validation against real content: CLOSED 2026-09-18.
+#     The note below used to say no content file used the Zod layer;
+#     since then every module under apps/web/src/content/ calls
+#     ContentRecordSchema.parse() + evaluate() at module load and throws
+#     on failure (verified in this audit). Remaining (narrower) gap: the
+#     typed domain schemas in packages/truth/src/schema/content-types.ts
+#     (PlayerSchema, FixtureSchema, ...) are still exercised only by
+#     their own unit tests — real content validates against the generic
+#     provenance schema, not the domain schemas. That is a backlog item,
+#     not a silent drift.
 #   - Truth gate against real content: NOT absent — enforced at build
 #     time. Every file under apps/web/src/content/ calls
 #     @ukbt/truth/gate's evaluate() and throws on failure; the `build`

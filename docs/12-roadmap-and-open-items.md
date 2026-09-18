@@ -983,3 +983,58 @@ no new branch — direct continuation):
     read-only advisors in `.opencode/agents/` + `THIRD-PARTY-NOTICES.md`.
     Known harness-policy conflict (ADV-004) proceeds under owner waiver,
     recorded in EV-20260915-001. Zero npm deps, nothing under `apps/web/`.
+
+## Audit batch 2026-09-18 — open items (deferred, recorded per ABSENT != PASS)
+
+Deferred from the 2026-09-18 multi-agent audit + fix loop (fixed the same
+day: mojibake titles x30, unparseable knowledge yaml, JSON-LD escaping,
+island prop parity, motion re-arm on ClientRouter swaps, sw offline catch,
+aria-expanded on <ul>, CSP unsafe-inline -> build-stamped sha256 hashes,
+XFO/frame-ancestors conflict, evidence record EV-20260910-002, gate
+hardening in check-seo/check-security/check-release-path/check-deploy-mapping,
+CI dist artifact sharing + timeouts + fork-PR build fallbacks + gated
+workers-deploy reinstatement, config fixes: allowBuilds/.nvmrc/engines/
+zod hoist/Docker removal/admin gitignore/receipt-schema dedup). Not fixed
+here, deliberately:
+
+1. **Truth-gate registry generation** — source tiers are hand-typed
+   literals inside content modules; nothing reads
+   `artifacts/evidence/*.yaml` at build time (audit P1; the dangling
+   EV-20260910-002 it caused was fixed, but the *mechanism* still
+   self-attests). Fix: generate the registry from evidence yaml
+   (classification -> tier, valid_until -> validUntil) and fail closed on
+   unknown IDs. Also define the T1-T5 taxonomy in knowledge/ (currently
+   defined nowhere).
+2. **Content-trust taint analysis** — `check-content-trust.mjs` is
+   regex-based and single-file: cross-file re-exports escape taint;
+   property-assignment propagation and dynamic import() are untracked.
+   Fix: AST-based pass (the repo's own audit tooling demonstrates the
+   approach).
+3. **Visual comparison gate** — screenshots.spec.ts captures 105 images
+   with zero assertions and compare-geometry.mjs is wired to nothing
+   (audit P1; CI-CONTRACT row amended to PARTIAL this commit). Fix:
+   either implement screenshot/geometry comparison in CI or move capture
+   to a manual artifact job.
+4. **Evidence-expiry enforcement (T4)** — no record sets `validUntil`;
+   the T4 rule is dead in practice until registry generation (item 1)
+   lands.
+5. **Unit coverage for `src/lib/content-trust.ts`** — the trust-class
+   policy map (~230 lines) has no direct test; only the static check
+   script observes it.
+6. **Remaining gate injection suites** — check-ui / check-motion /
+   check-internal-links lack failure-injection tests (check-security and
+   check-seo gained theirs in this batch); check-ui also lacks the
+   `UKBT_CHECK_ROOT` sandbox override.
+7. **Tina visual-edit preview on static hosting** — `?tina-edit=1`
+   requests match static assets (asset-first routing) and never reach the
+   middleware; admin-iframe path now permitted by CSP frame-ancestors
+   (XFO removed this commit) but needs live verification against
+   production before the edit-mode UX can be declared working.
+8. **ogImage prop** — BaseLayout accepts per-page og images but no page
+   passes one; every route shares social-card.jpg.
+9. **Playwright spec hardening** — replace hardcoded `waitForTimeout`s in
+   motion.spec.ts / mobile-ux.spec.ts with `waitForFunction` settle
+   helpers; add WebKit smoke project; upload `test-results/` traces on
+   failure.
+10. **Node engine pinning in CI** — NODE_VERSION '22' floats; pin to the
+    full version in `.nvmrc` (now 22.23.2) and align the workflow.

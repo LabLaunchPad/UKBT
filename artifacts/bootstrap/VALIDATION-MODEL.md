@@ -122,7 +122,7 @@ Automated tooling catches roughly a third of real accessibility defects. So:
 
 ### Receipts
 
-`schemas/receipt.schema.json` (mirrored at `contracts/schemas/`). Required:
+`schemas/receipt.schema.json` (single copy — the byte-identical mirror at `contracts/schemas/` was removed 2026-09-18 as a drift hazard). Required:
 `task_id`, `baseline_sha`, `commands[{command, exit_code}]`, `changed_files`,
 `acceptance[{criterion, result}]`, `verdict`. Receipts live in
 `artifacts/receipts/`. Secrets are redacted before persistence

@@ -5,12 +5,13 @@
 # disagree, escalate (DR-015); never resolve silently.
 
 authority_order:                       # refines CLAUDE.md § Authority
-  - current_repository + fresh_executed_measurements + fresh_live_site_observation
-  - current_approved_contracts
-  - current_evidence_records
-  - governed_visual_artifacts
-  - past_chat_and_historical_decisions
-  - model_memory
+  order:
+    - current_repository + fresh_executed_measurements + fresh_live_site_observation
+    - current_approved_contracts
+    - current_evidence_records
+    - governed_visual_artifacts
+    - past_chat_and_historical_decisions
+    - model_memory
   rule: >
     Historical context is useful, never automatically authoritative. A prior
     chat instruction is not an approval; a previous PASS is not a current
@@ -31,15 +32,16 @@ four_truths:
     - "Model confidence is never authorization."
 
 visual_forensics_order:                # AGENTS.md @ukbt:visual, made operational
-  - dom
-  - computed_styles
-  - box_geometry
-  - layout_relationships
-  - assets
-  - viewport_behavior
-  - interaction_states
-  - screenshots
-  - aesthetic_interpretation
+  order:
+    - dom
+    - computed_styles
+    - box_geometry
+    - layout_relationships
+    - assets
+    - viewport_behavior
+    - interaction_states
+    - screenshots
+    - aesthetic_interpretation
   rule: "Never label a property MEASURED unless it was actually measured."
 
 verification_standard:

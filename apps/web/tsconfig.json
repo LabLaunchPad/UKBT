@@ -4,7 +4,8 @@
     "baseUrl": ".",
     "paths": {
       "@ukbt/truth": ["../../packages/truth/src/index.ts"],
-      "@ukbt/truth/*": ["../../packages/truth/src/*"]
+      "@ukbt/truth/*": ["../../packages/truth/src/*"],
+      "@tina-client": ["../../tina/__generated__/client.ts"]
     }
   },
   "include": [".astro/types.d.ts", "**/*"],

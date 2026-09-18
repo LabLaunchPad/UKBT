@@ -202,9 +202,9 @@ pnpm-workspace.yaml
   packages/*      → @ukbt/truth (Zod schemas, truth gate, tokens)
 
 wrangler.jsonc    → Cloudflare Workers config (repo root, not apps/web/)
-contracts/        → Frozen Markdown contracts (21 files)
+contracts/        → Frozen Markdown contracts (19 files; recount 2026-09-18)
 knowledge/        → Decision substrate (13 files)
-artifacts/        → Evidence and receipts (21 directories)
+artifacts/        → Evidence and receipts (19 directories; recount 2026-09-18)
 scripts/          → Verification scripts
 .opencode/agents/ → 9 UKBT motion advisors (read-only subagents)
 .opencode/skills/ → 9 vendored motion skills + binding UKBT overlays

@@ -28,7 +28,7 @@ const registry = createRegistry([
   {
     id: 'EV-20260910-002',
     tier: 'T2',
-    url: 'artifacts/review/LEGACY-ABOUT-INVENTORY.md',
+    url: 'artifacts/evidence/EV-20260910-002.yaml',
   },
   {
     id: 'EV-20260910-003',
