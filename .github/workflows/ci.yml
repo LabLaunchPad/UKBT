@@ -129,6 +129,10 @@ jobs:
           cache: 'pnpm'
       - run: pnpm install --frozen-lockfile
       - run: pnpm --filter @ukbt/truth tokens:build
+      # Generate the Tina client (tina/__generated__ is gitignored) — the
+      # web app's @tina-client alias (islands visual editing) resolves
+      # against it. Same env-driven step the build job runs.
+      - run: pnpm exec tinacms build --skip-cloud-checks --skip-search-index
       - run: pnpm typecheck
 
   unit-tests:
