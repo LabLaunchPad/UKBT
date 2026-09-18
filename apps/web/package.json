@@ -20,7 +20,7 @@
     "@ukbt/truth": "workspace:*",
     "astro": "^7.2.8",
     "tinacms": "^3.14.0",
-    "zod": "^3.25.76"
+    "zod": "^4.6.5"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
