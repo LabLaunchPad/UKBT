@@ -45,7 +45,7 @@
     "@biomejs/biome": "^1.9.4",
     "@tinacms/cli": "^3.0.0",
     "tinacms": "^3.14.0",
-    "typescript": "^5.7.2",
+    "typescript": "^7.0.2",
     "wrangler": "^4.126.0"
   }
 }
