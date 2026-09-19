@@ -30,7 +30,26 @@ Statuses: `PASS | FAIL | BLOCKED_EXTERNAL`. Classifications:
 3. FAQ `pageHeading/pageEyebrow` rendered outside the faq island → moved inside `FAQSection`; island passes header fields + doc.
 4. `PageBanner`/`AboutStory`/`LeadershipGrid` now derive markers from island `data` on re-render, static string otherwise.
 5. `/admin/*` CSP `font-src`/`img-src` `data:` exception (browser-proven admin bundle blockage).
-6. Parity guard extended 14→25 checks: document ownership, name uniqueness, registry coverage, header-inside-island.
+6. Parity guard extended 14→28 checks: document ownership, name uniqueness, registry coverage, header-inside-island, primary-island semantics.
+7. FAQ single island marked `primary` (admin opens form, not picker); homepage hero stays primary; about multi-island intentionally unmarked.
+8. Perf `cssTotal` 88→96KB re-approval (about-island CSS in island chunk, +5.6KB clean-build measured 93.6KB = CI value) + injection fixture 89→97KB.
+
+## PUBLIC_TINA_ADMIN_ORIGIN forensic verdict (2026-09-19, production evidence)
+
+- Installed `@tinacms/astro@0.7.0` reads the var at build time (`src/internal/admin-origin.ts`):
+  comma-split, trimmed, **no trailing-slash normalization**; absent → `null` → bridge
+  `init(undefined)` → default `window.location.origin` (`bridge/dist/index.js:492`).
+- Bridge uses it as inbound `postMessage` allowlist AND outbound target
+  (`isFromAdmin`: strict `includes(event.origin)` + `event.source === window.parent`).
+- Live production HTML bakes `const adminOrigin = ["https://ukbanglatigers.co.uk/"]`
+  (**trailing slash**, site-wide) → can never equal `event.origin` (origins never
+  carry a slash) → bridge deaf + mute. **This var as configured breaks click-to-edit.**
+- Topology (browser): `/admin/` is top-level same-origin; preview iframe will be
+  same-origin. Same-origin does NOT require the var (default covers it); a wrong
+  value actively breaks editing. Classification: **INCORRECT → NORMALIZE**
+  (strip to bare `https://ukbanglatigers.co.uk`). NEVER `https://app.tina.io`.
+  `GITHUB_TOKEN` (Cloudflare): zero consumers in code/wrangler/CI-build → UNUSED;
+  leave in place, owner may remove after dashboard confirmation.
 
 ## First remaining gap
 
