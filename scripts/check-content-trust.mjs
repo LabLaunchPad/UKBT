@@ -90,7 +90,7 @@ function taintedInFile(src) {
   const tainted = new Set();
   const isTinaOrigin = (from) =>
     from.includes('tina/loaders') ||
-    /content\/(faq|homepage|site)\//.test(from);
+    /content\/(faq|homepage|about|site)\//.test(from);
   for (const m of src.matchAll(
     /import\s*\{([^}]*)\}\s*from\s*['"]([^'"]+)['"]/g,
   )) {

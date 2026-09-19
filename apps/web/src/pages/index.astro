@@ -48,7 +48,7 @@ const [mainEvent, ...otherEvents] = homepage.upcomingTournaments;
 // WhyChooseUs reasons from Tina CMS — client can edit these via admin.
 // Static JSON carries no _content_source by design; markers populate on
 // bridge island re-render, where reasons come from the fetched Tina doc.
-const reasons = tinaHomepage.whyChooseUs.map((r: { title: string; body: string }) => ({
+const reasons = (tinaHomepage.whyChooseUs || []).map((r: { title: string; body: string }) => ({
   title: r.title,
   body: r.body,
 }));
@@ -105,7 +105,7 @@ const structuredData = homepageGraph({
 
     <Section>
       <TinaIsland name="aboutSection" wrapper={{ tag: 'div', className: 'ukbt-club-intro-island' }}>
-        <ClubIntro lede={tinaHomepage.clubIntroLede} founded={homepage.founded} data={homepageData} />
+        <ClubIntro lede={tinaHomepage.clubIntroLede || homepage.taglineShort} founded={homepage.founded} data={homepageData} />
       </TinaIsland>
     </Section>
 

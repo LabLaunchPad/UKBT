@@ -30,8 +30,10 @@ export const HomepageSchema = z.object({
     .refine((v) => v === undefined || isSiteRelativeUrl(v), {
       message: 'secondaryCtaLink must be a site-relative URL',
     }),
-  clubIntroLede: z.string(),
-  whyChooseUs: z.array(z.object({ title: z.string(), body: z.string() })),
+  clubIntroLede: z.string().optional(),
+  whyChooseUs: z
+    .array(z.object({ title: z.string(), body: z.string() }))
+    .optional(),
 });
 
 const FaqItemSchema = z.object({
@@ -43,7 +45,20 @@ const FaqItemSchema = z.object({
 export const FaqSchema = z.object({
   pageHeading: z.string(),
   pageEyebrow: z.string().optional(),
-  items: z.array(FaqItemSchema),
+  items: z.array(FaqItemSchema).optional(),
+});
+
+// About page (apps/web/content/about/about.json). Mirrors tina/config.ts:
+// only heroSubline is required; everything else is optional. Used by the
+// aboutHero/aboutStory/aboutLeadership islands via validateWithPreserve.
+export const AboutSchema = z.object({
+  heroSubline: z.string(),
+  storyBody: z.unknown().optional(),
+  aboutImage: z.string().optional(),
+  aboutImageAlt: z.string().optional(),
+  leadershipIntro: z.string().optional(),
+  managementImage: z.string().optional(),
+  managementImageAlt: z.string().optional(),
 });
 
 export const SiteSettingsSchema = z.object({
@@ -72,6 +87,7 @@ export const SiteSettingsSchema = z.object({
 export type HomepageTina = z.infer<typeof HomepageSchema>;
 export type FaqItemTina = z.infer<typeof FaqItemSchema>;
 export type FaqTina = z.infer<typeof FaqSchema>;
+export type AboutTina = z.infer<typeof AboutSchema>;
 export type SiteSettingsTina = z.infer<typeof SiteSettingsSchema>;
 
 export function validateWithPreserve<T>(

@@ -94,6 +94,22 @@ Statuses: `PASS | FAIL | BLOCKED_EXTERNAL`. Classifications:
   forbidden). Pre-save gate otherwise all PASS. Verdict pending Save:
   `HUMAN_ACTION_REQUIRED`, not `VERIFIED_E2E`.
 
+## Contract-alignment repair (2026-09-19, PR: Tina schema/Zod/trust)
+
+- `content-trust.ts` classified `about.heroSubline/storyBody/leadershipIntro`
+  DORMANT while `about.astro` wires them with live markers (stale since
+  island repair). Reclassified to `PRESENTATION_COPY` with true sink notes;
+  `siteSettings.social*` notes corrected (sunk in Footer with truth
+  fallback). Image fields stay DORMANT (genuinely unwired; owner decision).
+- Zod/schema mismatches fixed: `clubIntroLede`, `whyChooseUs`, faq `items`
+  optional (matching `tina/config.ts`); new `AboutSchema` + island-level
+  `validateWithPreserve` (about path previously unvalidated).
+- `check-content-trust.mjs` taint regex now covers `content/about/`
+  (latent hole: direct about-JSON imports were untainted).
+- Automation-exhaustion proof for Save: no TinaCloud/Cloudflare MCP, no
+  env credentials, `/admin/` shows TinaCloud login wall, island endpoint
+  rejects unauthenticated probes (GET/POST-empty 404, fails closed).
+
 ## First remaining gap (superseded — see Ruleset verification + E2E closure status)
 
 Previously `RULESET_BYPASS_VERIFIED` blocked on unknown App identity. Since

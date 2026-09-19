@@ -11,6 +11,7 @@ import { about as aboutTruth } from '../../content/about-data';
 import { homepage } from '../../content/homepage-data';
 import { getAbout, getFaq, getHomepage } from './data';
 import {
+  AboutSchema,
   FaqSchema,
   HomepageSchema,
   tinaFaq as tinaFaqLocal,
@@ -38,6 +39,10 @@ async function fetchAboutDoc(): Promise<Record<string, unknown>> {
     res?.data as unknown as { about?: Record<string, unknown> | undefined }
   )?.about;
   if (doc && Object.keys(doc).length > 0) {
+    const validated = validateWithPreserve(AboutSchema, doc);
+    if (validated.success) {
+      return validated.original as Record<string, unknown>;
+    }
     return doc;
   }
   throw new Error('Failed to fetch about data for island');
