@@ -7,7 +7,11 @@
 // Stacki compat (css 56→72), Tina (html 64→72, js 32→48), the Cloudflare
 // adapter (css 72→80) and Tina island components (css 80→88, 2026-09-19:
 // FAQSection island extraction moves FAQ styles into the shared Tina
-// island chunk; +5.2KB measured, re-approved with 2.8KB headroom) — see
+// island chunk; +5.2KB measured, re-approved with 2.8KB headroom; css
+// 88→96, 2026-09-19: aboutHero/aboutStory/aboutLeadership island
+// registration ships those components' scoped styles in the island chunk;
+// +5.6KB measured clean-build (93.6KB, reproduces CI exactly),
+// re-approved with 2.4KB headroom) — see
 // docs/12-roadmap-and-open-items.md §2.13. Any further numeric change is
 // a re-approval event, not a drive-by edit. Warnings flag optimization
 // candidates.
@@ -31,7 +35,7 @@ const distDir = existsSync(distDirClient) ? distDirClient : distDirLegacy;
 const KB = 1024;
 const BUDGETS = {
   htmlPerPage: 72 * KB,
-  cssTotal: 88 * KB,
+  cssTotal: 96 * KB,
   jsTotal: 48 * KB,
   singleRaster: 350 * KB,
   singleRasterWarn: 300 * KB,
@@ -112,7 +116,7 @@ for (const f of distHtml('**/*.css')) {
 for (const f of distHtml('**/*.js')) {
   js += statSync(join(distDir, f)).size;
 }
-if (css > BUDGETS.cssTotal) fail('css-weight', `${kb(css)} > 88KB`);
+if (css > BUDGETS.cssTotal) fail('css-weight', `${kb(css)} > 96KB`);
 if (js > BUDGETS.jsTotal) fail('js-weight', `${kb(js)} > 48KB`);
 
 // LCP rule: the homepage hero image must keep fetchpriority="high".
