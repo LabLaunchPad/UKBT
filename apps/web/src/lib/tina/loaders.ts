@@ -38,7 +38,7 @@ export const HomepageSchema = z.object({
 
 const FaqItemSchema = z.object({
   question: z.string(),
-  answer: z.unknown(),
+  answer: z.string(),
   visible: z.boolean().optional(),
 });
 

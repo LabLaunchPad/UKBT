@@ -2,12 +2,11 @@
 // FAQSection — Tina island component for the FAQ list.
 // ponytail: header lives inside the island so heading/eyebrow edits live-update.
 import SectionHeader from './SectionHeader.astro';
-import TinaMarkdown from '@tinacms/astro/TinaMarkdown.astro';
-import { tinaField, type TinaRichTextContent } from '@tinacms/astro';
+import { tinaField } from '@tinacms/astro';
 
 interface FaqItem {
   question: string;
-  answer: TinaRichTextContent;
+  answer: string;
   visible?: boolean;
   _content_source?: unknown;
   [key: string]: unknown;
@@ -22,14 +21,6 @@ interface Props {
 }
 const { items, pageHeading, pageEyebrow, data } = Astro.props;
 const visibleItems = items.filter((item) => item.visible !== false);
-// ponytail: unwrap Tina invalid_markdown wrapper caused by markdown parser on stored Plate JSON (faq.json answer is {type:root} but parser expects markdown string → value.replace failure)
-function normalizeRichText(content: any) {
-  if (!content || typeof content !== 'object') return content;
-  if (content.type === 'root' && Array.isArray(content.children) && content.children.length === 1 && content.children[0]?.type === 'invalid_markdown' && content.children[0]?.value) {
-    return content.children[0].value;
-  }
-  return content;
-}
 ---
 
 <div class="ukbt-faq-list">
@@ -45,7 +36,7 @@ function normalizeRichText(content: any) {
       visibleItems.map((item) => (
       <details class="ukbt-faq-item">
         <summary class="ukbt-faq-question" data-tina-field={tinaField(item, "question")}>{item.question}</summary>
-        <div class="ukbt-faq-answer" data-tina-field={tinaField(item, "answer")}><TinaMarkdown content={normalizeRichText(item.answer)} /></div>
+        <div class="ukbt-faq-answer" data-tina-field={tinaField(item, "answer")}><p>{item.answer}</p></div>
       </details>
     ))
   ) : (
