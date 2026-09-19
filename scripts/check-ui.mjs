@@ -137,16 +137,30 @@ try {
   fail('cta-source', 'index.html unreadable');
 }
 
-// 6. FAQ sink wiring (REM-001): CMS answers must pass through the escaping
-// renderer; no new raw-HTML sinks may appear unnoticed.
+// 6. FAQ sink wiring (REM-001, amended for Tina visual editing): CMS answers
+// must pass through an approved escaping renderer — either the bespoke
+// renderFaqAnswer(item.answer) or Tina's supported <TinaMarkdown
+// content={item.answer}> (page and island share FAQSection.astro, so the
+// check covers both files). DOM-level no-<script> guarantees stay in
+// apps/web/tests/visual/content-trust.spec.ts. No new raw-HTML sinks may
+// appear unnoticed.
 const pagesDir = join(root, 'apps/web/src/pages');
 const layoutsDir = join(root, 'apps/web/src/layouts');
 try {
   const faq = readFileSync(join(pagesDir, 'faq.astro'), 'utf8');
-  if (!/renderFaqAnswer\(item\.answer\)/.test(faq)) {
+  let faqSection = '';
+  try {
+    faqSection = readFileSync(join(compDir, 'FAQSection.astro'), 'utf8');
+  } catch {
+    faqSection = '';
+  }
+  const combined = `${faq}\n${faqSection}`;
+  const viaLegacy = /renderFaqAnswer\(item\.answer\)/.test(combined);
+  const viaTina = /<TinaMarkdown\s+content=\{item\.answer/.test(combined);
+  if (!viaLegacy && !viaTina) {
     fail(
       'faq-sink-wiring',
-      'faq.astro no longer routes answers through renderFaqAnswer',
+      'FAQ answers route through neither renderFaqAnswer nor TinaMarkdown',
     );
   }
 } catch {
@@ -159,10 +173,14 @@ for (const dir of [pagesDir, compDir, layoutsDir]) {
     setHtmlUses += (src.match(/set:html=\{/g) ?? []).length;
   }
 }
-if (setHtmlUses !== 2) {
+// BaseLayout JSON-LD is the only raw sink in our source. The former FAQ
+// set:html was replaced by the TinaMarkdown component sink (escaping
+// renderer owned by @tinacms/astro; its internal set:html lives in the
+// package, not in this repo, so the source count drops 2 -> 1 by design).
+if (setHtmlUses !== 1) {
   fail(
     'raw-sink-count',
-    `expected 2 set:html uses (faq + BaseLayout), found ${setHtmlUses}`,
+    `expected 1 set:html use (BaseLayout JSON-LD), found ${setHtmlUses}`,
   );
 }
 

@@ -6,9 +6,6 @@ import homepageData from '../../../content/homepage/homepage.json' with {
 import siteData from '../../../content/site/siteSettings.json' with {
   type: 'json',
 };
-// REM-003: CMS-controlled navigation values are validated against the URL
-// allowlist at build time (fail-closed: a violation throws and breaks the
-// build). UI-side Tina checks are client-only and never re-enforced here.
 import {
   isEmailValue,
   isHttpsUrl,
@@ -16,7 +13,7 @@ import {
   isTelUrl,
 } from '../allowed-urls';
 
-const HomepageSchema = z.object({
+export const HomepageSchema = z.object({
   eyebrow: z.string().optional(),
   headline: z.string(),
   tagline: z.string(),
@@ -43,13 +40,13 @@ const FaqItemSchema = z.object({
   visible: z.boolean(),
 });
 
-const FaqSchema = z.object({
+export const FaqSchema = z.object({
   pageHeading: z.string(),
   pageEyebrow: z.string().optional(),
   items: z.array(FaqItemSchema),
 });
 
-const SiteSettingsSchema = z.object({
+export const SiteSettingsSchema = z.object({
   siteTaglineShort: z.string(),
   footerTagline: z.string().optional(),
   contact: z.object({
@@ -77,6 +74,41 @@ export type FaqItemTina = z.infer<typeof FaqItemSchema>;
 export type FaqTina = z.infer<typeof FaqSchema>;
 export type SiteSettingsTina = z.infer<typeof SiteSettingsSchema>;
 
-export const tinaHomepage = HomepageSchema.parse(homepageData);
-export const tinaFaq = FaqSchema.parse(faqData);
-export const tinaSite = SiteSettingsSchema.parse(siteData);
+export function validateWithPreserve<T>(
+  schema: z.ZodSchema<T>,
+  data: unknown,
+):
+  | { success: true; data: T; original: unknown }
+  | { success: false; error: z.ZodError } {
+  const result = schema.safeParse(data);
+  if (result.success) {
+    return { success: true, data: result.data, original: data };
+  }
+  return { success: false, error: result.error };
+}
+
+const _tinaHomepage = HomepageSchema.safeParse(homepageData);
+const _tinaFaq = FaqSchema.safeParse(faqData);
+const _tinaSite = SiteSettingsSchema.safeParse(siteData);
+
+export function validateOrThrow<T>(
+  schema: z.ZodSchema<T>,
+  data: unknown,
+  name: string,
+): T {
+  const result = schema.safeParse(data);
+  if (result.success) return result.data;
+  throw new Error(`${name} data validation failed`);
+}
+
+export const tinaHomepage = validateOrThrow(
+  HomepageSchema,
+  homepageData,
+  'Homepage',
+);
+export const tinaFaq = validateOrThrow(FaqSchema, faqData, 'FAQ');
+export const tinaSite = validateOrThrow(
+  SiteSettingsSchema,
+  siteData,
+  'Site settings',
+);
