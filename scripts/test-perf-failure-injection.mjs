@@ -58,7 +58,7 @@ const cases = [
   { name: 'good-fixture-passes', setup: () => {}, expectPass: true },
   {
     name: 'css-over-budget',
-    setup: (w) => w('big.css', 'x'.repeat(81 * 1024)),
+    setup: (w) => w('big.css', 'x'.repeat(89 * 1024)),
     expectPass: false,
     expectRule: 'css-weight',
   },
