@@ -32,7 +32,7 @@ test('frame-ancestors CSP header is present (not X-Frame-Options DENY)', async (
 }) => {
   await page.goto('/admin/');
   const headers = await page.request.fetch('/admin/').then((r) => r.headers());
-  const csp = headers.get('content-security-policy') || '';
+  const csp = (headers['content-security-policy'] as string) || '';
   expect(csp).toContain('frame-ancestors');
   expect(csp).toContain("'self'");
 });

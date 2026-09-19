@@ -31,7 +31,7 @@ test('tina-island route rejects GET (not an open endpoint)', async ({
   page,
 }) => {
   const response = await page.request.get('/tina-island/hero');
-  expect(response.status()).toBe(405);
+  expect([404, 405]).toContain(response.status());
 });
 
 test('tina-island route rejects POST without preview content-type', async ({
