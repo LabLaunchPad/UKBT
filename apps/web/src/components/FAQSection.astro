@@ -22,6 +22,14 @@ interface Props {
 }
 const { items, pageHeading, pageEyebrow, data } = Astro.props;
 const visibleItems = items.filter((item) => item.visible !== false);
+// ponytail: unwrap Tina invalid_markdown wrapper caused by markdown parser on stored Plate JSON (faq.json answer is {type:root} but parser expects markdown string → value.replace failure)
+function normalizeRichText(content: any) {
+  if (!content || typeof content !== 'object') return content;
+  if (content.type === 'root' && Array.isArray(content.children) && content.children.length === 1 && content.children[0]?.type === 'invalid_markdown' && content.children[0]?.value) {
+    return content.children[0].value;
+  }
+  return content;
+}
 ---
 
 <div class="ukbt-faq-list">
@@ -37,7 +45,7 @@ const visibleItems = items.filter((item) => item.visible !== false);
       visibleItems.map((item) => (
       <details class="ukbt-faq-item">
         <summary class="ukbt-faq-question" data-tina-field={tinaField(item, "question")}>{item.question}</summary>
-        <div class="ukbt-faq-answer" data-tina-field={tinaField(item, "answer")}><TinaMarkdown content={item.answer} /></div>
+        <div class="ukbt-faq-answer" data-tina-field={tinaField(item, "answer")}><TinaMarkdown content={normalizeRichText(item.answer)} /></div>
       </details>
     ))
   ) : (
