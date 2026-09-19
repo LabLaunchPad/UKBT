@@ -1,7 +1,22 @@
 # TinaCloud final commissioning — evidence ledger (2026-09-19)
 
-Base: `main = be54425` (PR #90 island/CSP/parity/perf fixes as `47bfea8`, PR #91 CSP
-revert as `be54425`; both merged via normal protected path, all required checks green).
+Base: `main = 799a628` (PR #90 island/CSP/parity/perf fixes as `47bfea8`, PR #91 CSP
+revert as `be54425`, PR #92 ledger close as `799a628`; all merged via normal
+protected path, all required checks green).
+
+## Final pass (2026-09-19, read-mostly)
+
+- `HEAD == origin/main == 799a628`, tree clean (DIRECT, PASS).
+- `SESSION_KV = PASS`: `wrangler.jsonc` at HEAD carries exactly one `kv_namespaces`
+  entry (`SESSION` → `3435716ffa0e4616b01e2b0faf96ddd5`); no duplicate binding;
+  runtime healthy; empty namespace acceptable per commissioning brief.
+- App discovery tool coverage: available GitHub MCP tool set exposes no
+  installation/App-identity endpoint; `gh` PAT probes already returned 403/401
+  twice with zero Tina commits in history → `GITHUB_APP_VERIFIED = HUMAN_REQUIRED`
+  (no re-probe; tool set unchanged, no new evidence).
+- Pre-save gate: repo/CF/prod layers PASS with direct evidence; remaining gates
+  (`TINACLOUD_PROJECT_VERIFIED`, `SINGLE_REPO_PROJECT`, `EDITORIAL_WORKFLOW_OFF`,
+  `GITHUB_APP_VERIFIED`, `RULESET_VERIFIED`, legacy transition) are human/external.
 Statuses: `PASS | FAIL | BLOCKED_EXTERNAL`. Classifications:
 `DIRECT | REPO | CI | PRODUCTION | EXTERNAL | INFERRED | PREDICTED | UNVERIFIED`.
 
