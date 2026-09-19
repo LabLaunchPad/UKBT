@@ -182,6 +182,7 @@ export default defineConfig({
             label: 'Club story — paragraphs',
             description: 'Main story paragraphs. Keep 2–3 short paragraphs; avoid inventing facts.',
             isBody: false,
+            parser: { type: 'slatejson' },
           },
           {
             type: 'image',
@@ -265,6 +266,7 @@ export default defineConfig({
                 name: 'answer',
                 label: 'Answer',
                 required: true,
+                parser: { type: 'slatejson' },
               },
               {
                 type: 'boolean',
