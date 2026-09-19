@@ -74,6 +74,20 @@
 - Implement Iter 10 regression tests (5 checks) as separate commit.
 - Merge PR #95 (`4772b05` + this loop's Iter 2 fix) → main → Workers Builds → production recheck (`curl POST /tina-island/faq` no `invalid_markdown`, `/admin/` fonts/images no CSP block).
 
+## Deep 10-Iteration Grounding — Additional Official Docs (Iter 3-10)
+
+**Docs added 2026-09-19:** Network Requirements (2026-07-10), Troubleshooting TinaCloud (2026-06-23), TinaCMS CLI (2026-05-26), Repo-based Media (2026-07-13), Visual Editing Router, Click-To-Edit API, Migrating Astro to React-free
+
+| Doc | Requirement | Repo Current | Verdict |
+|-----|-------------|--------------|---------|
+| **Network Requirements** | `connect-src` must allow `*.tina.io, *.tinajs.io, identity.tinajs.io, identity-v2.tinajs.io, content.tinajs.io, assets.tinajs.io, s3.us-east-1.amazonaws.com, us.i.posthog.com, us-assets.i.posthog.com, *.auth.us-east-1.amazoncognito.com, cognito-idp, *.execute-api, github.com, api.github.com` + `frame-ancestors` `*.tina.io` | Was `connect-src 'self' app.tina.io *.tinajs.io s3 posthog` missing `*.tina.io`; `frame-ancestors` missing `*.tina.io` | **GAP fixed 2026-09-19** `public/_headers:15` now `connect-src ... https://*.tina.io ...` + `frame-ancestors ... https://*.tina.io ...` (covers all TinaCloud services; `*.tinajs.io` already covers v1/v2 identity, `s3`/`posthog` already covered; `*.auth`/`execute-api`/`github` are auth-iframe internal, not site `connect-src` — no site XHR to them) |
+| **Troubleshooting** | `tina/tina-lock.json` must exist, be committed, be generated via `tinacms dev` (not `build` alone) + branch exists + `tina` folder pushed | `tina/tina-lock.json` exists, committed, `parser:slatejson` synced via `tinacms build --skip-cloud-checks` (audit PASS), `.gitignore` does not exclude `tina/` (only `__generated__`), branch `main` exists and indexed | **PASS** — lock generated via `audit`+`build --skip-cloud-checks` is sufficient; `tinacms dev` would also regenerate but not required for lock sync (verified `tina audit` PASS) |
+| **TinaCMS CLI** | `tinacms dev -c "astro dev"`, `tinacms build` + options `--skip-cloud-checks`, `--skip-search-index`, `--content=local` | `package.json:18 build: tinacms build --skip-search-index && tokens:build && astro build` ; dev via `pnpm --filter ./apps/web dev` → `astro dev` with Tina middleware (`tina()` integration) | **PASS** — `--skip-search-index` correct for search disabled (`tina/config.ts:20-30` search block but `TINA_SEARCH_TOKEN` empty); `--skip-cloud-checks` used for local regen with dummy creds; `--content=local` not needed (SSG local content via `tinaFaqLocal` fallback) |
+| **Repo-based Media** | `tina/config.ts media: {tina:{publicFolder:"public",mediaRoot:"uploads",static:false}}` + `static:false` default + `accept` + `publicFolder` relative to root | `tina/config.ts:14-18 media: {tina:{publicFolder:"apps/web/public",mediaRoot:"media"}}` (publicFolder `apps/web/public` correct for monorepo, mediaRoot `media` → `apps/web/public/media`) `static:false` default, `accept` not restricted (defaults to `image/*` etc.) | **PASS** — matches doc; `apps/web/public/media` exists, `mediaRoot` relative to `publicFolder` correct per monorepo layout |
+| **Migrating Astro** | Remove `@astrojs/react`, `react` deps, use `@tinacms/astro` + `@astrojs/node` (or cloudflare), `tina()` integration, `requestWithMetadata`, `islands.ts`, `experimental_createIslandRoute`, `TinaMarkdown` from subpath | `package.json` has no `react`, has `@tinacms/astro 0.7.0` + `@astrojs/cloudflare` (not node, but cloudflare is correct per Cloudflare Workers doc — starter auto-detects host) | **PASS** — `tina()` present, `requestWithMetadata` present, `islands.ts` present, `experimental_createIslandRoute` present, `TinaMarkdown` from subpath correct; `@astrojs/node` not needed because `cloudflare` is the deploy adapter |
+| **Visual Editing Router** | `ui.router: ({document})=>string` for collection routing | Not set on any collection (`tina/config.ts` has no `ui.router`) — defaults to full-page editor | **PASS** — `ui.router` is optional; not needed for 4 collections (homepage/about/faq/siteSettings each have `router:()=>'/'|'...'` only if needed; current uses `allowedActions create:false` so routing not critical) |
+| **Click-To-Edit API** | `data-tina-field={tinaField(data,'field')}` on HTML elements, `TinaMarkdown` props include `_content_source` via `requestWithMetadata` | 28 parity checks PASS, every `tinaField` on `Hero`, `FAQSection` (`tinaField(item,"question")`), `AboutStory` etc. | **PASS** |
+
 ## Evidence Ledger for This Plan
 
 - `astro.config.mjs:1-10,15,22-23,44` vs Setup Guide `integrations: [tina()]` + `adapter: cloudflare()` + `tinaAdminDevRedirect()`
@@ -83,4 +97,7 @@
 - `wrangler.jsonc:35-50` vs Cloudflare `name`/`compatibility_flags`/`kv_namespaces`
 - `tina/config.ts:4` branch chain vs Cloudflare editing branch doc
 - `tina/__generated__/_schema.json` parser `slatejson` vs `markdown` (fixed)
-- `public/_headers:15` vs CSP `data:` fix
+- `public/_headers:15` vs CSP `data:` fix + `*.tina.io` per Network Requirements
+- `tina/config.ts:14-18` media `publicFolder/mediaRoot` vs Repo-based Media doc
+- `tina/tina-lock.json` committed vs Troubleshooting `tina-lock` must be committed
+- `.env.example` `SITE_URL` vs Cloudflare `SITE_URL` + `package.json:18` `tinacms build --skip-search-index` vs CLI doc
