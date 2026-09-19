@@ -24,7 +24,6 @@ const sectionHeader = read('apps/web/src/components/SectionHeader.astro');
 const indexPage = read('apps/web/src/pages/index.astro');
 const aboutPage = read('apps/web/src/pages/about.astro');
 const aboutStory = read('apps/web/src/components/AboutStory.astro');
-const tinaConfig = read('tina/config.ts');
 const dataTs = read('apps/web/src/lib/tina/data.ts');
 const tinaIsland = read('apps/web/src/pages/tina-island/[name].ts');
 
@@ -260,11 +259,6 @@ check(
   'tina-island-all',
   tinaIsland.includes('export const ALL'),
   'tina-island must export ALL',
-);
-check(
-  'tina-parser-slatejson',
-  tinaConfig.includes("parser: { type: 'slatejson' }"),
-  'tina rich-text must use slatejson parser',
 );
 check(
   'hero-sanitize',

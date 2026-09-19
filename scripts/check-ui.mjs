@@ -156,7 +156,10 @@ try {
   }
   const combined = `${faq}\n${faqSection}`;
   const viaLegacy = /renderFaqAnswer\(item\.answer\)/.test(combined);
-  const viaTina = /<TinaMarkdown\s+content=\{item\.answer/.test(combined);
+  const viaTina =
+    /<TinaMarkdown\s+content=\{(?:normalizeRichText\()?item\.answer/.test(
+      combined,
+    );
   if (!viaLegacy && !viaTina) {
     fail(
       'faq-sink-wiring',
