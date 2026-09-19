@@ -1,5 +1,7 @@
 ---
 // FAQSection — Tina island component for the FAQ list.
+// ponytail: header lives inside the island so heading/eyebrow edits live-update.
+import SectionHeader from './SectionHeader.astro';
 import TinaMarkdown from '@tinacms/astro/TinaMarkdown.astro';
 import { tinaField, type TinaRichTextContent } from '@tinacms/astro';
 
@@ -12,12 +14,25 @@ interface FaqItem {
 }
 interface Props {
   items: FaqItem[];
+  /** Page heading/eyebrow — rendered inside the island for live re-render. */
+  pageHeading?: string;
+  pageEyebrow?: string;
+  /** Tina metadata-bearing doc for header markers. */
+  data?: Record<string, unknown>;
 }
-const { items } = Astro.props;
+const { items, pageHeading, pageEyebrow, data } = Astro.props;
 const visibleItems = items.filter((item) => item.visible !== false);
 ---
 
 <div class="ukbt-faq-list">
+  {pageHeading && (
+    <SectionHeader
+      eyebrow={pageEyebrow || 'FAQ'}
+      heading={pageHeading}
+      eyebrowTinaField={data ? tinaField(data, 'pageEyebrow') : undefined}
+      headingTinaField={data ? tinaField(data, 'pageHeading') : undefined}
+    />
+  )}
   {visibleItems.length > 0 ? (
       visibleItems.map((item) => (
       <details class="ukbt-faq-item">

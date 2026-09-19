@@ -21,6 +21,8 @@ const whyChooseUs = read('apps/web/src/components/WhyChooseUs.astro');
 const clubIntro = read('apps/web/src/components/ClubIntro.astro');
 const button = read('apps/web/src/components/Button.astro');
 const sectionHeader = read('apps/web/src/components/SectionHeader.astro');
+const indexPage = read('apps/web/src/pages/index.astro');
+const aboutPage = read('apps/web/src/pages/about.astro');
 
 // 1. Primary CTA link must map to primaryCtaLink, not the label field.
 check(
@@ -107,9 +109,13 @@ check(
 check(
   'faq-page-heading-marker',
   faqPage.includes('pageHeading') &&
-    /headingTinaField|tinaField\(tinaFaq,\s*["']pageHeading["']\)/.test(
+    (/headingTinaField|tinaField\(tinaFaq,\s*["']pageHeading["']\)/.test(
       faqPage,
-    ),
+    ) ||
+      // header-inside-island: page passes doc + heading into FAQSection,
+      // which derives markers from island data (see check 12).
+      (faqPage.includes('data={tinaFaq}') &&
+        faqSection.includes('pageHeading'))),
   'faq.astro must map pageHeading to a Tina marker',
 );
 
@@ -140,6 +146,72 @@ check(
   clubIntro.includes('tinaField(data, "clubIntroLede")'),
   'ClubIntro must map clubIntroLede via tinaField(data, ...)',
 );
+
+// 10. Island/document ownership: aboutSection serves the homepage ClubIntro,
+// so it must fetch the homepage doc (owner of clubIntroLede), never the about doc.
+check(
+  'island-aboutSection-fetches-homepage',
+  /aboutSection[\s\S]*?fetch:\s*fetchHomepageDoc/.test(islands),
+  'aboutSection must fetchHomepageDoc (homepage owns clubIntroLede)',
+);
+check(
+  'island-aboutSection-lede-field',
+  /aboutSection[\s\S]*?d\.clubIntroLede/.test(islands),
+  'aboutSection lede must come from d.clubIntroLede',
+);
+
+// 11. Island names must be unique per page region: about page uses aboutHero,
+// never collides with the homepage aboutSection.
+check(
+  'about-page-no-aboutSection-collision',
+  !aboutPage.includes('name="aboutSection"'),
+  'about.astro must not use island name aboutSection (homepage owns it)',
+);
+for (const name of ['aboutHero', 'aboutStory', 'aboutLeadership']) {
+  check(
+    `island-registered-${name}`,
+    new RegExp(`${name}:\\s*\\{`).test(islands),
+    `islands.ts must register ${name} (about.astro consumes it)`,
+  );
+  check(
+    `page-uses-${name}`,
+    aboutPage.includes(`name="${name}"`),
+    `about.astro must consume island ${name}`,
+  );
+}
+
+// 12. FAQ header must live inside the faq island for live re-render.
+check(
+  'faq-page-no-outside-header',
+  !/<SectionHeader[\s\S]*?\/>[\s\S]*?<TinaIsland name="faq"/.test(faqPage),
+  'faq.astro SectionHeader must not sit outside the faq TinaIsland',
+);
+check(
+  'island-faq-passes-header',
+  /faq:[\s\S]*?propsFromData[\s\S]*?pageHeading/.test(islands) &&
+    /faq:[\s\S]*?propsFromData[\s\S]*?data:\s*d\b/.test(islands),
+  'faq propsFromData must pass pageHeading (+data) for in-island header',
+);
+check(
+  'faqsection-renders-header-inside',
+  faqSection.includes('SectionHeader') && faqSection.includes('pageHeading'),
+  'FAQSection must render the header inside the island',
+);
+
+// 13. Every TinaIsland name consumed by a page must exist in the registry.
+for (const [label, src] of [
+  ['index.astro', indexPage],
+  ['faq.astro', faqPage],
+  ['about.astro', aboutPage],
+]) {
+  for (const m of src.matchAll(/<TinaIsland name="([^"]+)"/g)) {
+    check(
+      `island-registered-for-${label}-${m[1]}`,
+      new RegExp(`${m[1]}:\\s*\\{`).test(islands),
+      `${label} consumes island "${m[1]}" which must be registered`,
+    );
+  }
+}
 
 if (failures.length > 0) {
   console.error(

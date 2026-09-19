@@ -46,6 +46,8 @@ import homepageData from '../../content/homepage/homepage.json' with { type: 'js
 const [mainEvent, ...otherEvents] = homepage.upcomingTournaments;
 
 // WhyChooseUs reasons from Tina CMS — client can edit these via admin.
+// Static JSON carries no _content_source by design; markers populate on
+// bridge island re-render, where reasons come from the fetched Tina doc.
 const reasons = tinaHomepage.whyChooseUs.map((r: { title: string; body: string }) => ({
   title: r.title,
   body: r.body,

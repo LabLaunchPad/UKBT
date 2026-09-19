@@ -1,9 +1,13 @@
 import type { IslandConfig } from '@tinacms/astro/experimental';
 import type { AstroComponentFactory } from 'astro/runtime/server/index.js';
+import AboutStory from '../../components/AboutStory.astro';
 import ClubIntroComponent from '../../components/ClubIntro.astro';
 import FAQSection from '../../components/FAQSection.astro';
 import HeroComponent from '../../components/Hero.astro';
+import LeadershipGrid from '../../components/LeadershipGrid.astro';
+import PageBanner from '../../components/PageBanner.astro';
 import WhyChooseUsComponent from '../../components/WhyChooseUs.astro';
+import { about as aboutTruth } from '../../content/about-data';
 import { homepage } from '../../content/homepage-data';
 import { getAbout, getFaq, getHomepage } from './data';
 import {
@@ -83,14 +87,73 @@ export const islands = {
     },
   },
   aboutSection: {
-    fetch: fetchAboutDoc,
+    // Homepage ClubIntro — owns homepage.clubIntroLede (NOT the about doc).
+    // ponytail: single-purpose fetch; about page uses aboutHero/aboutStory/aboutLeadership.
+    fetch: fetchHomepageDoc,
     component: ClubIntroComponent as unknown as AstroComponentFactory,
     wrapper: { tag: 'div', className: 'ukbt-club-intro-island' },
     propsFromData: (data: unknown, _params: URLSearchParams) => {
       const d = data as Record<string, unknown>;
       return {
-        lede: d.heroSubline || homepage.taglineShort,
+        lede: d.clubIntroLede || homepage.taglineShort,
         founded: homepage.founded,
+        data: d,
+      };
+    },
+  },
+  aboutHero: {
+    // About page banner — owns about.heroSubline.
+    fetch: fetchAboutDoc,
+    component: PageBanner as unknown as AstroComponentFactory,
+    wrapper: { tag: 'div', className: 'ukbt-about-hero-island' },
+    propsFromData: (data: unknown, _params: URLSearchParams) => {
+      const d = data as Record<string, unknown>;
+      return {
+        title: 'About Us',
+        crumbs: [{ label: 'Home', href: '/' }, { label: 'About Us' }],
+        lede: d.heroSubline,
+        background: {
+          src: '/media/gallery-06.webp',
+          alt: 'UK Bangla Tigers squad celebrating with a trophy',
+          width: 1400,
+          height: 933,
+        },
+        data: d,
+      };
+    },
+  },
+  aboutStory: {
+    fetch: fetchAboutDoc,
+    component: AboutStory as unknown as AstroComponentFactory,
+    wrapper: { tag: 'div', className: 'ukbt-about-story-island' },
+    propsFromData: (data: unknown, _params: URLSearchParams) => {
+      const d = data as Record<string, unknown>;
+      return {
+        // ponytail: truth-gated statics pass through; only storyBody is Tina-owned.
+        paragraphs: aboutTruth.storyParagraphs,
+        stats: [
+          { value: aboutTruth.founded, label: 'Founded' },
+          { value: aboutTruth.stats.players, label: 'Players' },
+          {
+            value: aboutTruth.stats.tournaments,
+            label: 'International Tournaments',
+          },
+        ],
+        content: d.storyBody,
+        data: d,
+      };
+    },
+  },
+  aboutLeadership: {
+    fetch: fetchAboutDoc,
+    component: LeadershipGrid as unknown as AstroComponentFactory,
+    wrapper: { tag: 'div', className: 'ukbt-about-leadership-island' },
+    propsFromData: (data: unknown, _params: URLSearchParams) => {
+      const d = data as Record<string, unknown>;
+      return {
+        // ponytail: roster is truth-gated; only leadershipIntro is Tina-owned.
+        leaders: aboutTruth.leaders,
+        intro: d.leadershipIntro,
         data: d,
       };
     },
@@ -103,6 +166,9 @@ export const islands = {
       const d = data as Record<string, unknown>;
       return {
         items: d.items || [],
+        pageHeading: d.pageHeading,
+        pageEyebrow: d.pageEyebrow,
+        data: d,
       };
     },
   },
