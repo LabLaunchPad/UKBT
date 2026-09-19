@@ -26,3 +26,28 @@ test('admin shell serves login UI with healthy same-origin assets', async ({
   await expect(page.getByText(/editing with TinaCMS/i).first()).toBeVisible();
   expect(sameOriginFailures, 'no same-origin asset failures').toEqual([]);
 });
+
+test('frame-ancestors CSP header is present (not X-Frame-Options DENY)', async ({
+  page,
+}) => {
+  await page.goto('/admin/');
+  const headers = await page.request.fetch('/admin/').then((r) => r.headers());
+  const csp = headers.get('content-security-policy') || '';
+  expect(csp).toContain('frame-ancestors');
+  expect(csp).toContain("'self'");
+});
+
+test('no X-Frame-Options header overrides frame-ancestors', async ({
+  page,
+}) => {
+  const response = await page.request.fetch('/admin/');
+  const xfo = response.headers()['x-frame-options'];
+  expect(xfo).toBeFalsy();
+});
+
+test('Tina bridge script loads correctly on admin shell', async ({ page }) => {
+  await page.goto('/admin/');
+  const bridgeScript = await page.locator('script[src*="bridge"]');
+  const count = await bridgeScript.count();
+  expect(count).toBeGreaterThanOrEqual(1);
+});

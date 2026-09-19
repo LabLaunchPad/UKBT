@@ -1,32 +1,52 @@
-import client from '@tina-client';
-import { requestWithMetadata } from '@tinacms/astro';
 import type { IslandConfig } from '@tinacms/astro/experimental';
 import type { AstroComponentFactory } from 'astro/runtime/server/index.js';
-import { homepage } from '../../content/homepage-data';
-import { tinaHomepage } from './loaders';
-
 import ClubIntroComponent from '../../components/ClubIntro.astro';
+import FAQSection from '../../components/FAQSection.astro';
 import HeroComponent from '../../components/Hero.astro';
+import WhyChooseUsComponent from '../../components/WhyChooseUs.astro';
+import { homepage } from '../../content/homepage-data';
+import { getAbout, getFaq, getHomepage } from './data';
+import { FaqSchema, HomepageSchema, validateWithPreserve } from './loaders';
 
-// Visual-editing data source (official @tinacms/astro static-site flow):
-// the island fetch resolves the CMS document through requestWithMetadata,
-// which (a) registers the admin form payload during bridge priming and
-// (b) overlays the editor's unsaved values onto the query result on every
-// re-render POST. If the TinaCloud content API is unreachable, fall back
-// to the build-validated local JSON so the preview still renders (without
-// a form payload) instead of failing the island.
 async function fetchHomepageDoc(): Promise<Record<string, unknown>> {
-  try {
-    const res = await requestWithMetadata(
-      client.queries.homepage({ relativePath: 'homepage.json' }),
-    );
-    const doc = (res?.data as { homepage?: Record<string, unknown> })?.homepage;
-    if (doc && Object.keys(doc).length > 0) return doc;
-  } catch {
-    // unreachable via requestWithMetadata's own catch — kept as a
-    // belt-and-braces guard for unexpected shapes.
+  const res = await getHomepage();
+  const doc = (
+    res?.data as unknown as { homepage?: Record<string, unknown> | undefined }
+  )?.homepage;
+  if (doc && Object.keys(doc).length > 0) {
+    const validated = validateWithPreserve(HomepageSchema, doc);
+    if (validated.success) {
+      return validated.original as Record<string, unknown>;
+    }
+    return doc;
   }
-  return tinaHomepage as unknown as Record<string, unknown>;
+  throw new Error('Failed to fetch homepage data for island');
+}
+
+async function fetchAboutDoc(): Promise<Record<string, unknown>> {
+  const res = await getAbout();
+  const doc = (
+    res?.data as unknown as { about?: Record<string, unknown> | undefined }
+  )?.about;
+  if (doc && Object.keys(doc).length > 0) {
+    return doc;
+  }
+  throw new Error('Failed to fetch about data for island');
+}
+
+async function fetchFaqDoc(): Promise<Record<string, unknown>> {
+  const res = await getFaq();
+  const doc = (
+    res?.data as unknown as { faq?: Record<string, unknown> | undefined }
+  )?.faq;
+  if (doc && Object.keys(doc).length > 0) {
+    const validated = validateWithPreserve(FaqSchema, doc);
+    if (validated.success) {
+      return validated.original as Record<string, unknown>;
+    }
+    return doc;
+  }
+  throw new Error('Failed to fetch FAQ data for island');
 }
 
 export const islands = {
@@ -36,14 +56,9 @@ export const islands = {
     wrapper: { tag: 'div', className: 'ukbt-hero-island' },
     propsFromData: (data: unknown, _params: URLSearchParams) => {
       const d = data as Record<string, unknown>;
-      // Mirrors the static hero mapping in pages/index.astro exactly:
-      // an island re-render must receive the same props as the static
-      // build, or a Tina save silently reverts the hero to defaults
-      // (headline, primary CTA, hero image — audit 2026-09-18).
-      // taglineShort/social come from the gated site-settings import —
-      // the homepage collection does not carry them.
       return {
         taglineShort: homepage.taglineShort,
+        tagline: (d.tagline as string) || homepage.taglineShort,
         eyebrow: d.eyebrow || 'UK Bangla Tigers Cricket Club',
         headline: d.headline,
         social: homepage.social,
@@ -56,20 +71,43 @@ export const islands = {
             }
           : undefined,
         heroImage: d.heroImage,
+        data: d,
       };
     },
   },
   aboutSection: {
-    fetch: fetchHomepageDoc,
+    fetch: fetchAboutDoc,
     component: ClubIntroComponent as unknown as AstroComponentFactory,
     wrapper: { tag: 'div', className: 'ukbt-club-intro-island' },
     propsFromData: (data: unknown, _params: URLSearchParams) => {
       const d = data as Record<string, unknown>;
-      // REM-004: fallbacks are truth-controlled, not hard-coded factual
-      // assertions — homepage.* below are gated @ukbt/truth values.
       return {
-        lede: d.clubIntroLede || homepage.taglineShort,
+        lede: d.heroSubline || homepage.taglineShort,
         founded: homepage.founded,
+        data: d,
+      };
+    },
+  },
+  faq: {
+    fetch: fetchFaqDoc,
+    component: FAQSection as unknown as AstroComponentFactory,
+    wrapper: { tag: 'div', className: 'ukbt-faq-island' },
+    propsFromData: (data: unknown, _params: URLSearchParams) => {
+      const d = data as Record<string, unknown>;
+      return {
+        items: d.items || [],
+      };
+    },
+  },
+  whyChooseUs: {
+    fetch: fetchHomepageDoc,
+    component: WhyChooseUsComponent as unknown as AstroComponentFactory,
+    wrapper: { tag: 'div', className: 'ukbt-chooseus' },
+    propsFromData: (data: unknown, _params: URLSearchParams) => {
+      const d = data as Record<string, unknown>;
+      return {
+        reasons: d.whyChooseUs || [],
+        data: d,
       };
     },
   },
