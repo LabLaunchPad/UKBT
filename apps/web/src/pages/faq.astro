@@ -22,7 +22,7 @@ const tinaFaqRemote = (faqRes?.data as { faq?: Record<string, unknown> })?.faq |
 const tinaFaq = (tinaFaqRemote.items as unknown[])?.length
   ? tinaFaqRemote
   : (tinaFaqLocal as unknown as Record<string, unknown>);
-const visibleItems = ((tinaFaq.items || []) as Array<{ question: string; answer: string; visible?: boolean; _content_source?: unknown }>).filter((item) => item.visible !== false);
+const visibleItems = ((tinaFaq.items || []) as Array<{ question: string; answer: string | Record<string, unknown>; visible?: boolean; _content_source?: unknown }>).filter((item) => item.visible !== false);
 ---
 
 <BaseLayout title={`${tinaFaq.pageHeading} — UK Bangla Tigers`} description="Answers to common questions about UK Bangla Tigers.">
