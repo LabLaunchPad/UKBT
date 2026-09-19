@@ -39,7 +39,7 @@ export const HomepageSchema = z.object({
 const FaqItemSchema = z.object({
   question: z.string(),
   answer: z.unknown(),
-  visible: z.boolean(),
+  visible: z.boolean().optional(),
 });
 
 export const FaqSchema = z.object({
@@ -64,23 +64,27 @@ export const AboutSchema = z.object({
 export const SiteSettingsSchema = z.object({
   siteTaglineShort: z.string(),
   footerTagline: z.string().optional(),
-  contact: z.object({
-    email: z.string().refine(isEmailValue, {
-      message: 'contact.email must be a mailbox address',
-    }),
-    phoneDisplay: z.string(),
-    phoneHref: z
-      .string()
-      .refine(isTelUrl, { message: 'contact.phoneHref must be a tel: URL' }),
-  }),
-  social: z.array(
-    z.object({
-      platform: z.string(),
-      url: z
+  contact: z
+    .object({
+      email: z.string().refine(isEmailValue, {
+        message: 'contact.email must be a mailbox address',
+      }),
+      phoneDisplay: z.string(),
+      phoneHref: z
         .string()
-        .refine(isHttpsUrl, { message: 'social.url must be an https: URL' }),
-    }),
-  ),
+        .refine(isTelUrl, { message: 'contact.phoneHref must be a tel: URL' }),
+    })
+    .optional(),
+  social: z
+    .array(
+      z.object({
+        platform: z.string(),
+        url: z
+          .string()
+          .refine(isHttpsUrl, { message: 'social.url must be an https: URL' }),
+      }),
+    )
+    .optional(),
   socialCard: z.string().optional(),
 });
 

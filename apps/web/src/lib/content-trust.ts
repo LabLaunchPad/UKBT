@@ -116,7 +116,7 @@ export const TINA_FIELD_TRUST: Record<string, FieldTrust> = {
   'faq.items.answer': {
     cls: 'SECURITY_SENSITIVE',
     structured: false,
-    note: 'set:html sink; safe ONLY via renderFaqAnswer (REM-001).',
+    note: 'Rich-text via TinaMarkdown renderer (FAQSection); escapes by design — no set:html. Legacy renderFaqAnswer choke preserved in lib/faq-answer.ts.',
   },
   'faq.items.visible': {
     cls: 'TECHNICAL',
