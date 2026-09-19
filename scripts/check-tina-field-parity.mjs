@@ -213,6 +213,31 @@ for (const [label, src] of [
   }
 }
 
+// 14. Primary-island semantics: at most one primary per page; single-island
+// pages (faq) must mark it so the admin opens the form instead of the picker.
+for (const [label, src] of [
+  ['index.astro', indexPage],
+  ['faq.astro', faqPage],
+  ['about.astro', aboutPage],
+]) {
+  const primaries = [...src.matchAll(/<TinaIsland[^>]*\bprimary\b/g)].length;
+  check(
+    `island-at-most-one-primary-${label}`,
+    primaries <= 1,
+    `${label} marks ${primaries} primary islands (max one)`,
+  );
+}
+check(
+  'island-faq-primary',
+  /<TinaIsland name="faq"[^>]*\bprimary\b/.test(faqPage),
+  'faq.astro single island must be primary',
+);
+check(
+  'island-index-hero-primary',
+  /<TinaIsland name="hero"[^>]*\bprimary\b/.test(indexPage),
+  'index.astro hero island must stay primary',
+);
+
 if (failures.length > 0) {
   console.error(
     JSON.stringify({ TINA_FIELD_PARITY_STATUS: 'FAIL', failures }, null, 2),

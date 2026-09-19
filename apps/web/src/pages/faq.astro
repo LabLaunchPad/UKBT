@@ -37,7 +37,7 @@ const visibleItems = ((tinaFaq.items || []) as Array<{ question: string; answer:
         Header lives inside the faq island: heading/eyebrow edits live-update
         on bridge re-render instead of going stale outside the boundary.
       */}
-      <TinaIsland name="faq" wrapper={{ tag: 'div', className: '' }}>
+      <TinaIsland name="faq" wrapper={{ tag: 'div', className: '' }} primary>
         <FAQSection
           items={visibleItems}
           pageHeading={tinaFaq.pageHeading as string}
