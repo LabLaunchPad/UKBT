@@ -579,3 +579,78 @@ observation; apply with judgment, do not generalize further.
   motion 8/8 PASS, probe settled 1 running (crossfade only), live
   production 57221B HTML smoke PASS.
 - **Status:** VERIFIED.
+
+## AL-032 -- Trailing-slash admin origin silently breaks Tina bridge
+
+- **Observation:** Production baked
+  `const adminOrigin = ["https://ukbanglatigers.co.uk/"]` (trailing
+  slash from Cloudflare Build var). Bridge `isFromAdmin` uses strict
+  `includes(event.origin)` with no normalization; `event.origin` never
+  carries a slash, so every inbound editor message was rejected and
+  outbound `postMessage` targeted an invalid origin (dropped). Source:
+  `@tinacms/astro@0.7.0` `src/internal/admin-origin.ts` (split/trim
+  only) + `@tinacms/bridge` `dist/index.js` (`init` defaults to
+  `window.location.origin`; `isFromAdmin` requires exact match +
+  `event.source === window.parent`).
+- **Outcome:** Dashboard var normalized to bare
+  `https://ukbanglatigers.co.uk`; redeploy baked the correct value on
+  `/`, `/about/`, `/faq/` (curl-verified). Same-origin does NOT
+  require the var (default covers it); a wrong value actively breaks
+  editing, so never set it to `https://app.tina.io`.
+- **Cause:** Env value treated as opaque string; origins compared by
+  strict equality; no trailing-slash handling anywhere in the chain.
+- **Counterexample:** Bare-origin value behaves identically to unset
+  in same-origin topology -- the pin is documentation, not function.
+- **Rule:** Origin-valued env vars must be stored and asserted without
+  trailing slash; verify via baked `const adminOrigin` in served HTML,
+  never via dashboard display alone.
+- **Verified-by:** live HTML grep pre/post redeploy, package source
+  read, browser topology probe (`/admin/` top-level, same origin).
+- **Status:** VERIFIED.
+
+## AL-033 -- Scoped _headers CSP block cannot relax global policy
+
+- **Observation:** Added `/admin/*` `_headers` block with `data:`
+  font/img to fix admin bundle blockage. Production served TWO
+  `Content-Security-Policy` headers (global + scoped); browsers enforce
+  their intersection, so the relaxation was a verified no-op
+  (font-src violations persisted live).
+- **Outcome:** Reverted the scoped block (PR #91); global policy
+  unchanged. Admin `data:` font/logo errors accepted as cosmetic,
+  pre-existing limitation. Never broaden global CSP for editor
+  cosmetics.
+- **Cause:** Cloudflare emits every matching `_headers` rule as a
+  separate header; multiple CSP headers intersect (most restrictive
+  wins). A second policy can only ever tighten.
+- **Counterexample:** Scoped blocks work for *adding* headers
+  (e.g. Cache-Control) or *tightening*; only relaxation is
+  impossible this way.
+- **Rule:** Verify header changes against live response headers
+  (count CSP instances), not against file content or local gates
+  (check-security reads only the first CSP line).
+- **Verified-by:** live header count 2 -> fix attempt -> still
+  blocked -> revert -> live header count 1; PR #91 green.
+- **Status:** VERIFIED.
+
+## AL-034 -- New TinaIsland registrations duplicate scoped CSS
+
+- **Observation:** Registering `aboutHero/aboutStory/aboutLeadership`
+  islands pushed clean-build cssTotal 88KB -> 93.6KB (budget FAIL).
+  Island components' scoped styles ship once in page CSS and again in
+  the Tina island chunk (same mechanism as the earlier FAQSection
+  +5.2KB island extraction).
+- **Outcome:** Sanctioned budget re-approval 88 -> 96KB with measured
+  justification + failure-injection fixture 89 -> 97KB (PR #90); local
+  clean build reproduced CI byte-for-byte (93.6KB).
+- **Cause:** Per-component scoped CSS counted twice by design of the
+  island architecture; cost is structural, not a regression.
+- **Counterexample:** Unregistered islands 404 on bridge re-render --
+  the CSS cost buys correct editing and cannot be designed away at
+  component level.
+- **Rule:** Every new TinaIsland registration must be followed by a
+  clean-build cssTotal measurement; budget changes follow the
+  re-approval chain in `check-perf.mjs`, never drive-by edits, and the
+  injection fixture must move in the same commit.
+- **Verified-by:** clean local build = CI value; PERF_STATUS PASS;
+  injection 8/8 PASS; PR #90 green.
+- **Status:** VERIFIED.

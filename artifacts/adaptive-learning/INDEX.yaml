@@ -32,3 +32,6 @@ index:
   AL-029: [lazy hidden image, drawer crest, capture hang, decode wait, eager chrome]
   AL-030: [eager roster grid, squadcard lazy, image requests, below fold grid]
   AL-031: [css budget overrun, scoped duplication, motion keyframes, gradient weight, inline animation]
+  AL-032: [trailing slash admin origin, postMessage origin mismatch, isFromAdmin, bridge deaf, TinaCloud edit broken]
+  AL-033: [scoped headers CSP, dual content-security-policy, intersection, relaxation no-op, live header count]
+  AL-034: [island registration css, duplicated scoped styles, perf budget re-approval, injection fixture]

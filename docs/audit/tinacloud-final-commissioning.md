@@ -67,12 +67,35 @@ Statuses: `PASS | FAIL | BLOCKED_EXTERNAL`. Classifications:
   same-origin. Same-origin does NOT require the var (default covers it); a wrong
   value actively breaks editing. Classification: **INCORRECT → NORMALIZE**
   (strip to bare `https://ukbanglatigers.co.uk`). NEVER `https://app.tina.io`.
+  **RESOLVED 2026-09-19:** owner normalized the dashboard var; redeploy bakes
+  `["https://ukbanglatigers.co.uk"]` on `/`, `/about/`, `/faq/` (curl-verified).
   `GITHUB_TOKEN` (Cloudflare): zero consumers in code/wrangler/CI-build → UNUSED;
   leave in place, owner may remove after dashboard confirmation.
 
-## First remaining gap
+## Ruleset verification (2026-09-19, API DIRECT)
 
-`RULESET_BYPASS_VERIFIED`: App identity unknown (`GITHUB_APP_IDENTITY = EXTERNAL_REQUIRED`) →
-no Ruleset created → first real Save predicted to meet legacy `422` until owner completes
-App-install verification + Ruleset-with-App-bypass (payload template in final report §9).
-Rerun from `GITHUB_APP_VERIFIED`.
+- `main-tinacloud-app-bypass` (id `23692482`): active, `refs/heads/main` only.
+- Rules: `deletion` + `non_fast_forward` + `required_status_checks`
+  (strict false, 18/18 contexts identical to legacy baseline).
+- Bypass: sole actor `Integration 47631` (TinaCloud App, discovered via API),
+  mode `always`; `current_user_can_bypass: never`.
+- Legacy branch protection deleted (API 404s); effective branch rules resolve
+  solely from ruleset 23692482. No property weakened.
+- TinaCloud project topology human-verified via dashboard screenshots: exact
+  repo, `main` indexed, single-repo toggle OFF, Editorial Workflow
+  structurally unavailable, bot authoring selected, App installed on
+  `LabLaunchPad` with write scope limited to `LabLaunchPad/UKBT`.
+
+## E2E closure status
+
+- `origin/main` checked 2026-09-19: no Tina-originated commit;
+  `faq.json` `pageEyebrow` still `FAQ`. Real Save + revert remain
+  human-only (no credentials/session available to automation; simulation
+  forbidden). Pre-save gate otherwise all PASS. Verdict pending Save:
+  `HUMAN_ACTION_REQUIRED`, not `VERIFIED_E2E`.
+
+## First remaining gap (superseded — see Ruleset verification + E2E closure status)
+
+Previously `RULESET_BYPASS_VERIFIED` blocked on unknown App identity. Since
+resolved: App install human-verified, ruleset created/verified, legacy
+retired. The remaining gap is the real TinaCloud Save + revert (human-only).
