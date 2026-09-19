@@ -7,12 +7,10 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/Header.astro';
 import PageBanner from '../components/PageBanner.astro';
 import Section from '../components/Section.astro';
-import SectionHeader from '../components/SectionHeader.astro';
 import AboutCTA from '../components/AboutCTA.astro';
 import Footer from '../components/Footer.astro';
 import TinaIsland from '@tinacms/astro/TinaIsland.astro';
 import FAQSection from '../components/FAQSection.astro';
-import { tinaField } from '@tinacms/astro';
 import { getFaq } from '../lib/tina/data';
 import { tinaFaq as tinaFaqLocal } from '../lib/tina/loaders';
 import { homepage } from '../content/homepage-data';
@@ -35,14 +33,17 @@ const visibleItems = ((tinaFaq.items || []) as Array<{ question: string; answer:
     <PageBanner title="Frequently Asked Questions" crumbs={[{ label: 'Home', href: '/' }, { label: 'FAQ' }]} />
 
     <Section>
-      <SectionHeader eyebrow={(tinaFaq.pageEyebrow as string) || 'FAQ'} heading={tinaFaq.pageHeading as string} eyebrowTinaField={tinaField(tinaFaq, "pageEyebrow")} headingTinaField={tinaField(tinaFaq, "pageHeading")} />
       {/*
-        Page and island share one component (FAQSection): identical markup,
-        styles, and per-item tinaField(item, …) markers on both sides of the
-        bridge. No duplicated list markup or <style> in this page.
+        Header lives inside the faq island: heading/eyebrow edits live-update
+        on bridge re-render instead of going stale outside the boundary.
       */}
-      <TinaIsland name="faq" wrapper={{ tag: 'div', className: '' }}>
-        <FAQSection items={visibleItems} />
+      <TinaIsland name="faq" wrapper={{ tag: 'div', className: '' }} primary>
+        <FAQSection
+          items={visibleItems}
+          pageHeading={tinaFaq.pageHeading as string}
+          pageEyebrow={(tinaFaq.pageEyebrow as string) || 'FAQ'}
+          data={tinaFaq}
+        />
       </TinaIsland>
     </Section>
 

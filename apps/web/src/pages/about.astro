@@ -71,13 +71,14 @@ const structuredData = aboutGraph({
   <Header nav={homepage.nav} cta={homepage.primaryCta} />
 
   <main id="main-content" tabindex="-1">
-    <TinaIsland name="aboutSection" wrapper={{ tag: 'div', className: '' }}>
+    <TinaIsland name="aboutHero" wrapper={{ tag: 'div', className: '' }}>
       <PageBanner
         title="About Us"
         crumbs={crumbs}
         lede={tinaAbout.heroSubline as string || about.heroSubline}
         background={bannerBackground}
         data-tina-field={tinaField(tinaAbout, 'heroSubline')}
+        data={tinaAbout}
       />
     </TinaIsland>
 
@@ -96,6 +97,7 @@ const structuredData = aboutGraph({
           stats={storyStats}
           data-tina-field={tinaField(tinaAbout, 'storyBody')}
           content={tinaAbout.storyBody as TinaRichTextContent}
+          data={tinaAbout}
         />
       </TinaIsland>
     </Section>
@@ -128,6 +130,7 @@ const structuredData = aboutGraph({
           leaders={about.leaders}
           intro={tinaAbout.leadershipIntro as string || about.leadershipIntro}
           data-tina-field={tinaField(tinaAbout, 'leadershipIntro')}
+          data={tinaAbout}
         />
       </TinaIsland>
     </Section>
