@@ -78,6 +78,9 @@ if (!existsSync(headersPath)) {
   if (/(?:^|\s)\*(?:\s|;|$)/.test(csp))
     fail('csp-unsafe', 'CSP has bare * source');
   if (!csp.includes("'self'")) fail('csp-self', 'CSP lacks self baseline');
+  if (!/img-src[^;]*data:/.test(csp)) fail('csp-data', 'img-src needs data: blob: for admin');
+  if (!/font-src[^;]*data:/.test(csp)) fail('csp-data', 'font-src needs data:');
+  if (headers.includes('__UKBT_CSP_SCRIPT_HASHES__')) fail('csp-unstamped', 'placeholder not stamped — re-run stamp-csp.mjs');
   const scriptSrc = /script-src([^;]*)/.exec(csp)?.[1] ?? '';
   if (scriptSrc.includes("'unsafe-inline'")) {
     fail(
@@ -152,6 +155,7 @@ for (const file of globSync('**/*.html', { cwd: distDir })) {
     fail('http-subresource', `${file}: ${m[0].slice(0, 80)}`);
     break;
   }
+  if (html.includes('[object Object]')) fail('html-serialization', `${file} contains [object Object] — rich-text unwrap missing`);
 }
 
 const result = {
