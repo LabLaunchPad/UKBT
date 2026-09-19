@@ -1,6 +1,7 @@
 # TinaCloud final commissioning — evidence ledger (2026-09-19)
 
-Base: `main = 4fdb680` + uncommitted island-boundary repair (see § Defects fixed).
+Base: `main = be54425` (PR #90 island/CSP/parity/perf fixes as `47bfea8`, PR #91 CSP
+revert as `be54425`; both merged via normal protected path, all required checks green).
 Statuses: `PASS | FAIL | BLOCKED_EXTERNAL`. Classifications:
 `DIRECT | REPO | CI | PRODUCTION | EXTERNAL | INFERRED | PREDICTED | UNVERIFIED`.
 
@@ -22,6 +23,9 @@ Statuses: `PASS | FAIL | BLOCKED_EXTERNAL`. Classifications:
 | Deploy | Workers Builds authority | `workers-deploy` gated on absent `WORKERS_DEPLOY_VIA_CI` → skipped | ci.yml | REPO | PASS |
 | Real edit/save | Client browser Save → Tina commit | No client account access; no Tina SHA exists | — | EXTERNAL | BLOCKED_EXTERNAL |
 | Prod | Live routes | `/faq` `/about` 200 + markers; `/admin` loads (TinaCMS) | browser | PROD | PASS |
+| Deploy | `47bfea8` live | FAQ header inside island + primary marker + aboutHero/aboutStory live in production HTML | prod HTML | PROD | PASS |
+| Deploy | `be54425` live | Single CSP header on `/admin/` (revert deployed); islands intact | prod headers+HTML | PROD | PASS |
+| CSP revert | `/admin/*` block removed | Production emitted both global + scoped CSP (intersection = no-op); global policy unchanged; admin data: errors are cosmetic/pre-existing | prod headers | PROD | PASS |
 
 ## Defects fixed this run (uncommitted)
 
