@@ -11,7 +11,13 @@ import { expect, test } from '@playwright/test';
  * layer, field-marker convention, CSP frame policy, and build hygiene.
  */
 
-const REPO = join(dirname(fileURLToPath(import.meta.url)), '..', '..', '..');
+const REPO = join(
+  dirname(fileURLToPath(import.meta.url)),
+  '..',
+  '..',
+  '..',
+  '..',
+);
 const WEB = join(REPO, 'apps', 'web');
 
 function readFile(path: string): string {

@@ -14,11 +14,18 @@ import TinaIsland from '@tinacms/astro/TinaIsland.astro';
 import FAQSection from '../components/FAQSection.astro';
 import { tinaField } from '@tinacms/astro';
 import { getFaq } from '../lib/tina/data';
+import { tinaFaq as tinaFaqLocal } from '../lib/tina/loaders';
 import { homepage } from '../content/homepage-data';
 import { type TinaRichTextContent } from '@tinacms/astro';
 
 const faqRes = await getFaq();
-const tinaFaq = (faqRes?.data as { faq?: Record<string, unknown> })?.faq || {};
+const tinaFaqRemote = (faqRes?.data as { faq?: Record<string, unknown> })?.faq || {};
+// TinaCloud is the authority when it returns content; local JSON is the
+// fallback for first-build/unauthenticated/empty-index cases (prevents an
+// empty FAQ page and keeps e2e deterministic).
+const tinaFaq = (tinaFaqRemote.items as unknown[])?.length
+  ? tinaFaqRemote
+  : (tinaFaqLocal as unknown as Record<string, unknown>);
 const visibleItems = ((tinaFaq.items || []) as Array<{ question: string; answer: TinaRichTextContent; visible?: boolean; _content_source?: unknown }>).filter((item) => item.visible !== false);
 ---
 

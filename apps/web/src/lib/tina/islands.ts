@@ -6,7 +6,12 @@ import HeroComponent from '../../components/Hero.astro';
 import WhyChooseUsComponent from '../../components/WhyChooseUs.astro';
 import { homepage } from '../../content/homepage-data';
 import { getAbout, getFaq, getHomepage } from './data';
-import { FaqSchema, HomepageSchema, validateWithPreserve } from './loaders';
+import {
+  FaqSchema,
+  HomepageSchema,
+  tinaFaq as tinaFaqLocal,
+  validateWithPreserve,
+} from './loaders';
 
 async function fetchHomepageDoc(): Promise<Record<string, unknown>> {
   const res = await getHomepage();
@@ -46,7 +51,9 @@ async function fetchFaqDoc(): Promise<Record<string, unknown>> {
     }
     return doc;
   }
-  throw new Error('Failed to fetch FAQ data for island');
+  // Fallback to committed JSON when TinaCloud has no indexed data yet
+  // (first deploy, unauthenticated build, or empty branch index).
+  return tinaFaqLocal as unknown as Record<string, unknown>;
 }
 
 export const islands = {
