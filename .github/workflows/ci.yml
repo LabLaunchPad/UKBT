@@ -131,9 +131,9 @@ jobs:
       - run: pnpm --filter @ukbt/truth tokens:build
       # Generate the Tina client (tina/__generated__ is gitignored) — the
       # web app's @tina-client alias (islands visual editing) resolves
-# against it. Same env-driven step the build job runs.
-       - run: pnpm exec tinacms build --skip-search-index
-       - run: pnpm typecheck
+      # against it. Same env-driven step the build job runs.
+      - run: pnpm exec tinacms build --skip-search-index
+      - run: pnpm typecheck
 
   unit-tests:
     name: Unit / integration tests (truth gate + content schema)
@@ -308,9 +308,9 @@ jobs:
         working-directory: apps/web
       # Full dist incl. Tina admin: the e2e webServer runs the app-level
       # build (astro only), so generate public/admin first — otherwise the
-# admin-shell spec tests a dist that production never ships.
-       - run: pnpm exec tinacms build --skip-search-index
-       - run: pnpm test:e2e
+      # admin-shell spec tests a dist that production never ships.
+      - run: pnpm exec tinacms build --skip-search-index
+      - run: pnpm test:e2e
         working-directory: apps/web
       - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6 (SHA-pinned 2026-09-10; node24 runtime)
         if: always()
