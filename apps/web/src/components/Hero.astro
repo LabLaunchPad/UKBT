@@ -10,6 +10,7 @@
 import Button from './Button.astro';
 import SocialLinks from './SocialLinks.astro';
 import { tinaField } from '@tinacms/astro';
+import { sanitizeImageSrc } from '../lib/tina/validators';
 
 interface Props {
   taglineShort: string;
@@ -31,7 +32,7 @@ interface Props {
   data?: Record<string, unknown>;
 }
 const {
-  taglineShort,
+  taglineShort: _taglineShort,
   tagline,
   social,
   eyebrow,
@@ -46,7 +47,7 @@ const {
 
 <div class="ukbt-hero">
   <img
-    src={heroImage}
+    src={sanitizeImageSrc(heroImage) ?? '/media/team-huddle.webp'}
     width="1080"
     height="720"
     alt=""

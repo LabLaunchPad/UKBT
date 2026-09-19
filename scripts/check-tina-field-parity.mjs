@@ -23,6 +23,9 @@ const button = read('apps/web/src/components/Button.astro');
 const sectionHeader = read('apps/web/src/components/SectionHeader.astro');
 const indexPage = read('apps/web/src/pages/index.astro');
 const aboutPage = read('apps/web/src/pages/about.astro');
+const aboutStory = read('apps/web/src/components/AboutStory.astro');
+const dataTs = read('apps/web/src/lib/tina/data.ts');
+const tinaIsland = read('apps/web/src/pages/tina-island/[name].ts');
 
 // 1. Primary CTA link must map to primaryCtaLink, not the label field.
 check(
@@ -236,6 +239,31 @@ check(
   'island-index-hero-primary',
   /<TinaIsland name="hero"[^>]*\bprimary\b/.test(indexPage),
   'index.astro hero island must stay primary',
+);
+check(
+  'faq-normalize',
+  faqSection.includes('invalid_markdown'),
+  'FAQSection must handle invalid_markdown unwrap',
+);
+check(
+  'about-normalize',
+  aboutStory.includes('invalid_markdown'),
+  'AboutStory must handle invalid_markdown unwrap',
+);
+check(
+  'data-priority',
+  dataTs.includes("priority: 'primary'"),
+  'data.ts must use priority primary',
+);
+check(
+  'tina-island-all',
+  tinaIsland.includes('export const ALL'),
+  'tina-island must export ALL',
+);
+check(
+  'hero-sanitize',
+  hero.includes('sanitizeImageSrc'),
+  'Hero must use sanitizeImageSrc',
 );
 
 if (failures.length > 0) {

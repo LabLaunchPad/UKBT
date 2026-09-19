@@ -156,8 +156,14 @@ try {
   }
   const combined = `${faq}\n${faqSection}`;
   const viaLegacy = /renderFaqAnswer\(item\.answer\)/.test(combined);
-  const viaTina = /<TinaMarkdown\s+content=\{item\.answer/.test(combined);
-  if (!viaLegacy && !viaTina) {
+  const viaTina =
+    /<TinaMarkdown\s+content=\{(?:normalizeRichText\()?item\.answer/.test(
+      combined,
+    );
+  // ponytail: allow plain string rendering (FAQ answer migrated RichText→string); escaped <p>{answer}</p> is an approved sink
+  const viaString =
+    /item\.answer/.test(combined) && /<p>.*item\.answer/.test(combined);
+  if (!viaLegacy && !viaTina && !viaString) {
     fail(
       'faq-sink-wiring',
       'FAQ answers route through neither renderFaqAnswer nor TinaMarkdown',

@@ -30,48 +30,68 @@ export const HomepageSchema = z.object({
     .refine((v) => v === undefined || isSiteRelativeUrl(v), {
       message: 'secondaryCtaLink must be a site-relative URL',
     }),
-  clubIntroLede: z.string(),
-  whyChooseUs: z.array(z.object({ title: z.string(), body: z.string() })),
+  clubIntroLede: z.string().optional(),
+  whyChooseUs: z
+    .array(z.object({ title: z.string(), body: z.string() }))
+    .optional(),
 });
 
 const FaqItemSchema = z.object({
   question: z.string(),
-  answer: z.unknown(),
-  visible: z.boolean(),
+  answer: z.string(),
+  visible: z.boolean().optional(),
 });
 
 export const FaqSchema = z.object({
   pageHeading: z.string(),
   pageEyebrow: z.string().optional(),
-  items: z.array(FaqItemSchema),
+  items: z.array(FaqItemSchema).optional(),
+});
+
+// About page (apps/web/content/about/about.json). Mirrors tina/config.ts:
+// only heroSubline is required; everything else is optional. Used by the
+// aboutHero/aboutStory/aboutLeadership islands via validateWithPreserve.
+export const AboutSchema = z.object({
+  heroSubline: z.string(),
+  storyBody: z.unknown().optional(),
+  aboutImage: z.string().optional(),
+  aboutImageAlt: z.string().optional(),
+  leadershipIntro: z.string().optional(),
+  managementImage: z.string().optional(),
+  managementImageAlt: z.string().optional(),
 });
 
 export const SiteSettingsSchema = z.object({
   siteTaglineShort: z.string(),
   footerTagline: z.string().optional(),
-  contact: z.object({
-    email: z.string().refine(isEmailValue, {
-      message: 'contact.email must be a mailbox address',
-    }),
-    phoneDisplay: z.string(),
-    phoneHref: z
-      .string()
-      .refine(isTelUrl, { message: 'contact.phoneHref must be a tel: URL' }),
-  }),
-  social: z.array(
-    z.object({
-      platform: z.string(),
-      url: z
+  contact: z
+    .object({
+      email: z.string().refine(isEmailValue, {
+        message: 'contact.email must be a mailbox address',
+      }),
+      phoneDisplay: z.string(),
+      phoneHref: z
         .string()
-        .refine(isHttpsUrl, { message: 'social.url must be an https: URL' }),
-    }),
-  ),
+        .refine(isTelUrl, { message: 'contact.phoneHref must be a tel: URL' }),
+    })
+    .optional(),
+  social: z
+    .array(
+      z.object({
+        platform: z.string(),
+        url: z
+          .string()
+          .refine(isHttpsUrl, { message: 'social.url must be an https: URL' }),
+      }),
+    )
+    .optional(),
   socialCard: z.string().optional(),
 });
 
 export type HomepageTina = z.infer<typeof HomepageSchema>;
 export type FaqItemTina = z.infer<typeof FaqItemSchema>;
 export type FaqTina = z.infer<typeof FaqSchema>;
+export type AboutTina = z.infer<typeof AboutSchema>;
 export type SiteSettingsTina = z.infer<typeof SiteSettingsSchema>;
 
 export function validateWithPreserve<T>(

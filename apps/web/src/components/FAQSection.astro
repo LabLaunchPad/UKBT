@@ -7,7 +7,7 @@ import { tinaField, type TinaRichTextContent } from '@tinacms/astro';
 
 interface FaqItem {
   question: string;
-  answer: TinaRichTextContent;
+  answer: string | TinaRichTextContent | Record<string, unknown>;
   visible?: boolean;
   _content_source?: unknown;
   [key: string]: unknown;
@@ -22,6 +22,16 @@ interface Props {
 }
 const { items, pageHeading, pageEyebrow, data } = Astro.props;
 const visibleItems = items.filter((item) => item.visible !== false);
+// ponytail: handle both string (current schema) and RichText object (legacy/remote before reindex) — string renders escaped, object via TinaMarkdown
+function normalizeRichText(content: unknown) {
+  if (!content || typeof content !== 'object') return content;
+  const c = content as Record<string, unknown>;
+  if (c['type'] === 'root' && Array.isArray(c['children']) && (c['children'] as unknown[]).length === 1) {
+    const first = (c['children'] as Record<string, unknown>[])[0];
+    if (first?.['type'] === 'invalid_markdown' && first?.['value']) return first['value'];
+  }
+  return content;
+}
 ---
 
 <div class="ukbt-faq-list">
@@ -37,7 +47,7 @@ const visibleItems = items.filter((item) => item.visible !== false);
       visibleItems.map((item) => (
       <details class="ukbt-faq-item">
         <summary class="ukbt-faq-question" data-tina-field={tinaField(item, "question")}>{item.question}</summary>
-        <div class="ukbt-faq-answer" data-tina-field={tinaField(item, "answer")}><TinaMarkdown content={item.answer} /></div>
+        <div class="ukbt-faq-answer" data-tina-field={tinaField(item, "answer")}>{typeof item.answer === 'string' ? <p>{item.answer}</p> : <TinaMarkdown content={normalizeRichText(item.answer) as TinaRichTextContent} />}</div>
       </details>
     ))
   ) : (

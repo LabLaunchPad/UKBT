@@ -33,7 +33,7 @@ const PAGE = (extra = '') =>
   `<html><head><title>T</title>${extra}</head><body></body></html>`;
 
 const HEADERS = (cspScriptSrc, extra = '') =>
-  `/*\n  Strict-Transport-Security: max-age=31536000\n  X-Content-Type-Options: nosniff\n  Referrer-Policy: strict-origin-when-cross-origin\n  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=()\n  Cross-Origin-Opener-Policy: same-origin\n  Cross-Origin-Resource-Policy: same-origin\n  Content-Security-Policy: default-src 'self'; script-src ${cspScriptSrc}; style-src 'self' 'unsafe-inline'; object-src 'none'; frame-ancestors 'self' https://app.tina.io https://*.tinajs.io; upgrade-insecure-requests\n${extra}`;
+  `/*\n  Strict-Transport-Security: max-age=31536000\n  X-Content-Type-Options: nosniff\n  Referrer-Policy: strict-origin-when-cross-origin\n  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=()\n  Cross-Origin-Opener-Policy: same-origin\n  Cross-Origin-Resource-Policy: same-origin\n  Content-Security-Policy: default-src 'self'; script-src ${cspScriptSrc}; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://assets.tinajs.io https://*.tinajs.io; font-src 'self' data:; connect-src 'self' https://*.ingest.sentry.io https://*.tina.io https://app.tina.io https://*.tinajs.io https://s3.us-east-1.amazonaws.com https://us.i.posthog.com https://us-assets.i.posthog.com; worker-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'; frame-ancestors 'self' https://*.tina.io https://app.tina.io https://*.tinajs.io; upgrade-insecure-requests\n${extra}`;
 
 // Good fixture: hashed inline script, no XFO, no unsafe-inline.
 const GOOD_HEADERS = HEADERS(`'self' ${INLINE_HASH}`);

@@ -73,11 +73,11 @@ TinaCloud Free (Git-backed)
 1. Create/select the single TinaCloud project for `LabLaunchPad/UKBT`
 2. Connect/authorize the GitHub repository
 3. Confirm branch is `main`
-4. Confirm Free-plan limits (2 users, 2 roles, 1 project, 100MB assets)
+4. Confirm Free-plan limits (2 users, 2 roles, 1 project, 100MB per-asset size cap — no total quota published)
 5. Configure local (`http://localhost:4321`) and production (`https://ukbanglatigers.co.uk`) URLs
 6. Obtain the `PUBLIC_TINA_CLIENT_ID` from the TinaCloud dashboard
 7. Store the `TINA_TOKEN` in the appropriate secret store
-8. Verify repo-based media sync (100MB cap)
+8. Verify repo-based media sync (100MB per-asset size cap)
 9. Inspect the media library
 10. Perform one harmless preview/editor change
 11. Confirm Git-backed save
@@ -127,7 +127,7 @@ pnpm check:governance-scaffold  # scaffold self-test
 - 2 users max (hard cap)
 - 2 roles
 - 1 project
-- 100MB asset cap
+- 100MB per-asset size cap (no total quota published)
 - No editorial workflow (Team Plus $41/mo)
 - No API (Business $249/mo)
 - No AI assist, no SSO

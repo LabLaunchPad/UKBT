@@ -29,6 +29,14 @@ interface Props {
 const { paragraphs, stats, 'data-tina-field': tinaFieldProp, content, data } = Astro.props;
 // ponytail: island data derives marker on re-render; static path keeps the passed string.
 const storyMarker = data ? tinaField(data, 'storyBody') : tinaFieldProp;
+function normalizeRichText(content: any) {
+  if (!content || typeof content !== 'object') return content;
+  if (content.type === 'root' && Array.isArray(content.children) && content.children.length === 1 && content.children[0]?.type === 'invalid_markdown' && content.children[0]?.value) {
+    return content.children[0].value;
+  }
+  return content;
+}
+const normalizedContent = normalizeRichText(content);
 ---
 
 <div class="ukbt-story">
@@ -48,7 +56,7 @@ const storyMarker = data ? tinaField(data, 'storyBody') : tinaFieldProp;
     <SubHeading label="Our Story" />
     <h2>More Than Just a Cricket Club, It's a Community.</h2>
     <div class="ukbt-story__paragraphs" data-tina-field={storyMarker}>
-      {content ? <TinaMarkdown content={content} /> : paragraphs.map((p) => <p>{p}</p>)}
+      {content ? <TinaMarkdown content={normalizedContent} /> : paragraphs.map((p) => <p>{p}</p>)}
     </div>
     <div class="ukbt-story__stats">
       {
