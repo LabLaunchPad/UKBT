@@ -147,7 +147,7 @@ Release is PASS only when `deploy:verify` passes fresh with no open blocker. `ar
 - Islands: `apps/web/src/lib/tina/islands.ts` fetches real data, renders components
 - Content classification: **EDITORIAL** (CMS-safe: headline, CTA, FAQ, nav labels, about copy) vs **TRUTH-SENSITIVE** (code-owned: players, stats, dates, org claims)
 - Public pages without `<TinaIsland>` are byte-identical to a Tina-free Astro app
-- Free plan: 2 users, 2 roles, 1 project, 100MB assets, NO editorial workflow
+- Free plan: 2 users, 2 roles, 1 project, 100MB per-asset size cap (no total quota published), NO editorial workflow
 - Required env vars: `PUBLIC_TINA_CLIENT_ID`, `TINA_TOKEN` (secret), `TINA_BRANCH`, `PUBLIC_TINA_ADMIN_ORIGIN`
 - Performance budgets adjusted: `htmlPerPage` 64→72KB, `cssTotal` 56→60KB, `jsTotal` 32→48KB to accommodate Tina bridge (15.5KB) and Cloudflare adapter overhead. See `scripts/check-perf.mjs`.
 

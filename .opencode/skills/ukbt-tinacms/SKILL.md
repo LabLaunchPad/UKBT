@@ -20,3 +20,10 @@ Tina config, TinaField, TinaIsland, visual editing, rich text, media, schema/ren
 
 ## Workflow
 DISCOVER → CLASSIFY → LOAD → DELEGATE to `tina-architect` → VERIFY (`check-tina-field-parity`, `typecheck`) → SYNTHESIZE.
+
+## Research-grounded deltas 2026-09-19
+- React-free API: `TinaIsland` / `TinaMarkdown.astro` subpath / `tinaField` / `requestWithMetadata` + `priority` primary / `prerender = false` island route (`experimental_createIslandRoute`).
+- Versions `tinacms` 3.14.0 / `cli` 3.0.0 / `@tinacms/astro` 0.7.0 = latest dist-tags (2026-09-19).
+- Free tier: 100MB is a per-asset size cap, no total quota published (tina.io/pricing).
+- SESSION KV namespace id must be pinned in root `wrangler.jsonc` or second deploy fails.
+- `_headers` applies to static assets only, not Worker-code responses (`/tina-island/*` is a Worker response; same-origin POST enforced by `experimental_createIslandRoute`).
