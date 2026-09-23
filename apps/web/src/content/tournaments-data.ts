@@ -73,8 +73,12 @@ for (const e of events) {
   const rec = ContentRecordSchema.parse({
     field: e.field,
     value: e.value,
-    status: 'pending_review',
+    // U-23 closed 2026-09-23: owner approval EV-20260923-001
+    // (Lablaunchpad/admin, all-current-facts, amendable) — approved, not
+    // published (TRUTH-CONTRACT.md keeps approval and going live separate).
+    status: 'approved',
     sources: ['EV-026'],
+    approver: 'Lablaunchpad (admin, 2026-09-23, EV-20260923-001)',
   }) as ContentRecord;
   const result = evaluate(rec, gateOptions);
   if (!result.passed) {

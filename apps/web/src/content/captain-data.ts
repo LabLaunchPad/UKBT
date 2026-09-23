@@ -53,8 +53,13 @@ function record(f: Fact<unknown>): ContentRecord {
   return ContentRecordSchema.parse({
     field: f.field,
     value: f.value,
-    status: 'pending_review',
+    // U-23 closed 2026-09-23: owner approval EV-20260923-001
+    // (Lablaunchpad/admin, all-current-facts, amendable). Minimal honest
+    // step is approved, not published (TRUTH-CONTRACT.md keeps approval
+    // and going live separate).
+    status: 'approved',
     sources: f.sources,
+    approver: 'Lablaunchpad (admin, 2026-09-23, EV-20260923-001)',
   }) as ContentRecord;
 }
 
