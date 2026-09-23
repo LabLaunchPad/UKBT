@@ -2,20 +2,27 @@
 // Mirrors the reference's `faq.html` (Banner → FAQ → Membership CTA →
 // Blog). Route added under CLIENT_REQ_009 / ROUTE-CONTRACT Amendment 01.
 //
-// FAQ content sourced from Tina CMS via faq.json. The visible flag
-// allows the client to hide questions without deleting them.
+// FAQ content sourced from Tina CMS via getFaq().
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/Header.astro';
 import PageBanner from '../components/PageBanner.astro';
 import Section from '../components/Section.astro';
-import SectionHeader from '../components/SectionHeader.astro';
 import AboutCTA from '../components/AboutCTA.astro';
 import Footer from '../components/Footer.astro';
+import TinaIsland from '@tinacms/astro/TinaIsland.astro';
+import FAQSection from '../components/FAQSection.astro';
+import { getFaq } from '../lib/tina/data';
+import { tinaFaq as tinaFaqLocal } from '../lib/tina/loaders';
 import { homepage } from '../content/homepage-data';
-import { tinaFaq } from '../lib/tina/loaders';
-import { renderFaqAnswer } from '../lib/faq-answer';
-
-const visibleItems = tinaFaq.items.filter((item) => item.visible !== false);
+const faqRes = await getFaq();
+const tinaFaqRemote = (faqRes?.data as { faq?: Record<string, unknown> })?.faq || {};
+// TinaCloud is the authority when it returns content; local JSON is the
+// fallback for first-build/unauthenticated/empty-index cases (prevents an
+// empty FAQ page and keeps e2e deterministic).
+const tinaFaq = (tinaFaqRemote.items as unknown[])?.length
+  ? tinaFaqRemote
+  : (tinaFaqLocal as unknown as Record<string, unknown>);
+const visibleItems = ((tinaFaq.items || []) as Array<{ question: string; answer: string | Record<string, unknown>; visible?: boolean; _content_source?: unknown }>).filter((item) => item.visible !== false);
 ---
 
 <BaseLayout title={`${tinaFaq.pageHeading} — UK Bangla Tigers`} description="Answers to common questions about UK Bangla Tigers.">
@@ -24,21 +31,18 @@ const visibleItems = tinaFaq.items.filter((item) => item.visible !== false);
     <PageBanner title="Frequently Asked Questions" crumbs={[{ label: 'Home', href: '/' }, { label: 'FAQ' }]} />
 
     <Section>
-      <SectionHeader eyebrow={tinaFaq.pageEyebrow || 'FAQ'} heading={tinaFaq.pageHeading} />
-      {visibleItems.length > 0 ? (
-        <div class="ukbt-faq-list">
-              {visibleItems.map((item) => (
-            <details class="ukbt-faq-item">
-              <summary class="ukbt-faq-question" data-tina-field="items.question">{item.question}</summary>
-              {/* REM-001: set:html is safe ONLY because renderFaqAnswer escapes
-                  all CMS text first — see apps/web/src/lib/faq-answer.ts. */}
-              <div class="ukbt-faq-answer" set:html={renderFaqAnswer(item.answer)} />
-            </details>
-          ))}
-        </div>
-      ) : (
-        <p class="ukbt-faq-empty">No questions are answered yet. Answers will be published here as the club confirms them.</p>
-      )}
+      {/*
+        Header lives inside the faq island: heading/eyebrow edits live-update
+        on bridge re-render instead of going stale outside the boundary.
+      */}
+      <TinaIsland name="faq" wrapper={{ tag: 'div', className: '' }} primary>
+        <FAQSection
+          items={visibleItems}
+          pageHeading={tinaFaq.pageHeading as string}
+          pageEyebrow={(tinaFaq.pageEyebrow as string) || 'FAQ'}
+          data={tinaFaq}
+        />
+      </TinaIsland>
     </Section>
 
     <Section surface="alt" paddingBottom="normal">
@@ -47,64 +51,3 @@ const visibleItems = tinaFaq.items.filter((item) => item.visible !== false);
   </main>
   <Footer social={homepage.social} nav={homepage.nav} secondaryNav={homepage.secondaryNav} />
 </BaseLayout>
-
-<style>
-  .ukbt-faq-list {
-    display: flex;
-    flex-direction: column;
-    gap: var(--ukbt-space-4);
-    max-width: 48rem;
-  }
-  .ukbt-faq-item {
-    border-bottom: 1px solid var(--ukbt-color-neutral-200);
-    padding-bottom: var(--ukbt-space-4);
-  }
-  .ukbt-faq-item[open] {
-    padding-bottom: var(--ukbt-space-2);
-  }
-  .ukbt-faq-question {
-    font-family: var(--ukbt-font-family-heading);
-    font-size: var(--ukbt-font-size-2);
-    font-weight: 600;
-    cursor: pointer;
-    list-style: none;
-    display: flex;
-    align-items: center;
-    gap: var(--ukbt-space-2);
-    min-height: 44px;
-  }
-  .ukbt-faq-question::before {
-    content: '+';
-    font-size: 1.25em;
-    font-weight: 700;
-    color: var(--ukbt-color-brand-accent);
-    flex-shrink: 0;
-  }
-  .ukbt-faq-item[open] .ukbt-faq-question::before {
-    content: '−';
-  }
-  .ukbt-faq-question::-webkit-details-marker {
-    display: none;
-  }
-  .ukbt-faq-question:focus-visible {
-    outline: 2px solid var(--ukbt-color-brand-accent);
-    outline-offset: 2px;
-    border-radius: 2px;
-  }
-  .ukbt-faq-answer {
-    padding: var(--ukbt-space-3) 0 var(--ukbt-space-2) 0;
-    color: var(--ukbt-color-neutral-700);
-    line-height: 1.6;
-  }
-  .ukbt-faq-answer :global(p) {
-    margin: 0 0 var(--ukbt-space-3) 0;
-  }
-  .ukbt-faq-answer :global(p:last-child) {
-    margin-bottom: 0;
-  }
-  .ukbt-faq-empty {
-    color: var(--ukbt-color-neutral-500);
-    font-style: italic;
-    max-width: 48rem;
-  }
-</style>

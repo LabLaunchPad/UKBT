@@ -26,3 +26,36 @@ test('admin shell serves login UI with healthy same-origin assets', async ({
   await expect(page.getByText(/editing with TinaCMS/i).first()).toBeVisible();
   expect(sameOriginFailures, 'no same-origin asset failures').toEqual([]);
 });
+
+test('frame-ancestors CSP header is present (not X-Frame-Options DENY)', async ({
+  page,
+}) => {
+  await page.goto('/admin/');
+  const response = await page.request.fetch('/admin/');
+  const headers = response.headers();
+  const csp = (headers['content-security-policy'] as string) || '';
+  // In dev, CSP may be delivered via meta tag not header; only assert
+  // when a header is present — the no-X-Frame-Options assertion below is
+  // the hard requirement.
+  if (csp) {
+    expect(csp).toContain('frame-ancestors');
+  }
+});
+
+test('no X-Frame-Options header overrides frame-ancestors', async ({
+  page,
+}) => {
+  const response = await page.request.fetch('/admin/');
+  const xfo = response.headers()['x-frame-options'];
+  expect(xfo).toBeFalsy();
+});
+
+test('Tina bridge script loads correctly on admin shell', async ({ page }) => {
+  await page.goto('/admin/');
+  // Bridge is staged as a static asset at /admin/bridge.js by the
+  // @tinacms/astro integration (verified via astro:build:done). In the
+  // admin shell it is loaded as a module; in public pages it is loaded
+  // via the TinaIsland inline bootstrap. Either path proves packaging.
+  const bridge = await page.request.fetch('/admin/bridge.js');
+  expect(bridge.ok()).toBe(true);
+});

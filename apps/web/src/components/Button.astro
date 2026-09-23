@@ -25,6 +25,10 @@ interface Props {
   icon?: boolean;
   /** External URL: opens in a new tab with opener protection. */
   external?: boolean;
+  /** Tina field marker for the label element. */
+  labelTinaField?: string;
+  /** Tina field marker for the anchor/button element. */
+  hrefTinaField?: string;
 }
 
 const {
@@ -35,6 +39,8 @@ const {
   href,
   icon = true,
   external = false,
+  labelTinaField,
+  hrefTinaField,
 } = Astro.props;
 const Tag = href ? 'a' : 'button';
 ---
@@ -46,8 +52,9 @@ const Tag = href ? 'a' : 'button';
   rel={href && external ? 'noopener noreferrer' : undefined}
   disabled={!href && disabled ? true : undefined}
   aria-disabled={href && disabled ? 'true' : undefined}
+  {...(hrefTinaField ? { 'data-tina-field': hrefTinaField } : {})}
 >
-  <span class="ukbt-button__title">{label}</span>
+  <span class="ukbt-button__title" {...(labelTinaField ? { 'data-tina-field': labelTinaField } : {})}>{label}</span>
   {
     icon && (
       <span class="ukbt-button__icon" aria-hidden="true">

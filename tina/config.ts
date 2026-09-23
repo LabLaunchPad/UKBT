@@ -1,7 +1,7 @@
 import { defineConfig } from 'tinacms';
 
 export default defineConfig({
-  branch: process.env.TINA_BRANCH || process.env.GITHUB_BRANCH || 'main',
+  branch: process.env.TINA_BRANCH || process.env.GITHUB_BRANCH || process.env.WORKERS_CI_BRANCH || process.env.CF_PAGES_BRANCH || 'main',
   // PUBLIC_TINA_CLIENT_ID is the Astro-convention name; TINA_CLIENT_ID is
   // accepted as a fallback because Tina's own docs use that name and a
   // mismatched variable name otherwise fails closed at build time.
@@ -17,6 +17,9 @@ export default defineConfig({
       mediaRoot: 'media',
     },
   },
+  // Search disabled by design — build uses --skip-search-index
+  // (package.json:18, ci.yml:272). Do not provision TINA_SEARCH_TOKEN
+  // unless search is re-enabled per https://tina.io/docs/reference/search/overview
   search: {
     tina: {
       indexerToken: process.env.TINA_SEARCH_TOKEN || undefined,
@@ -258,10 +261,11 @@ export default defineConfig({
                 ui: { validate: (v: string) => (!v ? 'Required' : v.length > 120 ? 'Keep under 120 characters' : undefined) },
               },
               {
-                type: 'rich-text',
+                type: 'string',
                 name: 'answer',
                 label: 'Answer',
                 required: true,
+                ui: { component: 'textarea', validate: (v: string) => (!v ? 'Required' : v.length > 500 ? 'Keep under 500 characters' : undefined) },
               },
               {
                 type: 'boolean',

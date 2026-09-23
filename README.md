@@ -38,7 +38,7 @@ The official website of **UK Bangla Tigers Cricket Club (CIC, est. 2020)** — a
 
 ## The site
 
-16 routes — Home, About, Club Captain, Players Profile, Tournaments, Franchises, Community, Coaching & Development, News, Membership, Join, Services, Contact, FAQ, Offline, 404 — plus a TinaCMS editorial layer for headlines, CTAs and FAQs.
+18 routes — Home, About, Club Captain, Players Profile, Tournaments, Franchises (plus the Uppsala Tigers franchise page), Community, Coaching & Development, News (plus per-article slugs), Membership, Join, Services, Contact, FAQ, Offline, 404 — plus the Tina island re-render endpoint — plus a TinaCMS editorial layer for headlines, CTAs and FAQs.
 
 <div align="center">
 <img src="https://raw.githubusercontent.com/LabLaunchPad/UKBT/main/apps/web/public/media/team-huddle.webp" alt="Squad team huddle" width="32%" />

@@ -18,7 +18,12 @@
 // this change); per the client's later confirmation London Blaze and
 // Roma Ovest Titans play in the CURRENT franchise team alongside UK
 // Bangla Tigers and Uppsala Tigers (4 current, 8 previous).
-import { type ContentRecord, createRegistry, evaluate } from '@ukbt/truth/gate';
+import {
+  type ContentRecord,
+  createRegistry,
+  evaluate,
+  isPublishable,
+} from '@ukbt/truth/gate';
 import { ContentRecordSchema } from '@ukbt/truth/schema';
 
 const registry = createRegistry([
@@ -53,8 +58,13 @@ function record(f: Fact<unknown>): ContentRecord {
   return ContentRecordSchema.parse({
     field: f.field,
     value: f.value,
-    status: 'pending_review',
+    // U-23 closed 2026-09-23: owner approval EV-20260923-001
+    // (Lablaunchpad/admin, all-current-facts, amendable). Minimal honest
+    // step is approved, not published (TRUTH-CONTRACT.md keeps approval
+    // and going live separate).
+    status: 'approved',
     sources: f.sources,
+    approver: 'Lablaunchpad (admin, 2026-09-23, EV-20260923-001)',
   }) as ContentRecord;
 }
 
@@ -89,7 +99,12 @@ const facts = {
 
 const allRecords: ContentRecord[] = Object.values(facts).map((f) => record(f));
 for (const rec of allRecords) {
-  const result = evaluate(rec, gateOptions);
+  // Production render boundary (contracts/TRUTH-CONTRACT.md, docs/adr-001):
+  // only approved/published records may publish. Dev keeps evidence-valid
+  // evaluate() so pending_review content stays reviewable.
+  const result = import.meta.env.PROD
+    ? isPublishable(rec, gateOptions)
+    : evaluate(rec, gateOptions);
   if (!result.passed) {
     throw new Error(
       `Truth gate failed for '${rec.field}': ${result.reasons.map((r) => `${r.rule}: ${r.detail}`).join('; ')}`,
