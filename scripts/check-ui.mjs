@@ -3,7 +3,7 @@
 // source. P0-structural issues FAIL; judgment calls WARN (listed, exit 0
 // unless failures exist). Output ends with:
 //   UI_STATUS = PASS | FAIL
-import { existsSync, globSync, readFileSync, readdirSync } from 'node:fs';
+import { existsSync, globSync, readdirSync, readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 

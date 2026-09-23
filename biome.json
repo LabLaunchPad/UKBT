@@ -1,14 +1,16 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.5.13/schema.json",
   "vcs": { "enabled": true, "clientKind": "git", "useIgnoreFile": true },
   "files": {
     "ignoreUnknown": true,
-    "include": ["apps/**/*.ts", "packages/**/*.ts", "scripts/**/*.mjs"],
-    "ignore": [
-      "apps/**/dist/**",
-      "apps/**/.astro/**",
-      "**/src/styles/generated/**",
-      ".opencode/**"
+    "includes": [
+      "apps/**/*.ts",
+      "packages/**/*.ts",
+      "scripts/**/*.mjs",
+      "!apps/**/dist",
+      "!apps/**/.astro",
+      "!**/src/styles/generated",
+      "!.opencode"
     ]
   },
   "formatter": { "enabled": true, "indentStyle": "space", "indentWidth": 2 },

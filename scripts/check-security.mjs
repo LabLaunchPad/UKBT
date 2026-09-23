@@ -5,7 +5,7 @@
 // Output ends with:
 //   SECURITY_STATUS = PASS | FAIL
 import { createHash } from 'node:crypto';
-import { existsSync, globSync, readFileSync, readdirSync } from 'node:fs';
+import { existsSync, globSync, readdirSync, readFileSync } from 'node:fs';
 import { basename, dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
