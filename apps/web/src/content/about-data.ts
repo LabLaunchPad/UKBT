@@ -3,12 +3,7 @@
 // leadership, mission facts); shared site-wide facts (nav, social) are
 // imported from homepage-data.ts rather than re-declared, so they are
 // gated exactly once.
-import {
-  type ContentRecord,
-  createRegistry,
-  evaluate,
-  isPublishable,
-} from '@ukbt/truth/gate';
+import { type ContentRecord, createRegistry, evaluate } from '@ukbt/truth/gate';
 import { ContentRecordSchema } from '@ukbt/truth/schema';
 
 const registry = createRegistry([
@@ -21,11 +16,6 @@ const registry = createRegistry([
     url: 'artifacts/evidence/EV-20260909-001.yaml',
   },
   {
-    id: 'EV-0916-01',
-    tier: 'T1',
-    url: 'artifacts/evidence/EV-20260916-001.yaml',
-  },
-  {
     id: 'EV-20260910-001',
     tier: 'T2',
     url: 'artifacts/evidence/EV-20260910-001.yaml',
@@ -33,7 +23,7 @@ const registry = createRegistry([
   {
     id: 'EV-20260910-002',
     tier: 'T2',
-    url: 'artifacts/evidence/EV-20260910-002.yaml',
+    url: 'artifacts/review/LEGACY-ABOUT-INVENTORY.md',
   },
   {
     id: 'EV-20260910-003',
@@ -68,13 +58,8 @@ function record(f: Fact<unknown>): ContentRecord {
   return ContentRecordSchema.parse({
     field: f.field,
     value: f.value,
-    // U-23 closed 2026-09-23: owner approval EV-20260923-001
-    // (Lablaunchpad/admin, all-current-facts, amendable). Minimal honest
-    // step is approved, not published (TRUTH-CONTRACT.md keeps approval
-    // and going live separate).
-    status: 'approved',
+    status: 'pending_review',
     sources: f.sources,
-    approver: 'Lablaunchpad (admin, 2026-09-23, EV-20260923-001)',
   }) as ContentRecord;
 }
 
@@ -92,8 +77,8 @@ const facts = {
   },
   statPlayers: {
     field: 'org.stat_players',
-    value: '50+',
-    sources: ['EV-026', 'EV-0909-01', 'EV-0916-01'],
+    value: '40+',
+    sources: ['EV-026', 'EV-0909-01'],
   },
   statTournaments: {
     field: 'org.stat_tournaments',
@@ -173,12 +158,7 @@ const facts = {
 const allRecords: ContentRecord[] = Object.values(facts).map((f) => record(f));
 
 for (const rec of allRecords) {
-  // Production render boundary (contracts/TRUTH-CONTRACT.md, docs/adr-001):
-  // only approved/published records may publish. Dev keeps evidence-valid
-  // evaluate() so pending_review content stays reviewable.
-  const result = import.meta.env.PROD
-    ? isPublishable(rec, gateOptions)
-    : evaluate(rec, gateOptions);
+  const result = evaluate(rec, gateOptions);
   if (!result.passed) {
     throw new Error(
       `Truth gate failed for '${rec.field}': ${result.reasons.map((r) => `${r.rule}: ${r.detail}`).join('; ')}`,

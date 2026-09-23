@@ -25,13 +25,7 @@ try {
     encoding: 'utf8',
   }).trim();
 } catch {
-  // No git (packed preview envs) — 'dev' namespace, same mechanics. LOUD,
-  // because in CI a silent fallback would mint the shared ukbt-static-dev
-  // namespace: stale-cache cross-contamination between releases with the
-  // root cause invisible downstream (audit 2026-09-18).
-  console.error(
-    'build-sw: WARNING — git absent; stamping sw.js with the shared "dev" build id. Cache namespaces will NOT be per-release.',
-  );
+  // No git (packed preview envs) — 'dev' namespace, same mechanics.
 }
 
 const stamped = readFileSync(distSw, 'utf8').replaceAll(

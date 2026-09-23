@@ -15,7 +15,7 @@
     "tokens:build": "style-dictionary build --config style-dictionary.config.json"
   },
   "dependencies": {
-    "zod": "^3.25.76"
+    "zod": "^3.24.1"
   },
   "devDependencies": {
     "typescript": "^5.7.2",

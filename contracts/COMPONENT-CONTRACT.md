@@ -9,7 +9,7 @@ never becomes the contract itself.
 ## Outputs / Frozen shape
 
 Every component contract (design-system layer 6,
-`packages/truth/src/contracts/`) is **framework-neutral** and specifies, at
+`packages/truth/contracts/`) is **framework-neutral** and specifies, at
 minimum:
 
 | Field | Content |
@@ -30,7 +30,7 @@ contains no Astro syntax (no `.astro` frontmatter, no slots-as-specified-
 in-Astro-terms) — it is written so that a hypothetical future rewrite in a
 different framework could implement it unchanged. `apps/web/src/
 components/` holds the Astro *implementation* of a contract; the contract
-itself lives in `packages/truth/src/contracts/`, per `REPOSITORY-CONTRACT.md`'s
+itself lives in `packages/truth/contracts/`, per `REPOSITORY-CONTRACT.md`'s
 layer table.
 
 ## Named component candidates carried forward from Track A (evidence,
@@ -74,9 +74,7 @@ Adelux-derived component shape).
 ## Validation method
 
 - A contract review step (human or Track B unlock precondition) confirms
-  no framework syntax appears in `packages/truth/src/contracts/*`.
-  (Path corrected 2026-09-18: the contracts were audited at
-  `packages/truth/src/contracts/` — button, card, link, breadcrumb.)
+  no framework syntax appears in `packages/truth/contracts/*`.
 - Each Astro implementation in `apps/web/src/components/` is checked
   against its contract's state/variant/accessibility list before being
   considered `IMPLEMENTED` (`DESIGN-SYSTEM-CONTRACT.md`).

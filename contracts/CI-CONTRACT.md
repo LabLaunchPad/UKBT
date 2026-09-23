@@ -17,14 +17,14 @@ gates ad hoc — and so `ABSENT` is never mistaken for `PASS` in the interim.
 | Unit/integration | Vitest, `packages/truth` | Yes |
 | Content schema | Zod schema validation against all content files | Yes |
 | Truth gate | T1-T9 (`TRUTH-CONTRACT.md`) against all content files | Yes |
-| Placeholder detection | Sentinel absence in production build / presence in test fixtures | **NO** (amended 2026-09-18) — never wired; `placeholderSentinel()` has no production caller and no dist scan exists. Open item, see below |
+| Placeholder detection | Sentinel absence in production build / presence in test fixtures | Yes |
 | Build | `astro build` succeeds | Yes |
 | Route/link integrity | Every route resolves; every internal link targets an existing route | Yes |
 | SEO metadata completeness | `A14` — title/description/canonical/OG per route | Yes |
 | Accessibility | axe-core + keyboard suite (`ACCESSIBILITY-CONTRACT.md`) — **merge-blocking, not informational** | Yes |
-| E2E / visual regression | `VISUAL-REGRESSION-CONTRACT.md`, CI-vs-CI only | **PARTIAL** (amended 2026-09-18) — Playwright e2e + axe run merge-blocking; the *visual comparison* (screenshot/geometry diff) has never existed. Open item, see below |
+| E2E / visual regression | `VISUAL-REGRESSION-CONTRACT.md`, CI-vs-CI only | Yes |
 | Secret scan | No credential/token/key committed | Yes |
-| Git cleanliness | No uncommitted generated output, no stray files | **NO** (amended 2026-09-18) — never wired to CI. Open item, see below |
+| Git cleanliness | No uncommitted generated output, no stray files | Yes |
 | Dependency allowlist | Every `package.json` dependency (either package) is on the explicit allowed list; anything else fails the build | Yes |
 
 **Explicit, restated:** "the gate runs" and "the gate blocks merge on
@@ -34,32 +34,18 @@ The accessibility gate in particular is named merge-blocking, not
 informational, because it was the gate most likely to be softened under
 time pressure (`ARCHITECTURE-PROPOSAL-V3.md`'s explicit red-team finding).
 
-## Current state (honest, per `knowledge/08-VALIDATION-POLICY.yaml`;
-regenerated 2026-09-18 — the previous state block still said
-`CI_WORKFLOW_PRESENT = false` / `GATES_IMPLEMENTED = 0` while
-`.github/workflows/ci.yml` implemented 16+ merge-blocking jobs; a frozen
-state block contradicting the repository it governs is itself a defect)
+## Current state (honest, per `knowledge/08-VALIDATION-POLICY.yaml`)
 
 ```
-CI_WORKFLOW_PRESENT = true
-CI_STATE = IMPLEMENTED (merge-blocking) — 16+ jobs, SHA-pinned actions
-GATES_IMPLEMENTED = 12 of the 15 table rows above (the other three
-are marked NO/PARTIAL: placeholder detection, visual comparison, git
-cleanliness)
-NOT WIRED YET (ABSENT != PASS, recorded here and in ci.yml's closing
-note, not faked with vacuous steps):
-  1. Placeholder detection — implement `__PLACEHOLDER_[A-Z0-9_]+__`
-     scan of dist (belongs in check-security or a dedicated gate) and
-     wire isPlaceholderSentinel() into the truth gate's evaluate();
-  2. Visual comparison — either implement toHaveScreenshot/geometry-diff
-     in CI or amend VISUAL-REGRESSION-CONTRACT.md to mark parity
-     VERIFIED = NOT_CURRENTLY;
-  3. Git cleanliness — a `git status --porcelain` (or equivalent)
-     job/step.
+CI_WORKFLOW_PRESENT = false
+CI_STATE = ABSENT   (not FAIL, not PASS — nothing exists to run yet)
+GATES_IMPLEMENTED = 0
+RAN_AND_PASSED = [scaffold_self_test: node scripts/scaffold-self-test.mjs, exit 0]
 ```
 
-`ABSENT ≠ PASS`. `NOT_RUN ≠ PASS`. The three gaps above are recorded
-rather than faked; adding them is backlog, not aspiration.
+`ABSENT ≠ PASS`. `NOT_RUN ≠ PASS`. This contract does not claim any gate
+above currently runs — it fixes what must exist by the time application
+code is written, so that Stage 4 cannot quietly ship without one.
 
 ## Invariants
 

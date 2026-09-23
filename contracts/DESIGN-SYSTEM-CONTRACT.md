@@ -72,7 +72,7 @@ movement between layers 2/3 (RAW/CANDIDATE, both Track A) and layers 4-10
 - Claiming an item is `VERIFIED` because it was `IMPLEMENTED` and "looks
   right."
 - Skipping ADAPTED and writing an Adelux RAW/CANDIDATE value directly into
-  `packages/truth/src/tokens/approved/` (path corrected 2026-09-18).
+  `packages/truth/tokens/approved/`.
 - Treating layers 1-3 as editable once frozen.
 
 ## Validation method

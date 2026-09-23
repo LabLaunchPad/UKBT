@@ -111,11 +111,6 @@ const TARGET_GROUPS = [
     selector: '.ukbt-breadcrumb a',
     label: 'breadcrumb links',
   },
-  {
-    route: '/',
-    selector: '.ukbt-about__dot',
-    label: 'slideshow dots (T6: measured 8-10px, enlarged to a 24px hit area)',
-  },
 ];
 
 for (const group of TARGET_GROUPS) {

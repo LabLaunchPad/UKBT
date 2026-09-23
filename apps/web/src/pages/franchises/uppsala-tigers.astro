@@ -1,18 +1,18 @@
 ---
-// Uppsala Tigers franchise detail page — moved here from the single-page
+// Uppsala Tigers franchise detail page â€” moved here from the single-page
 // /franchises showcase (which is now the Our Franchises card-grid
 // landing) per the client's instruction that this franchise sit under a
 // clickable "Our Franchise" list (EV-20260831-001, EV-20260831-002;
 // contracts/ROUTE-CONTRACT.md AMENDMENT 02). Full squad + team officials
 // per the club's own "Uppsala Tigers Players & Managements List"
 // (EV-20260831-005/-006), superseding the earlier overseas-only roster.
-// "Nipo Khadem" excluded per CLIENT_REQ_008 — absent from every squad
+// "Nipo Khadem" excluded per CLIENT_REQ_008 â€” absent from every squad
 // list supplied since that instruction.
 //
 // The intro image is Uppsala Tigers' own supplied crest
 // (EV-20260831-004), not nordic-smash-slide.webp: that graphic has "NIPO
 // KHADEM / PORTUGAL" baked into the photo itself (EV-20260826-031, found
-// on direct visual inspection of this page's own screenshot) — no
+// on direct visual inspection of this page's own screenshot) â€” no
 // text-content check can catch a name inside a raster image. No
 // alternative photo excluding that player exists in evidence.
 import BaseLayout from '../../layouts/BaseLayout.astro';
@@ -38,7 +38,7 @@ if (!uppsala) {
 ---
 
 <BaseLayout
-  title="Uppsala Tigers — Our Franchises — UK Bangla Tigers"
+  title="Uppsala Tigers â€” Our Franchises â€” UK Bangla Tigers"
   description="UK Bangla Tigers' sister franchise, Uppsala Tigers (Sweden)."
 >
   <Header nav={homepage.nav} cta={homepage.primaryCta} />
@@ -48,7 +48,7 @@ if (!uppsala) {
       title="Uppsala Tigers"
       crumbs={[
         { label: 'Home', href: '/' },
-        { label: 'Our Franchises', href: '/franchises/' },
+        { label: 'Our Franchises', href: '/franchises' },
         { label: 'Uppsala Tigers' },
       ]}
     />

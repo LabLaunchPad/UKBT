@@ -4,14 +4,6 @@ packages:
 allowBuilds:
   '@biomejs/biome': true
   '@bundled-es-modules/glob': true
-  # Audit 2026-09-18: these three were missing, so pnpm 10 silently skipped
-  # their postinstalls on fresh installs — better-sqlite3 is the native
-  # module behind @tinacms/search (needed the moment --skip-search-index is
-  # dropped or `tinacms dev` search is used); @sentry/cli downloads the
-  # sourcemap-upload binary; core-js postinstall is a funding banner.
-  '@sentry/cli': true
-  better-sqlite3: true
-  core-js: true
   esbuild: true
   sharp: true
   style-dictionary: true

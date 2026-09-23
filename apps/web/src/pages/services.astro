@@ -1,12 +1,12 @@
 ---
-// Mirrors the reference's `service.html` (Banner → Service → Membership
-// CTA → Pricing → Testimonial → Contact CTA). Route added under
+// Mirrors the reference's `service.html` (Banner â†’ Service â†’ Membership
+// CTA â†’ Pricing â†’ Testimonial â†’ Contact CTA). Route added under
 // CLIENT_REQ_009 / ROUTE-CONTRACT Amendment 01.
 //
 // SHELL. `noindex` per that amendment's condition 2. The reference page
 // sells court hire, coaching packages and pricing tiers. UKBT has no
-// evidence of offering any service to the public — the club's evidenced
-// activity is competing in tournaments — so every content slot here is
+// evidence of offering any service to the public â€” the club's evidenced
+// activity is competing in tournaments â€” so every content slot here is
 // UNKNOWN. Indexing this page would be a public claim that the club
 // sells something, which is exactly what condition 2 guards against.
 import BaseLayout from '../layouts/BaseLayout.astro';
@@ -20,7 +20,7 @@ import Footer from '../components/Footer.astro';
 import { homepage } from '../content/homepage-data';
 ---
 
-<BaseLayout title="What We Do — UK Bangla Tigers" description="What UK Bangla Tigers offers."
+<BaseLayout title="What We Do â€” UK Bangla Tigers" description="What UK Bangla Tigers offers."
   noindex={true}>
   <Header nav={homepage.nav} cta={homepage.primaryCta} />
   <main id="main-content" tabindex="-1">

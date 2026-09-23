@@ -1,7 +1,7 @@
 # Roadmap & Open Items
 
 **Status:** LIVING DOCUMENT — update in place as stages/items close, don't
-fork a second copy. Last updated 2026-09-23.
+fork a second copy. Last updated 2026-09-09.
 
 **Purpose:** one place that answers "what's done, what's next, what's
 blocked, and on whom" without re-deriving it from receipts scattered across
@@ -52,40 +52,6 @@ five gates — `check:seo`, `check:ui`, `check:motion`, `check:security`,
 § 2.13, § 2.9, § 2.11). The August receipt above is therefore a
 historical record, not the current gate state; a fresh Stage-10-style
 receipt (including the CI-only browser suites) has not been cut.
-
-**Control-plane update (2026-09-15):** after the production 404 (adapter
-activated, serve mapping unexamined — AL-026), `deploy:verify` grew three
-more steps: `check:control-plane` (AI control-plane self-audit per
-`contracts/AI-EXECUTION-CONTRACT.md`), `check:deploy-mapping`
-(pre-deploy serve-mapping gate), and `test:failure-injection` (9-case
-proof the mapping gate fails on bad topologies). Post-deploy HTTP proof
-is `scripts/smoke-deploy.mjs` (6 assertions; production 6/6 PASS after
-PR #66). Full `deploy:verify` green with the new steps; CI gains
-`control-plane` and `failure-injection` jobs.
-
-**Performance hardening (2026-09-15):** branch protection now requires
-18 checks (added deploy-mapping, control-plane, failure-injection, and
-perf-gate — verified by re-reading protection). perf-gate assessed
-trustworthy: deterministic, fail-closed, raw-bytes conservative vs
-transfer; misleading diagnostic strings fixed (AL-027), 7-case perf
-failure-injection chained into `test:failure-injection`. Baseline:
-CSS 79.2/80KB (next CSS addition forces explicit budget re-approval),
-JS 39.5/48KB, HTML max 65.5/72KB. LCP/CLS/INP remain UNMEASURED (no
-repo tooling). No src/ changes; motion reduced-motion model verified
-nuanced (kill + opacity-only restoration), ClientRouter listeners
-verified guarded.
-
-**SEO remediation (2026-09-15):** Semrush/SEOmator reports reconciled
-against live HTTP. Root fix: trailing-slash canonical architecture
-(canonical == served URL; AL-028) clearing the 11-sitemap + 144-redirect
-cluster at its cause. Gates flipped + 8-case SEO failure-injection.
-Added llms.txt (verified facts), Tina homepage metaDescription (144
-chars), below-fold lazy. Falsified as tool artifacts: single-incoming
-links (17/17 actual), compression warnings (gzip live). Platform-owned
-(not code): Cloudflare-managed robots.txt, dead www DNS. Blocked on
-owner content: thin pages, privacy/terms/address/dates (no filler, no
-fabrication). Rejected with reasons: HSTS preload, LCP preload, srcset
-pipeline, share buttons, filler content.
 
 ---
 
@@ -973,102 +939,3 @@ no new branch — direct continuation):
     records), MOTION/UI PASS, motion+pages 98/98, players captures 7/7
     reviewed at 1440/390. Perf: no new failure (players page under the
     page-image budget).
-19. **Motion skills + advisors (new branch `feat/opencode-motion-skills`,
-    owner direction 2026-09-15, EV-20260915-001).** All 9 skills vendored
-    from `iart-ai/web-animation-skills` @ `b6dba3e` (MIT) into
-    `.opencode/skills/` with license frontmatter + binding UKBT overlays
-    (ADOPT: 60fps, accessible-remapped, svg-CSS/SMIL, micro-CSS;
-    CONDITIONAL: glassmorphism; REFERENCE ONLY: gsap-web,
-    page-transition-animation, lottie-animation, ascii-animation) + 9
-    read-only advisors in `.opencode/agents/` + `THIRD-PARTY-NOTICES.md`.
-    Known harness-policy conflict (ADV-004) proceeds under owner waiver,
-    recorded in EV-20260915-001. Zero npm deps, nothing under `apps/web/`.
-
-## Audit batch 2026-09-18 — open items (deferred, recorded per ABSENT != PASS)
-
-Deferred from the 2026-09-18 multi-agent audit + fix loop (fixed the same
-day: mojibake titles x30, unparseable knowledge yaml, JSON-LD escaping,
-island prop parity, motion re-arm on ClientRouter swaps, sw offline catch,
-aria-expanded on <ul>, CSP unsafe-inline -> build-stamped sha256 hashes,
-XFO/frame-ancestors conflict, evidence record EV-20260910-002, gate
-hardening in check-seo/check-security/check-release-path/check-deploy-mapping,
-CI dist artifact sharing + timeouts + fork-PR build fallbacks + gated
-workers-deploy reinstatement, config fixes: allowBuilds/.nvmrc/engines/
-zod hoist/Docker removal/admin gitignore/receipt-schema dedup). Not fixed
-here, deliberately:
-
-1. **Truth-gate registry generation** — source tiers are hand-typed
-   literals inside content modules; nothing reads
-   `artifacts/evidence/*.yaml` at build time (audit P1; the dangling
-   EV-20260910-002 it caused was fixed, but the *mechanism* still
-   self-attests). Fix: generate the registry from evidence yaml
-   (classification -> tier, valid_until -> validUntil) and fail closed on
-   unknown IDs. Also define the T1-T5 taxonomy in knowledge/ (currently
-   defined nowhere).
-2. **Content-trust taint analysis** — `check-content-trust.mjs` is
-   regex-based and single-file: cross-file re-exports escape taint;
-   property-assignment propagation and dynamic import() are untracked.
-   Fix: AST-based pass (the repo's own audit tooling demonstrates the
-   approach).
-3. **Visual comparison gate** — screenshots.spec.ts captures 105 images
-   with zero assertions and compare-geometry.mjs is wired to nothing
-   (audit P1; CI-CONTRACT row amended to PARTIAL this commit). Fix:
-   either implement screenshot/geometry comparison in CI or move capture
-   to a manual artifact job.
-4. **Evidence-expiry enforcement (T4)** — no record sets `validUntil`;
-   the T4 rule is dead in practice until registry generation (item 1)
-   lands.
-5. **Unit coverage for `src/lib/content-trust.ts`** — the trust-class
-   policy map (~230 lines) has no direct test; only the static check
-   script observes it.
-6. **Remaining gate injection suites** — check-ui / check-motion /
-   check-internal-links lack failure-injection tests (check-security and
-   check-seo gained theirs in this batch); check-ui also lacks the
-   `UKBT_CHECK_ROOT` sandbox override.
-7. **Tina visual-edit preview on static hosting** — `?tina-edit=1`
-   requests match static assets (asset-first routing) and never reach the
-   middleware; admin-iframe path now permitted by CSP frame-ancestors
-   (XFO removed this commit) but needs live verification against
-   production before the edit-mode UX can be declared working.
-8. **ogImage prop** — BaseLayout accepts per-page og images but no page
-   passes one; every route shares social-card.jpg.
-9. **Playwright spec hardening** — replace hardcoded `waitForTimeout`s in
-   motion.spec.ts / mobile-ux.spec.ts with `waitForFunction` settle
-   helpers; add WebKit smoke project; upload `test-results/` traces on
-   failure.
-10. **Node engine pinning in CI** — NODE_VERSION '22' floats; pin to the
-    full version in `.nvmrc` (now 22.23.2) and align the workflow.
-
-## TinaCMS visual-editing closure 2026-09-22/23 — merged, smoke RED (external)
-
-Audit-batch item 7 above (edit-mode UX unverified) is now CLOSED: visual
-editing is proven live end-to-end. Evidence chain in
-`artifacts/audit/20260923-tina-admin-closure.md` (+ certification,
-issue-register, blocker-closure certificate, `20260923-final-closeout.md`):
-
-1. **Plumbing:** `/admin/` 200 + Tina bundle 200, single live CSP with
-   `frame-ancestors` allowing Tina hosts, `PUBLIC_TINA_ADMIN_ORIGIN`
-   bare (trailing-slash fixed 2026-09-19), FAQ `RichText→String` +
-   hybrid renderer (no `[object Object]`), 8× `data-tina-field`.
-2. **Real Save:** headline edited in `/admin` → commit `fbf05f2`
-   (`tinacloud-app[bot]`) → Workers Builds → live headline verified.
-   Owner separately confirmed the watched GitHub-OAuth + Save/Revert
-   session works from their login.
-3. **Gates merged (PR #96, `6da2262`):** fail-closed truth render
-   boundary (`isPublishable` in PROD, ADR-001), U-23 blanket approval
-   recorded (`EV-20260923-001`, 124 records
-   `pending_review→approved`), `tina-protocol.spec.ts` route-live pins
-   probe-skip on static CI servers (live covered by T3 matrix +
-   smoke), content-agnostic headline pins, vendor login-button axe
-   exclusion. Playwright green 5m29s.
-4. **Fixes merged:** PR #97 COOP `same-origin-allow-popups` (popup
-   `postMessage` restored), #98 unskip cloud checks (indexing proof
-   live), #99 CSP media/fonts hosts, #100 smoke edge-forensics.
-5. **STANDING BLOCKER — Post-deploy smoke FAIL on `main`** (run
-   `35816266024` + retry, all 6 paths `403 mitigated=challenge`,
-   rays `a3f6b6*`): GH-runner egress is Cloudflare-challenged while
-   production is 200 externally. Owner action: dashboard Security →
-   Events lookup for ray `a3f6b6da2a2d433c` → rule name, then decide
-   (allowlist Actions egress / tune bot policy / bless alternate
-   vantage). Smoke gate stays enforced; nothing weakened.
-   Registry owner contact remains `UNKNOWN`.

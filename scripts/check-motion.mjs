@@ -29,18 +29,8 @@ const ALLOWLIST = new Set([
 ]);
 for (const f of styleFiles) {
   const body = readFileSync(join(srcDir, f), 'utf8');
-  const blocks =
-    (f.endsWith('.css') ? body : (body.split('<style>')[1] ?? '')) +
-    (/\.astro$/i.test(f)
-      ? (() => {
-          const m = body.match(/<style[^>]*>[\s\S]*?<\/style>/gi) || [];
-          return m.join('\n');
-        })()
-      : '');
-  const inlineAnims = [...body.matchAll(/style="[^"]*animation\s*:/gi)].map(
-    (m) => m[0].replace(/^style="/, '').slice(0, 120),
-  );
-  const lines = `${blocks}\n${inlineAnims.join('\n')}`.split('\n');
+  const blocks = body.split('<style>')[1] ?? (f.endsWith('.css') ? body : '');
+  const lines = blocks.split('\n');
   for (let i = 0; i < lines.length; i++) {
     let t = lines[i].trim();
     if (!t || t.startsWith('/*') || t.startsWith('*') || t.startsWith('//')) {

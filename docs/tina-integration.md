@@ -63,21 +63,16 @@ TinaCloud Free (Git-backed)
 | `TINA_BRANCH` | Yes | `.env`, CI |
 | `PUBLIC_TINA_ADMIN_ORIGIN` | Yes | `.env`, CI |
 
-> **Notes:**
-> - `tina/config.ts:8` falls back to `TINA_CLIENT_ID` if `PUBLIC_TINA_CLIENT_ID` is not set — both names refer to the same value.
-> - `TINA_SEARCH_TOKEN` is NOT required — search is disabled by design (`tinacms build --skip-search-index`). See `tina/config.ts:23-30` and `docs/tina-audit/CMS_TRUST_MODEL.md`.
-> - `TINA_TOKEN` is a **build-time only** secret baked into the admin bundle by `tinacms build`. It is NOT a Workers runtime variable. Do not put it in `wrangler.jsonc` env_vars.
-
 ## Human TinaCloud Dashboard Steps
 
 1. Create/select the single TinaCloud project for `LabLaunchPad/UKBT`
 2. Connect/authorize the GitHub repository
 3. Confirm branch is `main`
-4. Confirm Free-plan limits (2 users, 2 roles, 1 project, 100MB per-asset size cap — no total quota published)
+4. Confirm Free-plan limits (2 users, 2 roles, 1 project, 100MB assets)
 5. Configure local (`http://localhost:4321`) and production (`https://ukbanglatigers.co.uk`) URLs
 6. Obtain the `PUBLIC_TINA_CLIENT_ID` from the TinaCloud dashboard
 7. Store the `TINA_TOKEN` in the appropriate secret store
-8. Verify repo-based media sync (100MB per-asset size cap)
+8. Verify repo-based media sync (100MB cap)
 9. Inspect the media library
 10. Perform one harmless preview/editor change
 11. Confirm Git-backed save
@@ -127,7 +122,7 @@ pnpm check:governance-scaffold  # scaffold self-test
 - 2 users max (hard cap)
 - 2 roles
 - 1 project
-- 100MB per-asset size cap (no total quota published)
+- 100MB asset cap
 - No editorial workflow (Team Plus $41/mo)
 - No API (Business $249/mo)
 - No AI assist, no SSO

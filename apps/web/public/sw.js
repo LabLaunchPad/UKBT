@@ -105,20 +105,15 @@ self.addEventListener('fetch', (event) => {
       caches.match(request).then(
         (hit) =>
           hit ||
-          fetch(request)
-            .then((res) => {
-              if (res.ok) {
-                const copy = res.clone();
-                caches
-                  .open(STATIC_CACHE)
-                  .then((cache) => cache.put(request, copy));
-              }
-              return res;
-            })
-            // Offline + uncached asset (e.g. first visit to a lazy hero
-            // slide): a bare fetch rejection would reject respondWith and
-            // surface as a hard TypeError instead of a clean failure.
-            .catch(() => new Response(null, { status: 504, statusText: 'Offline' })),
+          fetch(request).then((res) => {
+            if (res.ok) {
+              const copy = res.clone();
+              caches
+                .open(STATIC_CACHE)
+                .then((cache) => cache.put(request, copy));
+            }
+            return res;
+          }),
       ),
     );
   }

@@ -53,9 +53,9 @@ architecture proposal — restated here as the binding location map)
 | 1 Source evidence | `artifacts/extraction/`, `artifacts/source/` | Frozen (Track A) |
 | 2 Raw tokens | `artifacts/extraction/token-candidates.json` | Frozen, RAW=61 |
 | 3 Candidate tokens | same file | Frozen, CANDIDATE=20 |
-| 4 Adapted tokens | `packages/truth/src/tokens/adapted/` | Not created — Track B gated (paths corrected 2026-09-18) |
-| 5 Approved tokens | `packages/truth/src/tokens/approved/` | Not created — Track B gated |
-| 6 Component contracts | `packages/truth/src/contracts/` | Not created |
+| 4 Adapted tokens | `packages/truth/tokens/adapted/` | Not created — Track B gated |
+| 5 Approved tokens | `packages/truth/tokens/approved/` | Not created — Track B gated |
+| 6 Component contracts | `packages/truth/contracts/` | Not created |
 | 7 Framework adapter | `apps/web/src/components/` | Not created |
 | 8 UKBT content/truth | `packages/truth/content/` | Not created |
 | 9 Rendered implementation | `apps/web` build output | Not started |

@@ -34,20 +34,12 @@
   // generated `ukbt-web` name must NOT be adopted.
   "name": "ukbt-uk-bangla-tigers",
   "compatibility_date": "2026-09-14",
-  "compatibility_flags": ["nodejs_compat"],
   "main": "./apps/web/dist/server/entry.mjs",
   "assets": {
     "binding": "ASSETS",
     "directory": "./apps/web/dist/client",
     "not_found_handling": "404-page"
   },
-  // SESSION KV namespace pin (P0-1)
-  "kv_namespaces": [
-    {
-      "binding": "SESSION",
-      "id": "3435716ffa0e4616b01e2b0faf96ddd5"
-    }
-  ],
   // Mirrors the dashboard's current Observability settings for this Worker
   // (Settings > Observability), so `wrangler deploy`/`versions upload` from
   // CI don't silently reset them to defaults on the next deploy. Logs are
@@ -57,16 +49,13 @@
   "observability": {
     "enabled": false,
     "head_sampling_rate": 1,
-    // 2026-09-11 (P0/P1 hardening, F-06) intent was query-string redaction
-    // in persisted invocation logs — but `redact_query_string` is NOT a
-    // wrangler config field (absent from config-schema.json Observability,
-    // additionalProperties: false; absent from Cloudflare docs 2026-09-17),
-    // so wrangler warned and ignored it. Removed 2026-09-17 to kill the
-    // warning; redaction must be verified dashboard-side (Settings >
-    // Observability, human step). The safety case is unchanged — the static
-    // site has no query-string-dependent runtime behavior (no forms, no
-    // search, no URLSearchParams/location.search in apps/web/src). See
+    // 2026-09-11 (P0/P1 hardening, F-06): redact query strings from
+    // persisted invocation logs. Verified safe — the static site has no
+    // query-string-dependent runtime behavior (no forms, no search, no
+    // URLSearchParams/location.search anywhere in apps/web/src, no
+    // query-bearing redirects or analytics). See
     // docs/security/query-log-redaction.md.
+    "redact_query_string": true,
     "logs": {
       "enabled": true,
       "head_sampling_rate": 1,

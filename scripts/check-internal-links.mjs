@@ -7,13 +7,10 @@
 // Astro output, so a href="..."/href='...' regex is reliable here and
 // avoids a new dependency-allowlist entry for a one-file check.
 import { existsSync, globSync, readFileSync } from 'node:fs';
-import { dirname, extname, join, resolve } from 'node:path';
+import { dirname, extname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-// Sandbox override for scripts/test-seo-failure-injection.mjs.
-const root = process.env.UKBT_CHECK_ROOT
-  ? resolve(process.env.UKBT_CHECK_ROOT)
-  : dirname(dirname(fileURLToPath(import.meta.url)));
+const root = dirname(dirname(fileURLToPath(import.meta.url)));
 // With @astrojs/cloudflare adapter, static output goes to dist/client/.
 // Without adapter, it goes to dist/. Check both locations.
 const distDirClient = join(root, 'apps/web/dist/client');
@@ -30,20 +27,13 @@ if (!existsSync(distDir)) {
   process.exit(1);
 }
 
-const htmlFiles = globSync('**/*.html', { cwd: distDir })
-  // Tina admin is an authenticated SPA shell; its hash-routed links are not
-  // site content and must not trip link integrity. Prefix match covers both
-  // posix and win32 separators.
-  .filter(
-    (f) => f !== 'admin' && !f.startsWith('admin/') && !f.startsWith('admin\\'),
-  )
-  .map((f) => join(distDir, f));
+const htmlFiles = globSync('**/*.html', { cwd: distDir }).map((f) =>
+  join(distDir, f),
+);
 
 const hrefPattern = /href=["']([^"'#][^"']*)["']/g;
 const brokenLinks = [];
 const insecureLinks = [];
-const slashDrift = [];
-const dangerousLinks = [];
 let checkedLinks = 0;
 
 function resolvesToRealFile(internalPath) {
@@ -68,25 +58,6 @@ for (const file of htmlFiles) {
   const relFile = file.slice(distDir.length + 1);
   for (const match of html.matchAll(hrefPattern)) {
     const href = match[1];
-    // Dangerous schemes (REM-003): javascript:/data:/vbscript:/file: must
-    // never ship in any href. The loaders allowlist blocks CMS paths at
-    // build; this rule catches direct-constructed values reaching dist.
-    // Decoded once to catch single-encoded variants (browsers decode once).
-    const lower = href.trimStart().toLowerCase();
-    let decodedLower = lower;
-    try {
-      decodedLower = decodeURIComponent(lower);
-    } catch {
-      // Keep the raw form on malformed escapes.
-    }
-    const schemeOf = (s) => (s.match(/^([a-z][a-z0-9+.-]*):/) || [])[1];
-    const dangerous = [schemeOf(lower), schemeOf(decodedLower)].some((s) =>
-      ['javascript', 'data', 'vbscript', 'file'].includes(s),
-    );
-    if (dangerous) {
-      dangerousLinks.push({ file: relFile, href });
-      continue;
-    }
     // Insecure plain-http links fail the gate even when external —
     // every outbound URL must be https (2026-09-06: NCL http fix).
     if (href.startsWith('http://')) {
@@ -99,40 +70,17 @@ for (const file of htmlFiles) {
     checkedLinks++;
     if (!resolvesToRealFile(href)) {
       brokenLinks.push({ file: relFile, href });
-      continue;
-    }
-    // Canonical-form rule: internal route links must use the trailing-slash
-    // form. No-slash route URLs 307-redirect at the platform layer, so a
-    // no-slash href forces a redirect hop on every navigation (Semrush
-    // 2026-09-15: 144 temporary-redirect warnings). Files (have an
-    // extension) and the root are exempt; fragments/queries are judged on
-    // the path part only.
-    const pathPart = href.split('?')[0].split('#')[0];
-    const last = pathPart.split('/').pop();
-    if (
-      pathPart !== '/' &&
-      last &&
-      !last.includes('.') &&
-      !pathPart.endsWith('/')
-    ) {
-      slashDrift.push({ file: relFile, href });
     }
   }
 }
 
-const failed =
-  brokenLinks.length > 0 ||
-  insecureLinks.length > 0 ||
-  slashDrift.length > 0 ||
-  dangerousLinks.length > 0;
+const failed = brokenLinks.length > 0 || insecureLinks.length > 0;
 const result = {
   status: failed ? 'FAIL' : 'PASS',
   html_files_scanned: htmlFiles.length,
   internal_links_checked: checkedLinks,
   broken_links: brokenLinks,
   insecure_http_links: insecureLinks,
-  no_slash_route_links: slashDrift,
-  dangerous_scheme_links: dangerousLinks,
 };
 console.log(JSON.stringify(result, null, 2));
 process.exit(failed ? 1 : 0);

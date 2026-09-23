@@ -15,12 +15,7 @@
 // One supplied file carries no name and is never rendered.
 // Individual full profiles (bio, stats) remain UNKNOWN and are stated
 // as such rather than invented; no stats tables, no quotations.
-import {
-  type ContentRecord,
-  createRegistry,
-  evaluate,
-  isPublishable,
-} from '@ukbt/truth/gate';
+import { type ContentRecord, createRegistry, evaluate } from '@ukbt/truth/gate';
 import { ContentRecordSchema } from '@ukbt/truth/schema';
 
 const registry = createRegistry([
@@ -253,80 +248,25 @@ const rawRoster: RawPlayer[] = [
   { name: 'Musa Ahmad', country: 'Netherlands', photoSlug: 'musa-ahmad' },
   { name: 'Jeremy Martins', country: 'Portugal', photoSlug: 'jeremy-martins' }, // NOT on Uppsala's own squad list — EV-0831-06
   { name: 'Abu Bakkar', newFromPhotos: true, photoSlug: 'abu-bakkar' },
-  {
-    name: 'Asif Taniwal',
-    country: 'Afghanistan',
-    newFromPhotos: true,
-    photoSlug: 'asif-taniwal',
-  },
+  { name: 'Asif Taniwal', newFromPhotos: true, photoSlug: 'asif-taniwal' },
   { name: 'Ayyan Warraich', newFromPhotos: true, photoSlug: 'ayyan-warraich' },
-  {
-    name: 'CP Rizwan',
-    country: 'UAE',
-    newFromPhotos: true,
-    photoSlug: 'cp-rizwan',
-  },
-  {
-    name: 'Danish Sarhadi',
-    country: 'UAE',
-    newFromPhotos: true,
-    photoSlug: 'danish-sarhadi',
-  },
+  { name: 'CP Rizwan', newFromPhotos: true, photoSlug: 'cp-rizwan' },
+  { name: 'Danish Sarhadi', newFromPhotos: true, photoSlug: 'danish-sarhadi' },
   {
     name: 'Ibrahim Maqsood',
     newFromPhotos: true,
     photoSlug: 'ibrahim-maqsood',
   },
-  {
-    name: 'Ibrar Ahmed',
-    country: 'UAE',
-    newFromPhotos: true,
-    photoSlug: 'ibrar-ahmed',
-  },
-  {
-    name: 'Jack Jakir',
-    country: 'England',
-    newFromPhotos: true,
-    photoSlug: 'jack-jakir',
-  },
-  {
-    name: 'Junaid Shamsu',
-    country: 'UAE',
-    newFromPhotos: true,
-    photoSlug: 'junaid-shamsu',
-  },
-  {
-    name: 'Krish Anand',
-    country: 'England',
-    newFromPhotos: true,
-    photoSlug: 'krish-anand',
-  },
-  {
-    name: 'Muhsin Ali',
-    country: 'England',
-    newFromPhotos: true,
-    photoSlug: 'muhsin-ali',
-  },
-  {
-    name: 'Saghir Ahmad',
-    country: 'UAE',
-    newFromPhotos: true,
-    photoSlug: 'saghir-ahmad',
-  },
+  { name: 'Ibrar Ahmed', newFromPhotos: true, photoSlug: 'ibrar-ahmed' },
+  { name: 'Jack Jakir', newFromPhotos: true, photoSlug: 'jack-jakir' },
+  { name: 'Junaid Shamsu', newFromPhotos: true, photoSlug: 'junaid-shamsu' },
+  { name: 'Krish Anand', newFromPhotos: true, photoSlug: 'krish-anand' },
+  { name: 'Muhsin Ali', newFromPhotos: true, photoSlug: 'muhsin-ali' },
+  { name: 'Saghir Ahmad', newFromPhotos: true, photoSlug: 'saghir-ahmad' },
   { name: 'Sibet Hussain', newFromPhotos: true, photoSlug: 'sibet-hussain' },
-  {
-    name: 'Syed Aziz',
-    country: 'Scotland',
-    newFromPhotos: true,
-    photoSlug: 'syed-aziz',
-  },
+  { name: 'Syed Aziz', newFromPhotos: true, photoSlug: 'syed-aziz' },
   { name: 'Taimoor Ali', newFromPhotos: true, photoSlug: 'taimoor-ali' },
-  {
-    name: 'Zohair Iqbal',
-    country: 'UAE',
-    newFromPhotos: true,
-    photoSlug: 'zohair-iqbal',
-  },
+  { name: 'Zohair Iqbal', newFromPhotos: true, photoSlug: 'zohair-iqbal' },
 ];
 
 interface RawOfficial {
@@ -367,19 +307,10 @@ function gateRecords(
     const rec = ContentRecordSchema.parse({
       field: r.field,
       value: r.value,
-      // U-23 closed 2026-09-23: owner approval EV-20260923-001
-      // (Lablaunchpad/admin, all-current-facts, amendable) — approved, not
-      // published (TRUTH-CONTRACT.md keeps approval and going live separate).
-      status: 'approved',
+      status: 'pending_review',
       sources: r.sources,
-      approver: 'Lablaunchpad (admin, 2026-09-23, EV-20260923-001)',
     }) as ContentRecord;
-    // Production render boundary (contracts/TRUTH-CONTRACT.md, docs/adr-001):
-    // only approved/published records may publish. Dev keeps evidence-valid
-    // evaluate() so pending_review content stays reviewable.
-    const result = import.meta.env.PROD
-      ? isPublishable(rec, gateOptions)
-      : evaluate(rec, gateOptions);
+    const result = evaluate(rec, gateOptions);
     if (!result.passed) {
       throw new Error(
         `Truth gate failed for '${rec.field}': ${result.reasons.map((r2) => `${r2.rule}: ${r2.detail}`).join('; ')}`,

@@ -40,19 +40,13 @@ export interface Crumb {
 }
 
 /**
- * Canonical path normalization. Deterministic: root keeps its bare `/`,
- * every other route carries a trailing slash, no query/hash ever
- * canonicalized. The trailing slash matches platform serving behavior —
- * Cloudflare Workers static assets 307-redirect no-slash route URLs to
- * their slash form — so canonical == served URL (verified live
- * 2026-09-15: /players → 307 → /players/). A no-slash canonical would
- * disagree with the served URL and pollute the sitemap with redirecting
- * URLs (Semrush 2026-09-15: 11 sitemap errors + 144 redirect warnings).
+ * Canonical path normalization. Deterministic: root keeps its trailing
+ * slash, every other route strips it, no query/hash ever canonicalized.
  */
 export function normalizePath(pathname: string): string {
   const clean = pathname.split('?')[0].split('#')[0];
-  if (clean === '' || clean === '/') return '/';
-  return clean.endsWith('/') ? clean : `${clean}/`;
+  if (clean.length > 1 && clean.endsWith('/')) return clean.slice(0, -1);
+  return clean === '' ? '/' : clean;
 }
 
 /** Absolute canonical URL for an indexable route path. */

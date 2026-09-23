@@ -1,25 +1,5 @@
 # Query-string log redaction
 
-## 2026-09-17 amendment — config field removed (FACT)
-
-`wrangler.jsonc → observability.redact_query_string` was removed. Evidence
-that the field never took effect via config:
-
-- Installed `wrangler@4.126.0` `config-schema.json` `Observability`
-  definition (lines 3972-4050) has no `redact_query_string` property and
-  sets `additionalProperties: false` — wrangler emitted
-  `Unexpected fields found in observability field: "redact_query_string"`
-  and ignored it (warning, deploy proceeds).
-- Cloudflare Wrangler configuration docs (fetched 2026-09-17, last updated
-  Sep 17, 2026) document `observability` as `enabled` +
-  `head_sampling_rate` only — no `redact_query_string` anywhere.
-
-Removal does not weaken posture: the field was a no-op, so nothing that
-was enforced is now unenforced. If query redaction is required, it must be
-verified dashboard-side (Worker Settings > Observability, human step) —
-recorded here as UNKNOWN until a human confirms. The functionality case
-below (nothing reads query strings) is unchanged.
-
 Changed 2026-09-11 (P0/P1 hardening, audit F-06):
 `wrangler.jsonc` → `observability.redact_query_string: false → true`.
 

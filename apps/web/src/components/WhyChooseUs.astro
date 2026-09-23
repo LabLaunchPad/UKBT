@@ -2,13 +2,10 @@
 // WhyChooseUs — re-art-directed. Clean vertical reasons, not a four-box grid.
 // Editorial composition: statement + reasons as a typographic list.
 import SectionHeader from './SectionHeader.astro';
-import { tinaField } from '@tinacms/astro';
 
 interface Reason {
   title: string;
   body: string;
-  _content_source?: unknown;
-  [key: string]: unknown;
 }
 interface Props {
   reasons: Reason[];
@@ -33,12 +30,12 @@ const { reasons, variant = 'default', lede = 'What the club is, stated from what
   </div>
   <div class="ukbt-chooseus__list">
     {
-      reasons.map((reason, i) => (
+      reasons.map((r, i) => (
         <div class="ukbt-chooseus__item">
           <span class="ukbt-chooseus__index" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
           <div class="ukbt-chooseus__text">
-            <h3 data-tina-field={tinaField(reason, "title")}>{reason.title}</h3>
-            <p data-tina-field={tinaField(reason, "body")}>{reason.body}</p>
+            <h3>{r.title}</h3>
+            <p>{r.body}</p>
           </div>
         </div>
       ))

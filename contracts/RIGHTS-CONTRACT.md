@@ -128,7 +128,7 @@ prohibited kind of reuse.
 
 ## Forbidden behavior
 
-- Populating any `packages/truth/src/tokens/adapted/` or `.../approved/`
+- Populating any `packages/truth/tokens/adapted/` or `.../approved/`
   content with a real Adelux-derived value while Track B remains
   RIGHTS_GATED.
 - Treating this contract's existence, or the act of writing any Stage-3
@@ -140,7 +140,7 @@ prohibited kind of reuse.
 
 ## Validation method
 
-- Any PR touching `packages/truth/src/tokens/adapted/` or `.../approved/`, or
+- Any PR touching `packages/truth/tokens/adapted/` or `.../approved/`, or
   any component contract citing Adelux-derived structure, must reference
   the Track B closure evidence in its receipt — absent that, the CI
   dependency/content review (Stage 4) rejects it.

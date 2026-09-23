@@ -34,14 +34,6 @@ catalog entry (AL-xx). Skip a gate only by writing down why.
 - [ ] P10. `deploy:verify` is the release gate; browser e2e is a
   separate suite with its own backlog (roadmap §2.14). Never conflate
   the two verdicts.
-- [ ] P14. Pins on CMS-editable regions assert stable markers +
-  absence-of-corruption, never exact editable wording (AL-036).
-- [ ] P15. Live-route pins probe the harness first and skip with
-  reason where the route is absent; live coverage stays explicitly
-  owned elsewhere (AL-037).
-- [ ] P16. On smoke FAIL, re-probe from an independent vantage before
-  touching code; escalate via ray forensics + dashboard Events, never
-  relax smoke or protection to fit the runner (AL-038).
 
 ## Environment (this box: win32, PowerShell 5.1)
 

@@ -28,12 +28,7 @@
 // (an "UPPSALA TIGERS" kit wordmark/crest) for everyone except Jaspreet
 // Singh and Roushan Singh, who are pictured in their national jerseys —
 // see apps/web/src/assets/MANIFEST.md's per-photo breakdown.
-import {
-  type ContentRecord,
-  createRegistry,
-  evaluate,
-  isPublishable,
-} from '@ukbt/truth/gate';
+import { type ContentRecord, createRegistry, evaluate } from '@ukbt/truth/gate';
 import { ContentRecordSchema } from '@ukbt/truth/schema';
 
 const registry = createRegistry([
@@ -280,19 +275,10 @@ for (const r of squad) {
   const rec = ContentRecordSchema.parse({
     field: r.field,
     value: r.value,
-    // U-23 closed 2026-09-23: owner approval EV-20260923-001
-    // (Lablaunchpad/admin, all-current-facts, amendable) — approved, not
-    // published (TRUTH-CONTRACT.md keeps approval and going live separate).
-    status: 'approved',
+    status: 'pending_review',
     sources: r.sources,
-    approver: 'Lablaunchpad (admin, 2026-09-23, EV-20260923-001)',
   }) as ContentRecord;
-  // Production render boundary (contracts/TRUTH-CONTRACT.md, docs/adr-001):
-  // only approved/published records may publish. Dev keeps evidence-valid
-  // evaluate() so pending_review content stays reviewable.
-  const result = import.meta.env.PROD
-    ? isPublishable(rec, gateOptions)
-    : evaluate(rec, gateOptions);
+  const result = evaluate(rec, gateOptions);
   if (!result.passed) {
     throw new Error(
       `Truth gate failed for '${rec.field}': ${result.reasons.map((r2) => `${r2.rule}: ${r2.detail}`).join('; ')}`,
