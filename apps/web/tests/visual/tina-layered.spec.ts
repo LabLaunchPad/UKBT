@@ -277,6 +277,8 @@ test('admin unauth shell layered L1-L5 (no preview-iframe triple — UNTESTABLE-
   // L4 a11y — vendor SPA unauth has no inputs; axe wcag only (best-practice flags vendor missing main/h1, not repo defect — T6 same)
   const a11y = await new AxeBuilder({ page })
     .withTags(['wcag2a', 'wcag2aa', 'wcag22aa'])
+    // vendor Tina login button (unfixable repo-side; T6 same)
+    .excluding('.bg-tina-orange-dark')
     .analyze();
   if (a11y.violations.length > 0)
     console.log(JSON.stringify(a11y.violations, null, 2));
