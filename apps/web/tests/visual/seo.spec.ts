@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { SEO_ROUTES, SITE, canonicalFor } from '../../src/lib/seo';
+import { canonicalFor, SEO_ROUTES, SITE } from '../../src/lib/seo';
 
 /**
  * Production SEO contract tests — assert the built output, not source.

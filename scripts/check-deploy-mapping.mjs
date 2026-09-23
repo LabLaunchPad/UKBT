@@ -12,8 +12,7 @@
 // the serve mapping and the generated artifacts diverge.
 // Output ends with:
 //   DEPLOY_MAPPING_STATUS = PASS | FAIL
-import { existsSync, readFileSync, statSync } from 'node:fs';
-import { globSync } from 'node:fs';
+import { existsSync, globSync, readFileSync, statSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
