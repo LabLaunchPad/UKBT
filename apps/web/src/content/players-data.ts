@@ -126,7 +126,12 @@ const rawRoster: RawPlayer[] = [
     allRounder: true,
     photoSlug: 'shakib-al-hasan',
   },
-  { name: 'Mark James', country: 'England', role: 'All-rounder', photoSlug: 'mark-james' },
+  {
+    name: 'Mark James',
+    country: 'England',
+    role: 'All-rounder',
+    photoSlug: 'mark-james',
+  },
   {
     name: 'Karanbir Singh',
     country: 'Austria',
@@ -134,8 +139,18 @@ const rawRoster: RawPlayer[] = [
     alsoUppsala: true,
     photoSlug: 'karanbir-singh',
   },
-  { name: 'Wayne Parnel', country: 'South Africa', role: 'Bowler', photoSlug: 'wayne-parnel' },
-  { name: 'Junaid Siddique', country: 'Canada', role: 'Bowler', photoSlug: 'junaid-siddique' },
+  {
+    name: 'Wayne Parnel',
+    country: 'South Africa',
+    role: 'Bowler',
+    photoSlug: 'wayne-parnel',
+  },
+  {
+    name: 'Junaid Siddique',
+    country: 'Canada',
+    role: 'Bowler',
+    photoSlug: 'junaid-siddique',
+  },
   {
     name: 'Owen Palmer',
     country: 'England',
@@ -166,14 +181,24 @@ const rawRoster: RawPlayer[] = [
     wicketKeeper: true,
     photoSlug: 'roushan-singh',
   },
-  { name: 'Juan Henry', country: 'Portugal', role: 'All-rounder', photoSlug: 'juan-henry' },
+  {
+    name: 'Juan Henry',
+    country: 'Portugal',
+    role: 'All-rounder',
+    photoSlug: 'juan-henry',
+  },
   {
     name: 'Shabbir Rahman',
     country: 'Bangladesh',
     role: 'Batsman',
     photoSlug: 'shabbir-rahman',
   },
-  { name: 'Kenner Lewis', country: 'West Indies', role: 'Batsman', photoSlug: 'kenner-lewis' },
+  {
+    name: 'Kenner Lewis',
+    country: 'West Indies',
+    role: 'Batsman',
+    photoSlug: 'kenner-lewis',
+  },
   {
     name: 'Jaspreet Singh',
     country: 'Italy',
@@ -181,7 +206,12 @@ const rawRoster: RawPlayer[] = [
     alsoUppsala: true,
     photoSlug: 'jaspreet-singh',
   },
-  { name: 'Peter Robert', country: 'England', role: 'Batsman', photoSlug: 'peter-robert' },
+  {
+    name: 'Peter Robert',
+    country: 'England',
+    role: 'Batsman',
+    photoSlug: 'peter-robert',
+  },
   { name: 'Amahl Nathaniel', country: 'West Indies', role: 'Batsman' },
   {
     name: 'Armaan Randhawa',
@@ -190,8 +220,18 @@ const rawRoster: RawPlayer[] = [
     alsoUppsala: true,
     photoSlug: 'armaan-randhawa',
   },
-  { name: 'Sufyan Mehmood', country: 'Oman', role: 'All-rounder', photoSlug: 'sufyan-mehmood' },
-  { name: 'Arafat Bhuiyan', country: 'England', role: 'Bowler', photoSlug: 'arafat-bhuiyan' },
+  {
+    name: 'Sufyan Mehmood',
+    country: 'Oman',
+    role: 'All-rounder',
+    photoSlug: 'sufyan-mehmood',
+  },
+  {
+    name: 'Arafat Bhuiyan',
+    country: 'England',
+    role: 'Bowler',
+    photoSlug: 'arafat-bhuiyan',
+  },
   {
     name: 'Jawid Stanigze',
     country: 'Afghanistan',
@@ -207,9 +247,19 @@ const rawRoster: RawPlayer[] = [
     alsoUppsala: true,
     photoSlug: 'chinthaka-rajapaksha',
   },
-  { name: 'Ellias Sunny', country: 'Bangladesh', role: 'Bowler', photoSlug: 'ellias-sunny' },
+  {
+    name: 'Ellias Sunny',
+    country: 'Bangladesh',
+    role: 'Bowler',
+    photoSlug: 'ellias-sunny',
+  },
   { name: 'Ruman Ahmed', country: 'Bangladesh', role: 'Batsman' },
-  { name: 'Forhad Reza', country: 'Bangladesh', role: 'All-rounder', photoSlug: 'forhad-reza' },
+  {
+    name: 'Forhad Reza',
+    country: 'Bangladesh',
+    role: 'All-rounder',
+    photoSlug: 'forhad-reza',
+  },
   {
     name: 'Tasaduq Hussain',
     country: 'Sweden',
@@ -234,7 +284,12 @@ const rawRoster: RawPlayer[] = [
     photoSlug: 'humayun-kabir-jyoti',
   },
   { name: 'Raminda Wijesooriya', country: 'Sri lanka', role: 'Batsman' },
-  { name: 'Towker Khan', country: 'USA', role: 'All-rounder', photoSlug: 'towker-khan' },
+  {
+    name: 'Towker Khan',
+    country: 'USA',
+    role: 'All-rounder',
+    photoSlug: 'towker-khan',
+  },
   {
     name: 'Prashant Shukla',
     country: 'India',
@@ -283,9 +338,25 @@ const rawRoster: RawPlayer[] = [
     photoSlug: 'dhrubonil-roy',
   },
   { name: 'Dhavalkumar Norotam', country: 'Portugal', role: 'All-rounder' },
-  { name: 'Musa Ahmad', country: 'Netherands', role: 'Batsman', photoSlug: 'musa-ahmad' },
-  { name: 'Jeremy Martins', country: 'Portugal', role: 'Bowler', photoSlug: 'jeremy-martins' }, // NOT on Uppsala's own squad list — EV-0831-06
-  { name: 'Abu Bakar', country: 'UAE', role: 'Bowler', newFromPhotos: true, photoSlug: 'abu-bakar' },
+  {
+    name: 'Musa Ahmad',
+    country: 'Netherands',
+    role: 'Batsman',
+    photoSlug: 'musa-ahmad',
+  },
+  {
+    name: 'Jeremy Martins',
+    country: 'Portugal',
+    role: 'Bowler',
+    photoSlug: 'jeremy-martins',
+  }, // NOT on Uppsala's own squad list — EV-0831-06
+  {
+    name: 'Abu Bakar',
+    country: 'UAE',
+    role: 'Bowler',
+    newFromPhotos: true,
+    photoSlug: 'abu-bakar',
+  },
   {
     name: 'Asif Taniwal',
     country: 'Afghanistan',
@@ -293,7 +364,13 @@ const rawRoster: RawPlayer[] = [
     newFromPhotos: true,
     photoSlug: 'asif-taniwal',
   },
-  { name: 'Ayyan Warraich', country: 'Germany', role: 'Bowler', newFromPhotos: true, photoSlug: 'ayyan-warraich' },
+  {
+    name: 'Ayyan Warraich',
+    country: 'Germany',
+    role: 'Bowler',
+    newFromPhotos: true,
+    photoSlug: 'ayyan-warraich',
+  },
   {
     name: 'CP Rizwan',
     country: 'UAE',
@@ -357,7 +434,13 @@ const rawRoster: RawPlayer[] = [
     newFromPhotos: true,
     photoSlug: 'saghir-ahmad',
   },
-  { name: 'Sibet Ahmed', country: 'England', role: 'All-rounder', newFromPhotos: true, photoSlug: 'sibet-ahmed' },
+  {
+    name: 'Sibet Ahmed',
+    country: 'England',
+    role: 'All-rounder',
+    newFromPhotos: true,
+    photoSlug: 'sibet-ahmed',
+  },
   {
     name: 'Syed Aziz',
     country: 'Scotland',
@@ -365,7 +448,13 @@ const rawRoster: RawPlayer[] = [
     newFromPhotos: true,
     photoSlug: 'syed-aziz',
   },
-  { name: 'Taimoor Ali', country: 'UAE', role: 'Batsman', newFromPhotos: true, photoSlug: 'taimoor-ali' },
+  {
+    name: 'Taimoor Ali',
+    country: 'UAE',
+    role: 'Batsman',
+    newFromPhotos: true,
+    photoSlug: 'taimoor-ali',
+  },
   {
     name: 'Zohair Iqbal',
     country: 'UAE',
