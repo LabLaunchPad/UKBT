@@ -10,8 +10,8 @@
  * - NAVIGATION_URL: validated by apps/web/src/lib/allowed-urls.ts (REM-003).
  * - SECURITY_SENSITIVE: raw-sink-adjacent; safe only via its named renderer.
  * - TECHNICAL: flags/containers with no content semantics.
- * - DORMANT: schema-defined but unwired (no sink). Wiring one without
- *   classifying its target path must fail the content-trust gate.
+ * - DORMANT: schema-defined but unwired (no sink). Rewiring one requires
+ *   reclassifying it to its target path in the same change.
  *
  * Keys are config-exact dotted paths from tina/config.ts. Every collection
  * field MUST appear here — the gate fails closed on unclassified fields.
@@ -77,16 +77,15 @@ export const TINA_FIELD_TRUST: Record<string, FieldTrust> = {
   'homepage.whyChooseUs.body': p(
     'Card body; fact-capable prose (FND-W1-041). Never structured.',
   ),
-  // about collection — ENTIRELY UNWIRED (dead surface, REM-021 owns wiring/removal)
-  'about.heroSubline': {
-    cls: 'DORMANT',
-    structured: false,
-    note: 'No sink; about.astro uses gated about-data.',
-  },
+  // about collection — heroSubline/storyBody/leadershipIntro are wired in
+  // about.astro (PageBanner/AboutStory/LeadershipGrid + aboutHero/Story/
+  // Leadership islands). The image fields stay DORMANT: no sink; wiring
+  // or removing them is an owner decision (schema change needs reindex).
+  'about.heroSubline': p('About banner lede; PageBanner text sink.'),
   'about.storyBody': {
-    cls: 'DORMANT',
+    cls: 'PRESENTATION_COPY',
     structured: false,
-    note: 'No sink. Rich-text: wiring requires REM-001-class renderer.',
+    note: 'Rich-text via TinaMarkdown renderer (AboutStory); never raw HTML.',
   },
   'about.aboutImage': { cls: 'DORMANT', structured: false, note: 'No sink.' },
   'about.aboutImageAlt': {
@@ -94,11 +93,7 @@ export const TINA_FIELD_TRUST: Record<string, FieldTrust> = {
     structured: false,
     note: 'No sink.',
   },
-  'about.leadershipIntro': {
-    cls: 'DORMANT',
-    structured: false,
-    note: 'No sink.',
-  },
+  'about.leadershipIntro': p('Leadership intro; LeadershipGrid text sink.'),
   'about.managementImage': {
     cls: 'DORMANT',
     structured: false,
@@ -121,7 +116,7 @@ export const TINA_FIELD_TRUST: Record<string, FieldTrust> = {
   'faq.items.answer': {
     cls: 'SECURITY_SENSITIVE',
     structured: false,
-    note: 'set:html sink; safe ONLY via renderFaqAnswer (REM-001).',
+    note: 'Rich-text via TinaMarkdown renderer (FAQSection); escapes by design — no set:html. Legacy renderFaqAnswer choke preserved in lib/faq-answer.ts.',
   },
   'faq.items.visible': {
     cls: 'TECHNICAL',
@@ -148,17 +143,17 @@ export const TINA_FIELD_TRUST: Record<string, FieldTrust> = {
   'siteSettings.social': {
     cls: 'TECHNICAL',
     structured: false,
-    note: 'List container; currently UNSUNK (pages use gated homepage.social).',
+    note: 'List container; sunk in Footer with truth fallback.',
   },
   'siteSettings.social.platform': {
     cls: 'DORMANT',
     structured: false,
-    note: 'No sink (see parent).',
+    note: 'No independent sink (renders inside footer social links).',
   },
   'siteSettings.social.url': {
     cls: 'NAVIGATION_URL',
     structured: false,
-    note: 'REM-003 https: refine; currently UNSUNK (latent).',
+    note: 'REM-003 https: refine; sunk in Footer with truth fallback.',
   },
   'siteSettings.socialCard': {
     cls: 'DORMANT',

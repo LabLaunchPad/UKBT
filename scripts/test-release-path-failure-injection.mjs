@@ -255,6 +255,26 @@ const cases = [
     expectPass: false,
     expectRule: 'smoke-not-after-deploy',
   },
+  {
+    // While WORKERS_DEPLOY_VIA_CI is unset the deploy job is SKIPPED
+    // (honest absence). Without !failure() the smoke job would skip
+    // alongside it and the Workers Builds publish would go unobserved.
+    name: 'smoke-skipped-deploy-not-tolerated',
+    ci: CI(GOOD_SMOKE.replace(' && !failure()', ''), GOOD_DEPLOY),
+    expectPass: false,
+    expectRule: 'smoke-skipped-deploy-not-tolerated',
+  },
+  {
+    // Production deploy must be main-only. Without the ref pin any push
+    // branch would attempt a production `wrangler deploy`.
+    name: 'workers-deploy-not-main-ref',
+    ci: CI(
+      GOOD_SMOKE,
+      GOOD_DEPLOY.replace(" && github.ref == 'refs/heads/main'", ''),
+    ),
+    expectPass: false,
+    expectRule: 'deploy-not-main-ref',
+  },
 ];
 
 for (const c of cases) {

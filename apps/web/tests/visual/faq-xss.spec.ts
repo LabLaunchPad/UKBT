@@ -93,5 +93,8 @@ test('live /faq/ answers render with no script elements in answer slots', async 
 }) => {
   await page.goto('/faq/');
   expect(await page.locator('.ukbt-faq-answer script').count()).toBe(0);
-  expect(await page.locator('.ukbt-faq-answer p').count()).toBeGreaterThan(0);
+  const answers = page.locator('.ukbt-faq-answer');
+  expect(await answers.count()).toBeGreaterThan(0);
+  const html = await answers.first().innerHTML();
+  expect(html.trim().length).toBeGreaterThan(0);
 });

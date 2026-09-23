@@ -26,6 +26,10 @@ interface Props {
   /** Accent rule (default) or primary rule, matching the two reference variants. */
   rule?: 'accent' | 'primary' | 'none';
   inverse?: boolean;
+  /** Tina field marker for the eyebrow element. */
+  eyebrowTinaField?: string;
+  /** Tina field marker for the heading element. */
+  headingTinaField?: string;
 }
 
 const {
@@ -36,6 +40,8 @@ const {
   ctaHref,
   rule = 'accent',
   inverse = false,
+  eyebrowTinaField,
+  headingTinaField,
 } = Astro.props;
 
 const cls = [
@@ -49,8 +55,10 @@ const cls = [
 
 <div class={cls} data-motion="reveal">
   <div class="ukbt-section-header__text">
-    <SubHeading label={eyebrow} variant={inverse ? 'inverse' : 'default'} />
-    <h2>{heading}</h2>
+    <div {...(eyebrowTinaField ? { 'data-tina-field': eyebrowTinaField } : {})}>
+      <SubHeading label={eyebrow} variant={inverse ? 'inverse' : 'default'} />
+    </div>
+    <h2 {...(headingTinaField ? { 'data-tina-field': headingTinaField } : {})}>{heading}</h2>
     {lede && <p class="ukbt-section-header__lede">{lede}</p>}
   </div>
   {

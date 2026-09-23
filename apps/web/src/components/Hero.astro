@@ -9,9 +9,12 @@
 // header, and a repeated mark would compete with the headline.
 import Button from './Button.astro';
 import SocialLinks from './SocialLinks.astro';
+import { tinaField } from '@tinacms/astro';
+import { sanitizeImageSrc } from '../lib/tina/validators';
 
 interface Props {
   taglineShort: string;
+  tagline: string;
   social: { platform: string; url: string }[];
   /** Club-identity eyebrow above the headline. Omitted by default. */
   eyebrow?: string;
@@ -25,9 +28,12 @@ interface Props {
   primaryCtaLink?: string;
   /** Hero background image path — overrides default when provided. */
   heroImage?: string;
+  /** Tina metadata-bearing data object for field markers. */
+  data?: Record<string, unknown>;
 }
 const {
-  taglineShort,
+  taglineShort: _taglineShort,
+  tagline,
   social,
   eyebrow,
   secondaryCta,
@@ -35,17 +41,19 @@ const {
   primaryCtaLabel = 'Join the Club',
   primaryCtaLink = '/join',
   heroImage = '/media/team-huddle.webp',
+  data,
 } = Astro.props;
 ---
 
 <div class="ukbt-hero">
   <img
-    src={heroImage}
+    src={sanitizeImageSrc(heroImage) ?? '/media/team-huddle.webp'}
     width="1080"
     height="720"
     alt=""
     fetchpriority="high"
     class="ukbt-hero__bg"
+    data-tina-field={tinaField(data, "heroImage")}
   />
   <img
     src="/media/team-night-action.webp"
@@ -78,17 +86,17 @@ const {
   <div class="ukbt-hero__continuity" aria-hidden="true" style="animation:ukbt-hero-rise var(--ukbt-motion-duration-slow) var(--ukbt-motion-easing-emphasized) 550ms backwards"></div>
   <div class="ukbt-container ukbt-hero__inner">
     <div class="ukbt-hero__content">
-      {eyebrow && <p class="ukbt-hero__eyebrow ukbt-eyebrow ukbt-eyebrow--on-dark" data-tina-field="eyebrow">{eyebrow}</p>}
-      <h1 class="ukbt-hero__headline" data-tina-field="headline">
+      {eyebrow && <p class="ukbt-hero__eyebrow ukbt-eyebrow ukbt-eyebrow--on-dark" data-tina-field={tinaField(data, "eyebrow")}>{eyebrow}</p>}
+      <h1 class="ukbt-hero__headline" data-tina-field={tinaField(data, "headline")}>
         {headline.split('\n').map((line, i) => (
           <Fragment>{i > 0 && <br />}{line}</Fragment>
         ))}
       </h1>
-      <p class="ukbt-hero__tagline" data-tina-field="tagline">{taglineShort}</p>
+      <p class="ukbt-hero__tagline" data-tina-field={tinaField(data, "tagline")}>{tagline}</p>
       <div class="ukbt-hero__actions">
-        <Button label={primaryCtaLabel} href={primaryCtaLink} variant="primary" data-tina-field="primaryCtaLabel" />
+        <Button label={primaryCtaLabel} href={primaryCtaLink} variant="primary" labelTinaField={tinaField(data, "primaryCtaLabel")} hrefTinaField={tinaField(data, "primaryCtaLink")} />
         {secondaryCta && (
-          <Button label={secondaryCta.label} href={secondaryCta.href} variant="secondary" />
+          <Button label={secondaryCta.label} href={secondaryCta.href} variant="secondary" labelTinaField={tinaField(data, "secondaryCtaLabel")} hrefTinaField={tinaField(data, "secondaryCtaLink")} />
         )}
       </div>
       <div class="ukbt-hero__social">

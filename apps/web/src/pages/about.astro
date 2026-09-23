@@ -12,7 +12,10 @@
 // MissionWelcome.astro's own header comment noted its omission "no
 // sponsor is evidenced" — now one is.
 //
-// data-tina-field attributes added for visual editing in Tina admin.
+// Tina visual editing: heroSubline, storyBody, leadershipIntro
+// sourced from @tinacms/astro getAbout(); truth-gated data
+// (founded, stats, leaders, founder, missionFacts, storyParagraphs)
+// still from @ukbt/truth via about-data.ts.
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/Header.astro';
 import PageBanner from '../components/PageBanner.astro';
@@ -24,10 +27,17 @@ import FounderSpotlight from '../components/FounderSpotlight.astro';
 import LeadershipGrid from '../components/LeadershipGrid.astro';
 import AboutCTA from '../components/AboutCTA.astro';
 import Footer from '../components/Footer.astro';
+import TinaIsland from '@tinacms/astro/TinaIsland.astro';
+import { tinaField } from '@tinacms/astro';
+import { type TinaRichTextContent } from '@tinacms/astro';
+import { getAbout } from '../lib/tina/data';
 import { homepage } from '../content/homepage-data';
 import { about } from '../content/about-data';
 import { ourSponsors } from '../content/sponsors-data';
 import { aboutGraph } from '../lib/seo';
+
+const aboutRes = await getAbout();
+const tinaAbout = (aboutRes?.data as { about?: Record<string, unknown> })?.about || {};
 
 const storyStats = [
   { value: about.founded, label: 'Founded' },
@@ -35,32 +45,18 @@ const storyStats = [
   { value: about.stats.tournaments, label: 'International Tournaments' },
 ];
 
-// About Phase 1 (legacy S2 port): founder career aggregates. Distinct
-// fields from the club aggregates above (career matches, active subset
-// of the registered squad) — no T8 conflict by construction. Per
-// EV-20260916-001 the club aggregate reads 50+ while the active subset
-// stays 40+ per EV-20260910-003 (growth, not a conflict); labels and
-// sections stay distinct.
-// `icon` is presentation mapping for R-A (form restore of the legacy
-// stat cards) — not gated data; values stay canonical.
 const founderStats: { value: string; label: string; icon: 'trophy' | 'people' }[] = [
   { value: about.founder.stats.careerMatches, label: 'Career Matches', icon: 'trophy' },
   { value: about.founder.stats.activePlayers, label: 'Active Players', icon: 'people' },
 ];
 
 const crumbs = [{ label: 'Home', href: '/' }, { label: 'About Us' }];
-// About banner backdrop (owner direction 2026-09-11): gallery-06,
-// owner-confirmed UKBT trophy-celebration photo (overrides
-// EV-20260826-030 §4 for this file — see MANIFEST). 1400x933,
-// 202KB. Photo is presentation wiring, not a gated fact.
 const bannerBackground = {
   src: '/media/gallery-06.webp',
   alt: 'UK Bangla Tigers squad celebrating with a trophy',
   width: 1400,
   height: 933,
 };
-// AboutPage graph via the central SEO emitter — org referenced by @id,
-// never repeated (see src/lib/seo.ts).
 const structuredData = aboutGraph({
   description: about.tagline,
   crumbs,
@@ -75,7 +71,16 @@ const structuredData = aboutGraph({
   <Header nav={homepage.nav} cta={homepage.primaryCta} />
 
   <main id="main-content" tabindex="-1">
-    <PageBanner title="About Us" crumbs={crumbs} lede={about.heroSubline} background={bannerBackground} data-tina-field="heroSubline" />
+    <TinaIsland name="aboutHero" wrapper={{ tag: 'div', className: '' }}>
+      <PageBanner
+        title="About Us"
+        crumbs={crumbs}
+        lede={tinaAbout.heroSubline as string || about.heroSubline}
+        background={bannerBackground}
+        data-tina-field={tinaField(tinaAbout, 'heroSubline')}
+        data={tinaAbout}
+      />
+    </TinaIsland>
 
     <Section density="compact">
       <MissionWelcome tagline={about.tagline} facts={about.missionFacts} />
@@ -86,7 +91,15 @@ const structuredData = aboutGraph({
     </Section>
 
     <Section density="compact">
-      <AboutStory paragraphs={about.storyParagraphs} stats={storyStats} data-tina-field="storyBody" />
+      <TinaIsland name="aboutStory" wrapper={{ tag: 'div', className: '' }}>
+        <AboutStory
+          paragraphs={about.storyParagraphs}
+          stats={storyStats}
+          data-tina-field={tinaField(tinaAbout, 'storyBody')}
+          content={tinaAbout.storyBody as TinaRichTextContent}
+          data={tinaAbout}
+        />
+      </TinaIsland>
     </Section>
 
     <Section density="compact">
@@ -112,23 +125,19 @@ const structuredData = aboutGraph({
     */}
 
     <Section density="compact">
-      {/*
-        Leadership intro (owner direction 2026-09-11): the compressed
-        `org.leadership_intro` renders in the grid's title column. The
-        full `org.management_story` passage is deliberately NOT passed
-        (no duplicate copy on the page) — retained unrendered in
-        about-data for the record.
-      */}
-      <LeadershipGrid
-        leaders={about.leaders}
-        intro={about.leadershipIntro}
-        data-tina-field="leadershipIntro"
-      />
+      <TinaIsland name="aboutLeadership" wrapper={{ tag: 'div', className: '' }}>
+        <LeadershipGrid
+          leaders={about.leaders}
+          intro={tinaAbout.leadershipIntro as string || about.leadershipIntro}
+          data-tina-field={tinaField(tinaAbout, 'leadershipIntro')}
+          data={tinaAbout}
+        />
+      </TinaIsland>
     </Section>
 
     <!-- TestimonialSection omitted: no real testimonials exist yet -->
 
-    <Section surface="alt" paddingBottom="normal" density="compact">
+    <Section surface="alt" paddingBottom="normal">
       <AboutCTA social={homepage.social} />
     </Section>
   </main>

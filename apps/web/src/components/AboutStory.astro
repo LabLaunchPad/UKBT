@@ -8,6 +8,10 @@
 // two-paragraph story. Stats are the real aggregate figures already used
 // on the Homepage (Founded/Players/Tournaments), not Adelux's placeholder
 // numbers.
+import TinaMarkdown from '@tinacms/astro/TinaMarkdown.astro';
+import { tinaField, type TinaRichTextContent } from '@tinacms/astro';
+import SubHeading from './SubHeading.astro';
+
 interface Stat {
   value: string;
   label: string;
@@ -17,9 +21,22 @@ interface Props {
   stats: Stat[];
   /** Tina visual editing field name for the story body. */
   'data-tina-field'?: string;
+  /** Tina rich-text content for the story body. */
+  content?: TinaRichTextContent;
+  /** Tina metadata-bearing doc — island re-render derives the marker from this. */
+  data?: Record<string, unknown>;
 }
-const { paragraphs, stats, 'data-tina-field': tinaField } = Astro.props;
-import SubHeading from './SubHeading.astro';
+const { paragraphs, stats, 'data-tina-field': tinaFieldProp, content, data } = Astro.props;
+// ponytail: island data derives marker on re-render; static path keeps the passed string.
+const storyMarker = data ? tinaField(data, 'storyBody') : tinaFieldProp;
+function normalizeRichText(content: any) {
+  if (!content || typeof content !== 'object') return content;
+  if (content.type === 'root' && Array.isArray(content.children) && content.children.length === 1 && content.children[0]?.type === 'invalid_markdown' && content.children[0]?.value) {
+    return content.children[0].value;
+  }
+  return content;
+}
+const normalizedContent = normalizeRichText(content);
 ---
 
 <div class="ukbt-story">
@@ -38,8 +55,8 @@ import SubHeading from './SubHeading.astro';
   <div class="ukbt-story__content-side">
     <SubHeading label="Our Story" />
     <h2>More Than Just a Cricket Club, It's a Community.</h2>
-    <div class="ukbt-story__paragraphs" {...tinaField ? { 'data-tina-field': tinaField } : {}}>
-      {paragraphs.map((p) => <p>{p}</p>)}
+    <div class="ukbt-story__paragraphs" data-tina-field={storyMarker}>
+      {content ? <TinaMarkdown content={normalizedContent} /> : paragraphs.map((p) => <p>{p}</p>)}
     </div>
     <div class="ukbt-story__stats">
       {

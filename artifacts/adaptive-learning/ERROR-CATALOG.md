@@ -579,3 +579,145 @@ observation; apply with judgment, do not generalize further.
   motion 8/8 PASS, probe settled 1 running (crossfade only), live
   production 57221B HTML smoke PASS.
 - **Status:** VERIFIED.
+
+## AL-032 -- Trailing-slash admin origin silently breaks Tina bridge
+
+- **Observation:** Production baked
+  `const adminOrigin = ["https://ukbanglatigers.co.uk/"]` (trailing
+  slash from Cloudflare Build var). Bridge `isFromAdmin` uses strict
+  `includes(event.origin)` with no normalization; `event.origin` never
+  carries a slash, so every inbound editor message was rejected and
+  outbound `postMessage` targeted an invalid origin (dropped). Source:
+  `@tinacms/astro@0.7.0` `src/internal/admin-origin.ts` (split/trim
+  only) + `@tinacms/bridge` `dist/index.js` (`init` defaults to
+  `window.location.origin`; `isFromAdmin` requires exact match +
+  `event.source === window.parent`).
+- **Outcome:** Dashboard var normalized to bare
+  `https://ukbanglatigers.co.uk`; redeploy baked the correct value on
+  `/`, `/about/`, `/faq/` (curl-verified). Same-origin does NOT
+  require the var (default covers it); a wrong value actively breaks
+  editing, so never set it to `https://app.tina.io`.
+- **Cause:** Env value treated as opaque string; origins compared by
+  strict equality; no trailing-slash handling anywhere in the chain.
+- **Counterexample:** Bare-origin value behaves identically to unset
+  in same-origin topology -- the pin is documentation, not function.
+- **Rule:** Origin-valued env vars must be stored and asserted without
+  trailing slash; verify via baked `const adminOrigin` in served HTML,
+  never via dashboard display alone.
+- **Verified-by:** live HTML grep pre/post redeploy, package source
+  read, browser topology probe (`/admin/` top-level, same origin).
+- **Status:** VERIFIED.
+
+## AL-033 -- Scoped _headers CSP block cannot relax global policy
+
+- **Observation:** Added `/admin/*` `_headers` block with `data:`
+  font/img to fix admin bundle blockage. Production served TWO
+  `Content-Security-Policy` headers (global + scoped); browsers enforce
+  their intersection, so the relaxation was a verified no-op
+  (font-src violations persisted live).
+- **Outcome:** Reverted the scoped block (PR #91); global policy
+  unchanged. Admin `data:` font/logo errors accepted as cosmetic,
+  pre-existing limitation. Never broaden global CSP for editor
+  cosmetics.
+- **Cause:** Cloudflare emits every matching `_headers` rule as a
+  separate header; multiple CSP headers intersect (most restrictive
+  wins). A second policy can only ever tighten.
+- **Counterexample:** Scoped blocks work for *adding* headers
+  (e.g. Cache-Control) or *tightening*; only relaxation is
+  impossible this way.
+- **Rule:** Verify header changes against live response headers
+  (count CSP instances), not against file content or local gates
+  (check-security reads only the first CSP line).
+- **Verified-by:** live header count 2 -> fix attempt -> still
+  blocked -> revert -> live header count 1; PR #91 green.
+- **Status:** VERIFIED.
+
+## AL-034 -- New TinaIsland registrations duplicate scoped CSS
+
+- **Observation:** Registering `aboutHero/aboutStory/aboutLeadership`
+  islands pushed clean-build cssTotal 88KB -> 93.6KB (budget FAIL).
+  Island components' scoped styles ship once in page CSS and again in
+  the Tina island chunk (same mechanism as the earlier FAQSection
+  +5.2KB island extraction).
+- **Outcome:** Sanctioned budget re-approval 88 -> 96KB with measured
+  justification + failure-injection fixture 89 -> 97KB (PR #90); local
+  clean build reproduced CI byte-for-byte (93.6KB).
+- **Cause:** Per-component scoped CSS counted twice by design of the
+  island architecture; cost is structural, not a regression.
+- **Counterexample:** Unregistered islands 404 on bridge re-render --
+  the CSS cost buys correct editing and cannot be designed away at
+  component level.
+- **Rule:** Every new TinaIsland registration must be followed by a
+  clean-build cssTotal measurement; budget changes follow the
+  re-approval chain in `check-perf.mjs`, never drive-by edits, and the
+  injection fixture must move in the same commit.
+- **Verified-by:** clean local build = CI value; PERF_STATUS PASS;
+  injection 8/8 PASS; PR #90 green.
+- **Status:** VERIFIED.
+
+## AL-035 -- AxeBuilder has .exclude(), not .excluding()
+
+- **Observation:** L4 admin axe fix chained `.excluding('.bg-tina-orange-dark')`;
+  CI Playwright failed `TypeError: (intermediate value).withTags(...).excluding
+  is not a function`. Installed `@axe-core/playwright@4.13.0`
+  `dist/index.js:61` defines `exclude(selector)`.
+- **Cause:** Method name invented from the axe-core (non-Playwright)
+  API memory instead of reading the installed package.
+- **Rule:** Verify chained test-API names against the installed
+  `node_modules` dist before pushing, not from memory.
+- **Verified-by:** `Select-String exclude(selector` hit in installed
+  dist; biome clean; next CI run green.
+- **Status:** VERIFIED.
+
+## AL-036 -- E2E pins on CMS-editable copy rot on first save
+
+- **Observation:** `R-GATE-02` asserted headline fragments
+  (`not just` / `a team.`); the headline is Tina-editable and changed
+  via a real Save (`fbf05f2`), so the pin would break post-merge
+  regardless of the static-server issue.
+- **Cause:** Pinning exact marketing copy that the CMS is designed to change.
+- **Rule:** Pins on CMS-editable regions assert stable markers
+  (`data-tina-island`, eyebrow constants) + absence-of-corruption
+  (`[object Object]`) — never exact editable wording.
+- **Verified-by:** PR #96 CI green after replacement.
+- **Status:** VERIFIED.
+
+## AL-037 -- Live-route pins fail on static preview servers
+
+- **Observation:** 8 `tina-protocol` tests POST `/tina-island/*`
+  expecting 200/403; CI serves `dist/client/` statically
+  (`serve-static.mjs`), so the on-demand Worker route 404s there by
+  design (dev + production serve it; T3 matrix + smoke own that coverage).
+- **Cause:** Asserting server behavior the CI harness never provides.
+- **Rule:** Probe once per worker (`page.request`, cached); `test.skip`
+  with reason where the route is absent; keep live coverage owned
+  explicitly elsewhere. Never weaken the live assertion to fit CI.
+- **Verified-by:** PR #96 Playwright pass; R-GATE-01 still asserts 403
+  where the route is live.
+- **Status:** VERIFIED.
+
+## AL-038 -- Runner-egress challenge is not a user-facing outage
+
+- **Observation:** Post-deploy smoke FAILed all 6 paths (`403
+  mitigated=challenge`, `Just a moment...`) from the GH runner while
+  production returned 200 externally (homepage incl. new headline,
+  `/about`, `/admin/`). Retry failed identically in 9s: standing
+  policy, not transient.
+- **Cause:** Cloudflare challenges runner-egress IPs; smoke runs from
+  that egress.
+- **Rule:** On smoke FAIL, first re-probe from an independent vantage
+  (external fetch) before touching code; attach `ray/server/mitigated`
+  forensics (PR #100) and escalate the rule name via dashboard
+  Security Events. Never relax smoke or protection to fit the runner.
+- **Verified-by:** external 200s vs runner 403s, same window; final
+  closeout `20260923-final-closeout.md`.
+- **Status:** VERIFIED.
+
+### AL-039: PowerShell Argument Tokenization on `gh pr create --body`
+
+- **Observation:** `gh pr create` fails with `unknown arguments [...] please quote all values that have spaces`.
+- **Cause:** PowerShell parses unquoted or complex multi-line markdown strings containing quotes, hyphens, and escape characters before passing them to native binaries (`gh.exe`).
+- **Rule:** When creating PRs from PowerShell, use `--fill` (inheriting git commit metadata) or write the PR body to a temporary markdown file and pass `--body-file <path>` (or `-F <path>`), rather than inline multi-line `--body` strings.
+- **Verified-by:** PR #102 creation with `--fill`.
+- **Status:** VERIFIED.
+

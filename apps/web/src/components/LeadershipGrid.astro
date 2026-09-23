@@ -9,6 +9,8 @@
 // (`org.leadership_intro`) — the managementStory passage compressed
 // for SEO/marketing, roster hedge kept. The full passage is NOT
 // rendered here (no duplicate copy on the page).
+import { tinaField } from '@tinacms/astro';
+import SubHeading from './SubHeading.astro';
 interface Leader {
   name: string;
   role: string;
@@ -25,9 +27,12 @@ interface Props {
   intro: string;
   /** Tina visual editing field name for the leadership intro. */
   'data-tina-field'?: string;
+  /** Tina metadata-bearing doc — island re-render derives the marker from this. */
+  data?: Record<string, unknown>;
 }
-const { leaders, intro, 'data-tina-field': tinaField } = Astro.props;
-import SubHeading from './SubHeading.astro';
+const { leaders, intro, 'data-tina-field': tinaFieldProp, data } = Astro.props;
+// ponytail: island data derives marker on re-render; static path keeps the passed string.
+const introMarker = data ? tinaField(data, 'leadershipIntro') : tinaFieldProp;
 ---
 
 <div class="ukbt-leadership">
@@ -58,7 +63,7 @@ import SubHeading from './SubHeading.astro';
   <div class="ukbt-leadership__title">
     <SubHeading label="Our Leadership" />
     <h2>Meet the People Behind the Tigers</h2>
-    <p {...tinaField ? { 'data-tina-field': tinaField } : {}}>{intro}</p>
+    <p {...introMarker ? { 'data-tina-field': introMarker } : {}}>{intro}</p>
   </div>
 </div>
 
