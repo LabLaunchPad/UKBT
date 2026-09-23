@@ -182,3 +182,11 @@ Community skills are supporting knowledge. **UKBT `AGENTS.md` + UKBT skills are 
 Prefer: `DISCOVER → CLASSIFY → LOAD SKILLS → DELEGATE → VERIFY → SYNTHESIZE`
 Never: `GUESS → EDIT → CLAIM PASS`
 When real TinaCloud browser session is available, use it; when unavailable, exhaust MCP/browser capabilities before declaring blocked.
+
+## Web-Research Discipline (binding)
+
+- Triggers: issue/bug/blocker investigation; library/framework/SDK/API/CLI/cloud-service question; any version-sensitive or config-syntax claim.
+- Source order: Context7 resolve+query for libraries first, then official docs via webfetch, then websearch plus community signals for live issues.
+- Version claims require cross-check across >=2 sources; repo facts outrank community claims.
+- Grounding: record source URL + retrieval timestamp in the task report; never present training-data claims as verified; UNKNOWN stays UNKNOWN.
+- Non-triggers: pure business-logic debugging, code review, refactoring need no web research.
