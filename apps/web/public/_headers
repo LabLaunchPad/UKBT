@@ -3,7 +3,14 @@
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=()
-  Cross-Origin-Opener-Policy: same-origin
+  # COOP must be same-origin-allow-popups, NOT same-origin: the TinaCloud
+  # login popup (app.tina.io) returns session tokens via window.opener.
+  # same-origin severs the opener for cross-origin popups — observed live
+  # 2026-09-23 as "No opener window available to send message to", which
+  # leaves the login window open forever with a retry loop and no visual
+  # editing. allow-popups keeps full isolation except the popup channel
+  # OAuth needs. CORP below is unaffected (subresources, not popups).
+  Cross-Origin-Opener-Policy: same-origin-allow-popups
   Cross-Origin-Resource-Policy: same-origin
   # No X-Frame-Options: it would override frame-ancestors below and block
   # the Tina admin's same-origin edit iframe (audit 2026-09-18). CSP
@@ -12,7 +19,12 @@
   # stamped at build time (scripts/stamp-csp.mjs) with the sha256 of every
   # inline executable script in dist; check-security.mjs recomputes and
   # enforces it. ld+json data blocks are non-executable and exempt.
-  Content-Security-Policy: default-src 'self'; script-src 'self' __UKBT_CSP_SCRIPT_HASHES__; style-src 'self' 'unsafe-inline'; img-src 'self'; font-src 'self'; connect-src 'self' https://*.ingest.sentry.io https://app.tina.io https://*.tinajs.io https://s3.us-east-1.amazonaws.com https://us.i.posthog.com https://us-assets.i.posthog.com; worker-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'; frame-ancestors 'self' https://app.tina.io https://*.tinajs.io; upgrade-insecure-requests
+  Content-Security-Policy: default-src 'self'; script-src 'self' __UKBT_CSP_SCRIPT_HASHES__; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: blob: https://assets.tina.io https://assets.tinajs.io https://*.tinajs.io; font-src 'self' data:; connect-src 'self' https://*.ingest.sentry.io https://*.tina.io https://app.tina.io https://*.tinajs.io https://s3.us-east-1.amazonaws.com https://us.i.posthog.com https://us-assets.i.posthog.com; worker-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'; frame-ancestors 'self' https://*.tina.io https://app.tina.io https://*.tinajs.io; upgrade-insecure-requests
+  # style-src fonts.googleapis.com + img-src assets.tina.io added 2026-09-23:
+  # live-monitored Tina admin breakage (fonts stylesheet + TinaCloud media
+  # team-huddle.webp both blocked). Scoped to the observed Tina asset host
+  # + Google Fonts stylesheet host;
+  # no wildcards, no unsafe-*, script-src untouched.
 
 # PWA-lite cache matrix (2026-09-11): explicit Cache-Control per asset
 # class. HTML intentionally has NO rule — Cloudflare serves it

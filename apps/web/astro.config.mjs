@@ -4,6 +4,7 @@ import sentry from '@sentry/astro';
 import spotlightjs from '@spotlightjs/astro';
 import tina from '@tinacms/astro/integration';
 import cloudflare from '@astrojs/cloudflare';
+import { tinaAdminDevRedirect } from '@tinacms/astro/vite';
 
 const integrations = [spotlightjs(), tina()];
 if (process.env.SENTRY_DSN) {
@@ -19,6 +20,7 @@ export default defineConfig({
   // where `tinacms build` emits it — outside this app's Vite root), so it
   // is aliased rather than reached with fragile relative depth.
   vite: {
+    plugins: [tinaAdminDevRedirect()],
     resolve: {
       alias: {
         '@tina-client': fileURLToPath(

@@ -32,6 +32,8 @@ const { name, when, where, status } = Astro.props;
     display: flex;
     flex-direction: column;
     gap: var(--ukbt-space-2);
+    /* Dark card: repaint the focus ring gold for keyboard focus visibility */
+    --ukbt-color-focus-ring: var(--ukbt-color-brand-accent);
   }
   .ukbt-event-card__tag {
     align-self: flex-start;

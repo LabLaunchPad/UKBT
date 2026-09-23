@@ -261,10 +261,11 @@ export default defineConfig({
                 ui: { validate: (v: string) => (!v ? 'Required' : v.length > 120 ? 'Keep under 120 characters' : undefined) },
               },
               {
-                type: 'rich-text',
+                type: 'string',
                 name: 'answer',
                 label: 'Answer',
                 required: true,
+                ui: { component: 'textarea', validate: (v: string) => (!v ? 'Required' : v.length > 500 ? 'Keep under 500 characters' : undefined) },
               },
               {
                 type: 'boolean',

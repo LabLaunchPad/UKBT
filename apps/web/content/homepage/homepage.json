@@ -1,6 +1,6 @@
 {
   "eyebrow": "UK Bangla Tigers Cricket Club",
-  "headline": "We're not just\na team.",
+  "headline": "We are not only a team, but also an institute for learning! ",
   "tagline": "United by Passion. Driven by Cricket.",
   "metaDescription": "UK Bangla Tigers Cricket Club — international T20 cricket since 2020, an institute for learning, with sister franchise Uppsala Tigers in Sweden.",
   "heroImage": "/media/team-huddle.webp",
@@ -10,9 +10,21 @@
   "secondaryCtaLink": "/tournaments/",
   "clubIntroLede": "A registered cricket club, competing across international tournaments since 2020.",
   "whyChooseUs": [
-    { "title": "International Competition", "body": "Competing across the Safari International T20 Cup, Nordic Smash T20 and the Asian Challengers Trophy." },
-    { "title": "A Learning Institute", "body": "The club describes itself as not only a team, but an institute for learning." },
-    { "title": "A Franchise Network", "body": "One family across two nations, alongside sister franchise Uppsala Tigers in Sweden." },
-    { "title": "A Registered Club", "body": "Founded in 2020 · registered as UK Bangla Tigers Cricket Club CIC." }
+    {
+      "title": "International Competition",
+      "body": "Competing across the Safari International T20 Cup, Nordic Smash T20 and the Asian Challengers Trophy."
+    },
+    {
+      "title": "A Learning Institute",
+      "body": "The club describes itself as not only a team, but an institute for learning."
+    },
+    {
+      "title": "A Franchise Network",
+      "body": "One family across multiple nations, alongside sister franchise Uppsala Tigers in Sweden."
+    },
+    {
+      "title": "A Registered Club",
+      "body": "Registered as UK Bangla Tigers Cricket Club CIC, originally founded in 2020. "
+    }
   ]
 }

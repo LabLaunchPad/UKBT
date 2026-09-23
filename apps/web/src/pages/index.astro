@@ -41,11 +41,14 @@ import TinaIsland from '@tinacms/astro/TinaIsland.astro';
 import { homepage } from '../content/homepage-data';
 import { homepageGraph } from '../lib/seo';
 import { tinaHomepage } from '../lib/tina/loaders';
+import homepageData from '../../content/homepage/homepage.json' with { type: 'json' };
 
 const [mainEvent, ...otherEvents] = homepage.upcomingTournaments;
 
 // WhyChooseUs reasons from Tina CMS — client can edit these via admin.
-const reasons = tinaHomepage.whyChooseUs.map((r: { title: string; body: string }) => ({
+// Static JSON carries no _content_source by design; markers populate on
+// bridge island re-render, where reasons come from the fetched Tina doc.
+const reasons = (tinaHomepage.whyChooseUs || []).map((r: { title: string; body: string }) => ({
   title: r.title,
   body: r.body,
 }));
@@ -88,6 +91,7 @@ const structuredData = homepageGraph({
     <TinaIsland name="hero" wrapper={{ tag: 'div', className: 'ukbt-hero-island' }} primary>
       <Hero
         taglineShort={homepage.taglineShort}
+        tagline={tinaHomepage.tagline}
         social={homepage.social}
         eyebrow={tinaHomepage.eyebrow || 'UK Bangla Tigers Cricket Club'}
         headline={tinaHomepage.headline}
@@ -95,17 +99,20 @@ const structuredData = homepageGraph({
         primaryCtaLink={tinaHomepage.primaryCtaLink}
         secondaryCta={tinaHomepage.secondaryCtaLabel ? { label: tinaHomepage.secondaryCtaLabel, href: tinaHomepage.secondaryCtaLink || '/tournaments/' } : undefined}
         heroImage={tinaHomepage.heroImage}
+        data={homepageData}
       />
     </TinaIsland>
 
     <Section>
       <TinaIsland name="aboutSection" wrapper={{ tag: 'div', className: 'ukbt-club-intro-island' }}>
-        <ClubIntro lede={tinaHomepage.clubIntroLede} founded={homepage.founded} />
+        <ClubIntro lede={tinaHomepage.clubIntroLede || homepage.taglineShort} founded={homepage.founded} data={homepageData} />
       </TinaIsland>
     </Section>
 
     <Section surface="alt" wrapper={true}>
-      <WhyChooseUs reasons={reasons} variant="editorial" />
+      <TinaIsland name="whyChooseUs" wrapper={{ tag: 'div', className: 'ukbt-chooseus' }}>
+        <WhyChooseUs reasons={reasons} variant="editorial" />
+      </TinaIsland>
     </Section>
 
     <Section surface="inverse" wrapper={true}>
