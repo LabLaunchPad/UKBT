@@ -1,4 +1,7 @@
 User-agent: *
 Allow: /
 
+# TinaCMS admin is an authenticated app shell, not indexable content.
+Disallow: /admin/
+
 Sitemap: https://ukbanglatigers.co.uk/sitemap.xml

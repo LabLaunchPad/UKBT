@@ -83,6 +83,7 @@ const initials = p.name
           alt={p.photoAlt ?? `${p.name} — ${org}`}
           width="320"
           height="320"
+          loading="lazy"
         />
         {badges.length > 0 && (
           <p class="ukbt-squad-card__badge">{badges.join(' · ')}</p>

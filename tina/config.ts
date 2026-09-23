@@ -1,8 +1,11 @@
 import { defineConfig } from 'tinacms';
 
 export default defineConfig({
-  branch: process.env.TINA_BRANCH || process.env.GITHUB_BRANCH || 'main',
-  clientId: process.env.PUBLIC_TINA_CLIENT_ID || null,
+  branch: process.env.TINA_BRANCH || process.env.GITHUB_BRANCH || process.env.WORKERS_CI_BRANCH || process.env.CF_PAGES_BRANCH || 'main',
+  // PUBLIC_TINA_CLIENT_ID is the Astro-convention name; TINA_CLIENT_ID is
+  // accepted as a fallback because Tina's own docs use that name and a
+  // mismatched variable name otherwise fails closed at build time.
+  clientId: process.env.PUBLIC_TINA_CLIENT_ID || process.env.TINA_CLIENT_ID || null,
   token: process.env.TINA_TOKEN || null,
   build: {
     outputFolder: 'admin',
@@ -14,6 +17,9 @@ export default defineConfig({
       mediaRoot: 'media',
     },
   },
+  // Search disabled by design — build uses --skip-search-index
+  // (package.json:18, ci.yml:272). Do not provision TINA_SEARCH_TOKEN
+  // unless search is re-enabled per https://tina.io/docs/reference/search/overview
   search: {
     tina: {
       indexerToken: process.env.TINA_SEARCH_TOKEN || undefined,
@@ -68,6 +74,19 @@ export default defineConfig({
               validate: (v: string) => {
                 if (!v) return 'Supporting text is required';
                 if (v.length > 120) return 'Keep under 120 characters';
+              },
+            },
+          },
+          {
+            type: 'string',
+            name: 'metaDescription',
+            label: 'Homepage meta description (SEO)',
+            description: 'Search-result snippet for the homepage. Factual club summary, 120-160 characters.',
+            required: false,
+            ui: {
+              component: 'textarea',
+              validate: (v: string) => {
+                if (v && (v.length < 120 || v.length > 160)) return 'Keep 120-160 characters';
               },
             },
           },
@@ -242,10 +261,11 @@ export default defineConfig({
                 ui: { validate: (v: string) => (!v ? 'Required' : v.length > 120 ? 'Keep under 120 characters' : undefined) },
               },
               {
-                type: 'rich-text',
+                type: 'string',
                 name: 'answer',
                 label: 'Answer',
                 required: true,
+                ui: { component: 'textarea', validate: (v: string) => (!v ? 'Required' : v.length > 500 ? 'Keep under 500 characters' : undefined) },
               },
               {
                 type: 'boolean',

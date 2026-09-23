@@ -15,8 +15,8 @@ location claim)
 DTCG-compatible token source
   RAW        → artifacts/extraction/token-candidates.json  (repo root — frozen Track A evidence)
   CANDIDATE  → artifacts/extraction/token-candidates.json  (same file)
-  ADAPTED    → packages/truth/tokens/adapted/               (UKBT-owned, governed)
-  APPROVED   → packages/truth/tokens/approved/               (UKBT-owned, governed)
+  ADAPTED    → packages/truth/src/tokens/adapted/           (UKBT-owned, governed)
+  APPROVED   → packages/truth/src/tokens/approved/           (UKBT-owned, governed)
         ↓
 Style Dictionary
   (compiles tokens/approved/** ONLY — fail-closed; RAW/CANDIDATE/ADAPTED
@@ -97,7 +97,7 @@ part of this pipeline at any layer (`A09`/`A10`, unchanged).
 ## Forbidden behavior
 
 - Compiling `artifacts/extraction/token-candidates.json` (RAW/CANDIDATE)
-  or `packages/truth/tokens/adapted/` directly into shipped CSS (bypassing
+  or `packages/truth/src/tokens/adapted/` directly into shipped CSS (bypassing
   the APPROVED gate).
 - Introducing Tailwind or an equivalent utility framework as a styling
   source of truth.

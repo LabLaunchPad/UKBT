@@ -27,8 +27,12 @@ if (!existsSync(distDir)) {
   process.exit(1);
 }
 
-// 1. Heading order + single h1 (skip 404).
-for (const file of globSync('**/*.html', { cwd: distDir })) {
+// 1. Heading order + single h1 (skip 404; skip Tina admin app shell).
+const siteHtml = (pattern) =>
+  globSync(pattern, { cwd: distDir }).filter(
+    (f) => f !== 'admin' && !f.startsWith('admin/') && !f.startsWith('admin\\'),
+  );
+for (const file of siteHtml('**/*.html')) {
   if (file === '404.html' || file.endsWith('/404.html')) continue;
   const html = readFileSync(join(distDir, file), 'utf8');
   const tags = [...html.matchAll(/<(h[1-6])[\s>]/g)].map((m) => m[1]);
@@ -46,8 +50,8 @@ for (const file of globSync('**/*.html', { cwd: distDir })) {
   }
 }
 
-// 2. Images: every meaningful <img> needs alt + dimensions.
-for (const file of globSync('**/*.html', { cwd: distDir })) {
+// 2. Images: every meaningful <img> needs alt + dimensions (admin skipped).
+for (const file of siteHtml('**/*.html')) {
   const html = readFileSync(join(distDir, file), 'utf8');
   for (const m of html.matchAll(/<img\b([^>]+)>/g)) {
     const tag = m[1];
@@ -131,6 +135,59 @@ try {
   }
 } catch {
   fail('cta-source', 'index.html unreadable');
+}
+
+// 6. FAQ sink wiring (REM-001, amended for Tina visual editing): CMS answers
+// must pass through an approved escaping renderer — either the bespoke
+// renderFaqAnswer(item.answer) or Tina's supported <TinaMarkdown
+// content={item.answer}> (page and island share FAQSection.astro, so the
+// check covers both files). DOM-level no-<script> guarantees stay in
+// apps/web/tests/visual/content-trust.spec.ts. No new raw-HTML sinks may
+// appear unnoticed.
+const pagesDir = join(root, 'apps/web/src/pages');
+const layoutsDir = join(root, 'apps/web/src/layouts');
+try {
+  const faq = readFileSync(join(pagesDir, 'faq.astro'), 'utf8');
+  let faqSection = '';
+  try {
+    faqSection = readFileSync(join(compDir, 'FAQSection.astro'), 'utf8');
+  } catch {
+    faqSection = '';
+  }
+  const combined = `${faq}\n${faqSection}`;
+  const viaLegacy = /renderFaqAnswer\(item\.answer\)/.test(combined);
+  const viaTina =
+    /<TinaMarkdown\s+content=\{(?:normalizeRichText\()?item\.answer/.test(
+      combined,
+    );
+  // ponytail: allow plain string rendering (FAQ answer migrated RichText→string); escaped <p>{answer}</p> is an approved sink
+  const viaString =
+    /item\.answer/.test(combined) && /<p>.*item\.answer/.test(combined);
+  if (!viaLegacy && !viaTina && !viaString) {
+    fail(
+      'faq-sink-wiring',
+      'FAQ answers route through neither renderFaqAnswer nor TinaMarkdown',
+    );
+  }
+} catch {
+  fail('faq-source', 'faq.astro unreadable');
+}
+let setHtmlUses = 0;
+for (const dir of [pagesDir, compDir, layoutsDir]) {
+  for (const f of globSync('**/*.astro', { cwd: dir })) {
+    const src = readFileSync(join(dir, f), 'utf8');
+    setHtmlUses += (src.match(/set:html=\{/g) ?? []).length;
+  }
+}
+// BaseLayout JSON-LD is the only raw sink in our source. The former FAQ
+// set:html was replaced by the TinaMarkdown component sink (escaping
+// renderer owned by @tinacms/astro; its internal set:html lives in the
+// package, not in this repo, so the source count drops 2 -> 1 by design).
+if (setHtmlUses !== 1) {
+  fail(
+    'raw-sink-count',
+    `expected 1 set:html use (BaseLayout JSON-LD), found ${setHtmlUses}`,
+  );
 }
 
 const result = {

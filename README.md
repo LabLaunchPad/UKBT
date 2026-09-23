@@ -1,49 +1,119 @@
-# UKBT — UK Bangla Tigers
+<div align="center">
 
-Repository for the UK Bangla Tigers website.
+<img src="https://raw.githubusercontent.com/LabLaunchPad/UKBT/main/apps/web/public/brand/crest-512.png" alt="UK Bangla Tigers crest" width="140" />
 
-**Status: active build.** A real, governed multi-page site exists
-(`apps/web`) and is being extended stage by stage. This line is
-intentionally the only status claim in this file — see "Current state"
-below for why, and where the real numbers live instead.
+# UK Bangla Tigers
 
-## Working here
+**United by Passion. Driven by Cricket.**
 
-Read in this order:
+The official website of **UK Bangla Tigers Cricket Club (CIC, est. 2020)** — an evidence-gated Astro monorepo deployed to Cloudflare.
 
-| File | What it gives you |
+[![CI](https://github.com/LabLaunchPad/UKBT/actions/workflows/ci.yml/badge.svg)](https://github.com/LabLaunchPad/UKBT/actions/workflows/ci.yml)
+[![Live site](https://img.shields.io/badge/site-ukbanglatigers.co.uk-16a34a?style=flat)](https://ukbanglatigers.co.uk/)
+[![Astro](https://img.shields.io/badge/astro-7.x-BC52EE?style=flat&logo=astro&logoColor=white)](apps/web)
+[![Cloudflare](https://img.shields.io/badge/cloudflare-workers-F6821F?style=flat&logo=cloudflare&logoColor=white)](wrangler.jsonc)
+[![pnpm](https://img.shields.io/badge/pnpm-10-F69220?style=flat&logo=pnpm&logoColor=white)](pnpm-workspace.yaml)
+[![Biome](https://img.shields.io/badge/biome-lint%20%2B%20format-60a5fa?style=flat)](biome.json)
+
+[🌐 Live site](https://ukbanglatigers.co.uk/) · [📋 Roadmap](docs/12-roadmap-and-open-items.md) · [🤝 Contributing](CONTRIBUTING.md) · [🔒 Security](SECURITY.md)
+
+</div>
+
+---
+
+<img src="https://raw.githubusercontent.com/LabLaunchPad/UKBT/main/apps/web/public/social-card.jpg" alt="UK Bangla Tigers — team social card" width="100%" />
+
+## About the club
+
+| | |
 |---|---|
-| `CLAUDE.md` | operating contract, authority order, hard invariants |
-| **`knowledge/`** | **compact decision substrate — read before any project-level decision** |
-| `AGENTS.md` | evidence and role doctrine |
-| `docs/10-fresh-repo-pipeline.md` | **the build order and the gate for each stage** |
-| `contracts/` | frozen, machine-checkable agreements |
-| `artifacts/bootstrap/` | current discovery output |
+| 🏏 **Club** | UK Bangla Tigers Cricket Club (Community Interest Company) |
+| 📅 **Founded** | 2020 |
+| 👥 **Squad** | 50+ players across the squad |
+| 🌍 **Reach** | 15+ countries · internationals on the roster |
+| 🏆 **Stage** | 7+ international tournaments — Safari International T20 Cup, Nordic Smash T20, Asian Challengers Trophy |
+| 🤝 **Family** | Sister franchise **Uppsala Tigers** (Sweden) |
 
-## The two rules that matter most
+> Every organisation-specific claim on the site — players, stats, history, leadership — is backed by a sourced evidence record. `UNKNOWN` is a complete and acceptable answer; a plausible guess is not.
 
-1. **No organization-specific claim about UK Bangla Tigers may be published
-   without a sourced evidence record.** Not players, fixtures, history,
-   leadership, honours, sponsors, venues, or contact details. `UNKNOWN` is a
-   complete and acceptable answer; a plausible guess is not.
-2. **No stage skipping.** Architecture is frozen at Stage 3, after a red team —
-   not before. Pages are built one at a time, each with its own verification
-   receipt.
+## The site
 
-## Current state
+18 routes — Home, About, Club Captain, Players Profile, Tournaments, Franchises (plus the Uppsala Tigers franchise page), Community, Coaching & Development, News (plus per-article slugs), Membership, Join, Services, Contact, FAQ, Offline, 404 — plus the Tina island re-render endpoint — plus a TinaCMS editorial layer for headlines, CTAs and FAQs.
 
-This file does not restate stage/gate numbers — three separate documents
-in this repository (this file included) were once found to have drifted
-out of date the same way, silently, because status was hand-copied into
-several places instead of living in one. Read the real, current state
-from whichever of these actually answers your question:
+<div align="center">
+<img src="https://raw.githubusercontent.com/LabLaunchPad/UKBT/main/apps/web/public/media/team-huddle.webp" alt="Squad team huddle" width="32%" />
+<img src="https://raw.githubusercontent.com/LabLaunchPad/UKBT/main/apps/web/public/media/gallery-04.webp" alt="Match action" width="32%" />
+<img src="https://raw.githubusercontent.com/LabLaunchPad/UKBT/main/apps/web/public/media/founder-trophy.webp" alt="Founder with trophy" width="32%" />
+</div>
+
+## Why this repo stands out
+
+- **Truth gate before pixels** — `@ukbt/truth` (Zod schemas + provenance types) validates every content module; the build fails if facts don't check out.
+- **16-gate release pipeline** — `pnpm deploy:verify` runs scaffold self-test → control plane → deps → lint → tokens → typecheck → unit → build → deploy-mapping → failure-injection → links → SEO → UI → motion → security → perf. A subset passing is never a release pass.
+- **Motion with a contract** — `contracts/MOTION-CONTRACT.md` enforces tokens-first animation, a two-tier reduced-motion model (instant states, soft-fade entrances), and zero third-party JS animation runtimes.
+- **Budgets as gates** — HTML/CSS/JS transfer weights, contrast, focus coverage, internal-link integrity and security headers are all machine-checked in CI.
+- **Adversarial memory** — past failures live in `artifacts/adaptive-learning/` (error catalog → prevention checklist → recurrence protocol), so mistakes get fixed once.
+
+## Tech stack
+
+| Layer | Choice |
+|---|---|
+| Site | Astro 7 (static output) + Astro ClientRouter view transitions |
+| Deploy | Cloudflare Workers + static assets (`wrangler.jsonc`) |
+| Monorepo | pnpm workspaces — `apps/web`, `packages/truth` |
+| Truth & tokens | Zod + Style Dictionary design tokens |
+| CMS | TinaCMS (editorial layer only — never bypasses the truth gate) |
+| Quality | Biome, TypeScript strict, Vitest, Playwright |
+| CI | GitHub Actions, 18 required checks, branch protection on `main` |
+
+## Project structure
+
+```
+apps/web/               # Astro site — one .astro per route, typed content modules
+packages/truth/         # @ukbt/truth — schemas, provenance, truth gate, design tokens
+contracts/              # frozen, machine-checkable agreements (motion, routes, SEO, …)
+knowledge/              # compact decision substrate (read before project-level decisions)
+artifacts/              # evidence records, verification receipts, adaptive learning
+scripts/                # the 16 gate checks behind pnpm deploy:verify
+docs/                   # pipeline, roadmap, runbooks (Tina, visual truth, …)
+.opencode/              # 9 read-only motion-advisor agents + vendored animation skills
+```
+
+## Quickstart
+
+```bash
+pnpm install          # frozen lockfile
+pnpm dev              # Astro dev server (apps/web)
+pnpm build            # tokens → Astro build → sitemap
+pnpm deploy:verify    # the full 16-gate release check
+```
+
+| Command | Purpose |
+|---|---|
+| `pnpm lint` / `pnpm typecheck` | Biome + `tsc --noEmit` |
+| `pnpm test:unit` / `pnpm test:e2e` | Vitest (truth gate) / Playwright (visual, a11y, responsive) |
+| `pnpm check:motion` | tokens, reduced motion, reveal gating (`MOTION_STATUS = PASS`) |
+| `pnpm check:seo` / `check:perf` / `check:ui` | built-output crawl, transfer budgets, headings/focus/images |
+
+## Project status — single source of truth
+
+Status is never hand-copied into this file (three documents once drifted that way). Read the live answer where it actually lives:
 
 | Question | Where the current answer lives |
 |---|---|
-| What stage is the project at, and what's the gate for each? | `docs/10-fresh-repo-pipeline.md` |
-| What's actually verified vs. still `UNKNOWN`? | `knowledge/01-VERIFIED-FACTS.yaml` |
-| Did the last build/test/accessibility pass actually run, and pass? | `artifacts/receipts/` (`FOUNDATION.md`, `HOMEPAGE.md`, `RELEASE.md`) |
-| Did an independent review find anything? | `artifacts/review/` (`HOMEPAGE-REDTEAM.md`, `replay.md`) |
-| What's blocked on the client, not on engineering? | `artifacts/content/CLIENT-ASK-LIST.md` |
+| Stage, gates, what's next | `docs/12-roadmap-and-open-items.md` |
+| What's verified vs `UNKNOWN` | `knowledge/01-VERIFIED-FACTS.yaml` |
+| Did the last build/tests/a11y actually pass | `artifacts/receipts/` (`RELEASE.md`, `HOMEPAGE.md`) |
+| Independent review findings | `artifacts/review/` |
+| Blocked on the client, not engineering | `artifacts/content/CLIENT-ASK-LIST.md` |
+| How to work here | `CLAUDE.md` → `AGENTS.md` → `knowledge/00-KNOWLEDGE-CONTRACT.md` |
 
-Scaffold integrity check: `node scripts/scaffold-self-test.mjs`
+## Contributing & security
+
+- Workflow, branches and PR rules: [`CONTRIBUTING.md`](CONTRIBUTING.md)
+- Report vulnerabilities: [`SECURITY.md`](SECURITY.md) — please don't open public issues for them.
+- Every PR to `main` needs all 18 CI checks green; `main` is protected.
+
+## Notices
+
+Vendored third-party animation knowledge is attributed in [`THIRD-PARTY-NOTICES.md`](THIRD-PARTY-NOTICES.md). Site photography and crest are club assets.

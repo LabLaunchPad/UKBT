@@ -1,12 +1,12 @@
 ---
-// Mirrors the reference's `booking.html` (Banner â†’ Booking Process â†’
-// Booking â†’ Contact CTA â†’ Testimonial). Route added under
+// Mirrors the reference's `booking.html` (Banner → Booking Process →
+// Booking → Contact CTA → Testimonial). Route added under
 // CLIENT_REQ_009 / ROUTE-CONTRACT Amendment 01.
 //
 // SHELL. `noindex` per that amendment's condition 2. The reference books
 // padel courts by the hour; UKBT has no booking product. The nearest
 // real UKBT concept is enquiring about joining, so the shell is framed
-// that way â€” but no trial date, selection process or contact route is on
+// that way — but no trial date, selection process or contact route is on
 // record, and FORM-CONTRACT's submitForm adapter has no backend, so no
 // form is rendered that would silently discard an enquiry.
 import BaseLayout from '../layouts/BaseLayout.astro';
@@ -20,7 +20,7 @@ import Footer from '../components/Footer.astro';
 import { homepage } from '../content/homepage-data';
 ---
 
-<BaseLayout title="Join the Club â€” UK Bangla Tigers" description="Get in touch about joining UK Bangla Tigers."
+<BaseLayout title="Join the Club — UK Bangla Tigers" description="Get in touch about joining UK Bangla Tigers."
   noindex={true}>
   <Header nav={homepage.nav} cta={homepage.primaryCta} />
   <main id="main-content" tabindex="-1">

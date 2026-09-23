@@ -32,7 +32,11 @@ const robotsPattern = /<meta name="robots" content="([^"]+)"\s*\/?>/;
 const urls = [];
 const skipped = [];
 
-for (const file of globSync('**/*.html', { cwd: distDir })) {
+const isAdminOwned = (f) =>
+  f === 'admin' || f.startsWith('admin/') || f.startsWith('admin\\');
+for (const file of globSync('**/*.html', { cwd: distDir }).filter(
+  (f) => !isAdminOwned(f),
+)) {
   if (file === '404.html' || file.endsWith('/404.html')) {
     skipped.push({ file, reason: 'error page' });
     continue;

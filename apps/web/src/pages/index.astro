@@ -37,14 +37,18 @@ import CaptainSpotlight from '../components/CaptainSpotlight.astro';
 import FranchiseTeaser from '../components/FranchiseTeaser.astro';
 import AboutCTA from '../components/AboutCTA.astro';
 import Footer from '../components/Footer.astro';
+import TinaIsland from '@tinacms/astro/TinaIsland.astro';
 import { homepage } from '../content/homepage-data';
 import { homepageGraph } from '../lib/seo';
 import { tinaHomepage } from '../lib/tina/loaders';
+import homepageData from '../../content/homepage/homepage.json' with { type: 'json' };
 
 const [mainEvent, ...otherEvents] = homepage.upcomingTournaments;
 
 // WhyChooseUs reasons from Tina CMS — client can edit these via admin.
-const reasons = tinaHomepage.whyChooseUs.map((r: { title: string; body: string }) => ({
+// Static JSON carries no _content_source by design; markers populate on
+// bridge island re-render, where reasons come from the fetched Tina doc.
+const reasons = (tinaHomepage.whyChooseUs || []).map((r: { title: string; body: string }) => ({
   title: r.title,
   body: r.body,
 }));
@@ -66,29 +70,49 @@ const structuredData = homepageGraph({
 
 <BaseLayout
   title="UK Bangla Tigers — Cricket Club"
-  description={homepage.taglineShort}
+  description={tinaHomepage.metaDescription || homepage.taglineShort}
   structuredData={structuredData}
 >
   <Header nav={homepage.nav} cta={homepage.primaryCta} />
 
   <main id="main-content" tabindex="-1">
-    <Hero
-      taglineShort={homepage.taglineShort}
-      social={homepage.social}
-      eyebrow={tinaHomepage.eyebrow || 'UK Bangla Tigers Cricket Club'}
-      headline={tinaHomepage.headline}
-      primaryCtaLabel={tinaHomepage.primaryCtaLabel}
-      primaryCtaLink={tinaHomepage.primaryCtaLink}
-      secondaryCta={tinaHomepage.secondaryCtaLabel ? { label: tinaHomepage.secondaryCtaLabel, href: tinaHomepage.secondaryCtaLink || '/tournaments' } : undefined}
-      heroImage={tinaHomepage.heroImage}
-    />
+    {/*
+      Visual editing (official @tinacms/astro static-site flow): the
+      hero and club-intro regions are wrapped in registered TinaIslands.
+      The wrapper emits a one-line inline bootstrap (hashed into the CSP
+      by scripts/stamp-csp.mjs) that loads /admin/bridge.js only inside
+      the admin iframe; the bridge primes /tina-island/hero and
+      /tina-island/aboutSection to pick up form payloads, and every
+      editor keystroke re-POSTs the island for a live swap. `primary`
+      makes the admin open the hero form on load. The wrapper tags match
+      the island registry (src/lib/tina/islands.ts) exactly — the bridge
+      swaps the whole wrapper element.
+    */}
+    <TinaIsland name="hero" wrapper={{ tag: 'div', className: 'ukbt-hero-island' }} primary>
+      <Hero
+        taglineShort={homepage.taglineShort}
+        tagline={tinaHomepage.tagline}
+        social={homepage.social}
+        eyebrow={tinaHomepage.eyebrow || 'UK Bangla Tigers Cricket Club'}
+        headline={tinaHomepage.headline}
+        primaryCtaLabel={tinaHomepage.primaryCtaLabel}
+        primaryCtaLink={tinaHomepage.primaryCtaLink}
+        secondaryCta={tinaHomepage.secondaryCtaLabel ? { label: tinaHomepage.secondaryCtaLabel, href: tinaHomepage.secondaryCtaLink || '/tournaments/' } : undefined}
+        heroImage={tinaHomepage.heroImage}
+        data={homepageData}
+      />
+    </TinaIsland>
 
     <Section>
-      <ClubIntro lede={tinaHomepage.clubIntroLede} founded={homepage.founded} />
+      <TinaIsland name="aboutSection" wrapper={{ tag: 'div', className: 'ukbt-club-intro-island' }}>
+        <ClubIntro lede={tinaHomepage.clubIntroLede || homepage.taglineShort} founded={homepage.founded} data={homepageData} />
+      </TinaIsland>
     </Section>
 
     <Section surface="alt" wrapper={true}>
-      <WhyChooseUs reasons={reasons} variant="editorial" />
+      <TinaIsland name="whyChooseUs" wrapper={{ tag: 'div', className: 'ukbt-chooseus' }}>
+        <WhyChooseUs reasons={reasons} variant="editorial" />
+      </TinaIsland>
     </Section>
 
     <Section surface="inverse" wrapper={true}>
@@ -100,7 +124,7 @@ const structuredData = homepageGraph({
         eyebrow="Upcoming Tournament"
         heading="Join Us on the International Stage"
         ctaLabel="All tournaments"
-        ctaHref="/tournaments"
+        ctaHref="/tournaments/"
       />
       <TournamentGrid mainEvent={mainEvent} otherEvents={otherEvents} />
     </Section>

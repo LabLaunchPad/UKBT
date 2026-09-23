@@ -24,6 +24,13 @@ ADMIT → BASELINE → FALSIFY → CONTRACT-FREEZE → PLAN → APPROVE → IMPL
 
 A failure moves to DIAGNOSE. Never jump directly from failure to another edit.
 
+Task-level execution (states, evidence, impact, budgets, adversarial
+review, completion language) is governed by
+`contracts/AI-EXECUTION-CONTRACT.md` — the single normative source; this
+section governs session granularity, that contract governs task
+granularity, and any contradiction between them is a defect resolved by
+amendment.
+
 ## Hard invariants
 - Never invent facts, test results, URLs, statistics, dates, people, fixtures, or licenses.
 - Unknown stays UNKNOWN.
@@ -154,9 +161,15 @@ pnpm check:motion               # scripts/check-motion.mjs (MOTION_STATUS)
 pnpm check:security             # scripts/check-security.mjs (SECURITY_STATUS)
 pnpm check:perf                 # scripts/check-perf.mjs (PERF_STATUS)
 pnpm check:governance-scaffold  # scripts/scaffold-self-test.mjs
-pnpm deploy:verify               # the full release gate: governance-scaffold, deps, lint,
-                                  # tokens:build, typecheck, test:unit, build, check:links,
-                                  # check:seo, check:ui, check:motion, check:security, check:perf
+pnpm check:control-plane        # scripts/check-control-plane.mjs (AI control-plane self-audit)
+pnpm check:deploy-mapping       # scripts/check-deploy-mapping.mjs (wrangler vs build output)
+pnpm test:failure-injection     # scripts/test-deploy-failure-injection.mjs (P14)
+pnpm smoke:deploy <url>         # scripts/smoke-deploy.mjs (post-deploy HTTP gate)
+pnpm deploy:verify               # the full release gate: governance-scaffold,
+                                   # control-plane, deps, lint, tokens:build, typecheck,
+                                   # test:unit, build, check:deploy-mapping,
+                                   # test:failure-injection, check:links,
+                                   # check:seo, check:ui, check:motion, check:security, check:perf
 ```
 
 For a single test file, a single e2e spec, or any other package-scoped

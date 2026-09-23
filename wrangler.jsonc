@@ -1,5 +1,5 @@
 {
-  // Cloudflare Workers static-assets deployment target for @ukbt/web.
+  // Worker + static-assets deployment target for @ukbt/web.
   // See contracts/DEPLOYMENT-CONTRACT.md's 2026-08-27 amendment: HOST is
   // Cloudflare Workers (static assets), not Cloudflare Pages as originally
   // frozen — the owner connected this exact pre-provisioned Worker via the
@@ -15,18 +15,39 @@
   // directory". Keeping it here means `npx wrangler deploy` and
   // `npx wrangler versions upload` both work unmodified.
   //
-  // No `main` entry: this is a pure static site (apps/web/astro.config.mjs
-  // `output: 'static'`), so there is no Worker script to run — Cloudflare
-  // serves `assets.directory` directly. Confirmed against Cloudflare's own
-  // docs (developers.cloudflare.com/workers/framework-guides/web-apps/astro/,
-  // "If you want to use Astro as a static site generator, you do not need
-  // the Astro Cloudflare adapter").
+  // 2026-09-15 (production 404 recovery): `@astrojs/cloudflare` IS active
+  // (apps/web/astro.config.mjs `adapter: cloudflare()`, Astro `output:
+  // 'static'`). The adapter relocates static output to `dist/client/` and
+  // emits the Worker entry at `dist/server/entry.mjs` — verified against a
+  // clean local build, which also yields the adapter-generated
+  // `dist/server/wrangler.json` (`main: "entry.mjs"`, assets `"../client"`,
+  // relative to `dist/server/`). This root config mirrors that generated
+  // truth with paths relative to the repository root. The previous
+  // assets-only revision (`assets.directory: ./apps/web/dist`, no `main`)
+  // served a directory containing only `client/` + `server/` subfolders —
+  // no `index.html`, no `404.html`, no `_headers` at its root — so every
+  // route 404'd at the platform layer. `main` is required because exactly
+  // one production route is on-demand: `tina-island/[name].ts`
+  // (`export const prerender = false`, POST island handler); all other
+  // routes are prerendered and served as static assets. `name` keeps the
+  // dashboard Worker's exact name (`ukbt-uk-bangla-tigers`); the adapter-
+  // generated `ukbt-web` name must NOT be adopted.
   "name": "ukbt-uk-bangla-tigers",
   "compatibility_date": "2026-09-14",
+  "compatibility_flags": ["nodejs_compat"],
+  "main": "./apps/web/dist/server/entry.mjs",
   "assets": {
-    "directory": "./apps/web/dist",
+    "binding": "ASSETS",
+    "directory": "./apps/web/dist/client",
     "not_found_handling": "404-page"
   },
+  // SESSION KV namespace pin (P0-1)
+  "kv_namespaces": [
+    {
+      "binding": "SESSION",
+      "id": "3435716ffa0e4616b01e2b0faf96ddd5"
+    }
+  ],
   // Mirrors the dashboard's current Observability settings for this Worker
   // (Settings > Observability), so `wrangler deploy`/`versions upload` from
   // CI don't silently reset them to defaults on the next deploy. Logs are
@@ -36,13 +57,16 @@
   "observability": {
     "enabled": false,
     "head_sampling_rate": 1,
-    // 2026-09-11 (P0/P1 hardening, F-06): redact query strings from
-    // persisted invocation logs. Verified safe — the static site has no
-    // query-string-dependent runtime behavior (no forms, no search, no
-    // URLSearchParams/location.search anywhere in apps/web/src, no
-    // query-bearing redirects or analytics). See
+    // 2026-09-11 (P0/P1 hardening, F-06) intent was query-string redaction
+    // in persisted invocation logs — but `redact_query_string` is NOT a
+    // wrangler config field (absent from config-schema.json Observability,
+    // additionalProperties: false; absent from Cloudflare docs 2026-09-17),
+    // so wrangler warned and ignored it. Removed 2026-09-17 to kill the
+    // warning; redaction must be verified dashboard-side (Settings >
+    // Observability, human step). The safety case is unchanged — the static
+    // site has no query-string-dependent runtime behavior (no forms, no
+    // search, no URLSearchParams/location.search in apps/web/src). See
     // docs/security/query-log-redaction.md.
-    "redact_query_string": true,
     "logs": {
       "enabled": true,
       "head_sampling_rate": 1,

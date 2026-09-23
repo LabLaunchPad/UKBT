@@ -1,0 +1,117 @@
+---
+// FAQSection — Tina island component for the FAQ list.
+// ponytail: header lives inside the island so heading/eyebrow edits live-update.
+import SectionHeader from './SectionHeader.astro';
+import TinaMarkdown from '@tinacms/astro/TinaMarkdown.astro';
+import { tinaField, type TinaRichTextContent } from '@tinacms/astro';
+
+interface FaqItem {
+  question: string;
+  answer: string | TinaRichTextContent | Record<string, unknown>;
+  visible?: boolean;
+  _content_source?: unknown;
+  [key: string]: unknown;
+}
+interface Props {
+  items: FaqItem[];
+  /** Page heading/eyebrow — rendered inside the island for live re-render. */
+  pageHeading?: string;
+  pageEyebrow?: string;
+  /** Tina metadata-bearing doc for header markers. */
+  data?: Record<string, unknown>;
+}
+const { items, pageHeading, pageEyebrow, data } = Astro.props;
+const visibleItems = items.filter((item) => item.visible !== false);
+// ponytail: handle both string (current schema) and RichText object (legacy/remote before reindex) — string renders escaped, object via TinaMarkdown
+function normalizeRichText(content: unknown) {
+  if (!content || typeof content !== 'object') return content;
+  const c = content as Record<string, unknown>;
+  if (c['type'] === 'root' && Array.isArray(c['children']) && (c['children'] as unknown[]).length === 1) {
+    const first = (c['children'] as Record<string, unknown>[])[0];
+    if (first?.['type'] === 'invalid_markdown' && first?.['value']) return first['value'];
+  }
+  return content;
+}
+---
+
+<div class="ukbt-faq-list">
+  {pageHeading && (
+    <SectionHeader
+      eyebrow={pageEyebrow || 'FAQ'}
+      heading={pageHeading}
+      eyebrowTinaField={data ? tinaField(data, 'pageEyebrow') : undefined}
+      headingTinaField={data ? tinaField(data, 'pageHeading') : undefined}
+    />
+  )}
+  {visibleItems.length > 0 ? (
+      visibleItems.map((item) => (
+      <details class="ukbt-faq-item">
+        <summary class="ukbt-faq-question" data-tina-field={tinaField(item, "question")}>{item.question}</summary>
+        <div class="ukbt-faq-answer" data-tina-field={tinaField(item, "answer")}>{typeof item.answer === 'string' ? <p>{item.answer}</p> : <TinaMarkdown content={normalizeRichText(item.answer) as TinaRichTextContent} />}</div>
+      </details>
+    ))
+  ) : (
+    <p class="ukbt-faq-empty">No questions are answered yet. Answers will be published here as the club confirms them.</p>
+  )}
+</div>
+
+<style>
+  .ukbt-faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ukbt-space-4);
+    max-width: 48rem;
+  }
+  .ukbt-faq-item {
+    border-bottom: 1px solid var(--ukbt-color-neutral-200);
+    padding-bottom: var(--ukbt-space-4);
+  }
+  .ukbt-faq-item[open] {
+    padding-bottom: var(--ukbt-space-2);
+  }
+  .ukbt-faq-question {
+    font-family: var(--ukbt-font-family-heading);
+    font-size: var(--ukbt-font-size-2);
+    font-weight: 600;
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: var(--ukbt-space-2);
+    min-height: 44px;
+  }
+  .ukbt-faq-question::before {
+    content: '+';
+    font-size: 1.25em;
+    font-weight: 700;
+    color: var(--ukbt-color-brand-accent);
+    flex-shrink: 0;
+  }
+  .ukbt-faq-item[open] .ukbt-faq-question::before {
+    content: '−';
+  }
+  .ukbt-faq-question::-webkit-details-marker {
+    display: none;
+  }
+  .ukbt-faq-question:focus-visible {
+    outline: 2px solid var(--ukbt-color-brand-accent);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+  .ukbt-faq-answer {
+    padding: var(--ukbt-space-3) 0 var(--ukbt-space-2) 0;
+    color: var(--ukbt-color-neutral-700);
+    line-height: 1.6;
+  }
+  .ukbt-faq-answer :global(p) {
+    margin: 0 0 var(--ukbt-space-3) 0;
+  }
+  .ukbt-faq-answer :global(p:last-child) {
+    margin-bottom: 0;
+  }
+  .ukbt-faq-empty {
+    color: var(--ukbt-color-neutral-500);
+    font-style: italic;
+    max-width: 48rem;
+  }
+</style>

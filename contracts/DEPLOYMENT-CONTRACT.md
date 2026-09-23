@@ -278,3 +278,100 @@ both paths, not just the GitHub Actions one.
 that carries this fix. Verify against the next push-to-main CI run's
 "Workers deploy (GitHub Actions)" job conclusion before treating this as
 resolved.
+
+## Amendment, 2026-09-15: `@astrojs/cloudflare` activated — Worker + assets mapping (production 404)
+
+**What changed:** `apps/web/astro.config.mjs` now sets
+`adapter: cloudflare()` (`@astrojs/cloudflare` 14.2.5, production
+dependency) to serve the Tina visual-editing island route
+(`src/pages/tina-island/[name].ts`, `export const prerender = false` —
+the ONLY on-demand production route; all other routes prerender). The
+adapter relocates static output to `apps/web/dist/client/` and emits the
+Worker entry at `apps/web/dist/server/entry.mjs` (plus an
+adapter-generated `dist/server/wrangler.json` with `main: "entry.mjs"`,
+assets `"../client"` — the generated truth this amendment mirrors).
+
+**The incident this corrects:** the adapter was activated without
+updating this contract's delivery mapping: root `wrangler.jsonc` kept
+`assets.directory: ./apps/web/dist` with no `main`, serving a directory
+containing only `client/` + `server/` subfolders — no `index.html`, no
+`404.html`, no `_headers` at its root. Homepage (and every other route)
+returned a platform-level 404; the custom 404 and `_headers` never
+applied. All 15 CI gates passed because every check inspected the build
+output while nothing validated the serve mapping, and Workers Builds
+promoted the broken revision to production with no post-deploy smoke
+check.
+
+**Mapping now (root `wrangler.jsonc`):**
+`main: ./apps/web/dist/server/entry.mjs`,
+`assets: { binding: ASSETS, directory: ./apps/web/dist/client,
+not_found_handling: 404-page }`. `name` stays `ukbt-uk-bangla-tigers`
+(dashboard Worker); the adapter-generated `ukbt-web` name is NOT
+adopted. Verified: `wrangler deploy --dry-run` reads 185 files from
+`dist/client`; local `wrangler dev` serves `/` → 200,
+`/definitely-nonexistent-route-ukbt-test` → 404 + custom document,
+full security-header set, and `POST /tina-island/hero` → 200 island
+HTML. Note: the installed adapter (v14) emits `dist/server/entry.mjs`,
+NOT the `dist/_worker.js/index.js` layout in Cloudflare's current docs
+(which target a newer adapter) — the generated output, not the docs
+page, is authoritative here.
+
+**Prevention added, this commit:**
+- `scripts/check-deploy-mapping.mjs` (`pnpm run check:deploy-mapping`,
+  wired into `deploy:verify` and a new `deploy-mapping` CI job) — fails
+  pre-deploy when the configured assets dir lacks index/404/_headers,
+  when adapter/on-demand routes exist without a `main` entry, or on
+  duplicate/conflicting Wrangler configs. Failure-injected against the
+  incident layout: FAILs on 4 rules.
+- `scripts/smoke-deploy.mjs <base-url>` (`pnpm run smoke:deploy <url>`)
+  — post-deploy HTTP assertions (homepage/sub-route/asset 200, custom
+  404, deployed security headers, island route). FAILs 7/7 against the
+  broken production revision; PASSes 6/6 against the fixed local
+  Worker. MUST be run against preview before promotion and against
+  production after (assignee: release operator; not yet wired as an
+  automatic promotion gate — see open item below).
+
+**Still open after this commit:**
+- Production still serves the broken revision until the fixed mapping
+  is deployed (rollback to last-known-good or forward-deploy, then
+  `smoke:deploy` against production).
+- `main` branch protection's required-checks list does not yet include
+  the new `deploy-mapping` job — owner action.
+- Missing Tina Cloud credentials (`PUBLIC_TINA_CLIENT_ID`/`TINA_TOKEN`)
+  remain a SEPARATE tracked issue; proven unrelated to the homepage 404
+  (island route renders 200 from local content with no secrets).
+
+## AMENDMENT 04 — CI-gated deploy path (2026-09-18)
+
+**Source:** independent multi-agent audit (2026-09-18). The 2026-09-10
+removal of the `workers-deploy` job left git-connected Workers Builds as
+the only deploy path: it publishes every merge to `main` **independently
+of CI**, so no gate in this repository could block a release. This is
+incompatible with the release-gate premise of this contract.
+
+**Decision (amends the 2026-09-10 note in ci.yml):**
+1. `workers-deploy` is reinstated as the sole production deploy path:
+   push-to-main only, gated on every merge-blocking gate job, deploying
+   from the repository root via the lockfile-pinned wrangler
+   (`pnpm exec wrangler deploy`).
+2. It is **opt-in** so main does not go red before credentials exist:
+   the job is skipped until the owner sets repository variable
+   `WORKERS_DEPLOY_VIA_CI=true` and provisions `CLOUDFLARE_API_TOKEN`
+   (Workers Scripts:Edit) + `CLOUDFLARE_ACCOUNT_ID` secrets, **then
+   disconnects the Workers Builds git integration** — one deploy path,
+   gated end to end. Skipped is recorded as skipped (honest absence),
+   not PASS.
+3. `scripts/check-release-path.mjs` now asserts this wiring (job present,
+   push-only, flag-gated, `wrangler deploy` in a run step, needs the
+   seo/security/perf gates, no continue-on-error, no exit-swallowing) so
+   the deploy path cannot be silently removed again. Failure-injection
+   coverage extended accordingly.
+4. `smoke-verify` now `needs: [build, workers-deploy]` with
+   `!failure()` gating (independently fixed in review): once the CI
+   deploy is enabled, smoke observes THAT deploy; while the flag is
+   unset the deploy job skips and smoke still observes the Workers
+   Builds publish. `check-release-path.mjs` asserts the ordering
+   (`smoke-not-after-deploy`).
+5. Until step 2 completes, production remains deployed by Workers Builds
+   without gates — this is a **known, dated, time-bounded exposure**, not
+   an approved steady state. Owner action required.
