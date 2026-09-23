@@ -1,7 +1,7 @@
 # Roadmap & Open Items
 
 **Status:** LIVING DOCUMENT — update in place as stages/items close, don't
-fork a second copy. Last updated 2026-09-09.
+fork a second copy. Last updated 2026-09-23.
 
 **Purpose:** one place that answers "what's done, what's next, what's
 blocked, and on whom" without re-deriving it from receipts scattered across
@@ -1038,3 +1038,37 @@ here, deliberately:
    failure.
 10. **Node engine pinning in CI** — NODE_VERSION '22' floats; pin to the
     full version in `.nvmrc` (now 22.23.2) and align the workflow.
+
+## TinaCMS visual-editing closure 2026-09-22/23 — merged, smoke RED (external)
+
+Audit-batch item 7 above (edit-mode UX unverified) is now CLOSED: visual
+editing is proven live end-to-end. Evidence chain in
+`artifacts/audit/20260923-tina-admin-closure.md` (+ certification,
+issue-register, blocker-closure certificate, `20260923-final-closeout.md`):
+
+1. **Plumbing:** `/admin/` 200 + Tina bundle 200, single live CSP with
+   `frame-ancestors` allowing Tina hosts, `PUBLIC_TINA_ADMIN_ORIGIN`
+   bare (trailing-slash fixed 2026-09-19), FAQ `RichText→String` +
+   hybrid renderer (no `[object Object]`), 8× `data-tina-field`.
+2. **Real Save:** headline edited in `/admin` → commit `fbf05f2`
+   (`tinacloud-app[bot]`) → Workers Builds → live headline verified.
+   Owner separately confirmed the watched GitHub-OAuth + Save/Revert
+   session works from their login.
+3. **Gates merged (PR #96, `6da2262`):** fail-closed truth render
+   boundary (`isPublishable` in PROD, ADR-001), U-23 blanket approval
+   recorded (`EV-20260923-001`, 124 records
+   `pending_review→approved`), `tina-protocol.spec.ts` route-live pins
+   probe-skip on static CI servers (live covered by T3 matrix +
+   smoke), content-agnostic headline pins, vendor login-button axe
+   exclusion. Playwright green 5m29s.
+4. **Fixes merged:** PR #97 COOP `same-origin-allow-popups` (popup
+   `postMessage` restored), #98 unskip cloud checks (indexing proof
+   live), #99 CSP media/fonts hosts, #100 smoke edge-forensics.
+5. **STANDING BLOCKER — Post-deploy smoke FAIL on `main`** (run
+   `35816266024` + retry, all 6 paths `403 mitigated=challenge`,
+   rays `a3f6b6*`): GH-runner egress is Cloudflare-challenged while
+   production is 200 externally. Owner action: dashboard Security →
+   Events lookup for ray `a3f6b6da2a2d433c` → rule name, then decide
+   (allowlist Actions egress / tune bot policy / bless alternate
+   vantage). Smoke gate stays enforced; nothing weakened.
+   Registry owner contact remains `UNKNOWN`.

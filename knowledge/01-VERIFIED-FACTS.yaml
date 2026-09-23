@@ -292,7 +292,7 @@ deployment: # established 2026-09-15 — PR #66 postmortem, contracts/DEPLOYMENT
   assets_directory: "apps/web/dist/client"
   on_demand_routes: ["src/pages/tina-island/[name].ts (sole prerender=false POST route)"]
   mapping_gate: "scripts/check-deploy-mapping.mjs (CI deploy-mapping job, deploy:verify step)"
-  smoke_gate: "scripts/smoke-deploy.mjs <base-url> (SMOKE_STATUS; production 6/6 PASS 2026-09-15)"
+  smoke_gate: "scripts/smoke-deploy.mjs <base-url> (SMOKE_STATUS; 6/6 PASS 2026-09-15; FAIL since 2026-09-23 from GH-runner egress challenge only — see smoke_runner_challenge_20260923)"
   failure_injection: "scripts/test-deploy-failure-injection.mjs (9 cases, all must pass)"
   control_plane: "contracts/AI-EXECUTION-CONTRACT.md FROZEN; knowledge/12-AI-CONTROL-PLANE.yaml; scripts/check-control-plane.mjs"
   branch_protection: "18 required checks on main incl. deploy-mapping, control-plane, failure-injection, perf-gate (set 2026-09-15 via admin API, verified by re-read)"
@@ -321,6 +321,18 @@ deployment: # established 2026-09-15 — PR #66 postmortem, contracts/DEPLOYMENT
     thin_pages_eeat_legal: "BLOCKED_REQUIRES_CONTENT — no filler, no fabricated address/authors/dates/policies"
     llms_txt: "added (verified facts only)"
     homepage_meta: "144 chars via Tina metaDescription field (was 37-char tagline)"
+
+  tina_visual_editing_20260923: # proven live end-to-end 2026-09-23; evidence: artifacts/audit/20260923-tina-admin-closure.md + certification + fbf05f2
+    admin_login: "/admin/ 200 + Tina bundle 200, single live CSP with frame-ancestors for Tina hosts"
+    admin_origin: "PUBLIC_TINA_ADMIN_ORIGIN bare https://ukbanglatigers.co.uk (slash fixed 2026-09-19)"
+    real_save: "headline edit -> tinacloud-app[bot] commit fbf05f2 -> Workers Builds -> live headline verified"
+    owner_oauth: "owner-confirmed watched GitHub-OAuth + Save/Revert session works from owner login (2026-09-23)"
+    render_boundary: "PROD renders isPublishable-only (fail-closed, ADR-001); U-23 blanket approval EV-20260923-001 (124 records)"
+    coop: "Cross-Origin-Opener-Policy same-origin-allow-popups live (popup postMessage restored, PR #97)"
+  smoke_runner_challenge_20260923: # standing external cause; evidence: main run 35816266024 + retry, artifacts/audit/20260923-final-closeout.md
+    symptom: "post-deploy smoke FAIL all 6 paths: 403 mitigated=challenge (Just a moment...) from GH-runner egress, rays a3f6b6*"
+    user_facing: "production 200 externally same window (homepage incl. new headline, /about, /admin/)"
+    rule_needed: "owner dashboard Security Events lookup for ray a3f6b6da2a2d433c; gate stays enforced, nothing weakened"
 
 unknowns:
   total: 27
