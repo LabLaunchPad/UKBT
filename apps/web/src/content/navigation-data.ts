@@ -8,19 +8,24 @@ import type { NavItem } from '@ukbt/truth';
  * Parent items with children remain navigable — clicking the label navigates
  * to the href, clicking the arrow/toggle opens the submenu.
  */
+// Internal route hrefs use the canonical trailing-slash form (seo.ts
+// normalizePath): the platform 307-redirects no-slash route URLs, so
+// no-slash hrefs would force a redirect hop on every navigation.
 export const primaryNav: NavItem[] = [
   { label: 'Home', href: '/' },
-  { label: 'About Us', href: '/about' },
-  { label: 'Club Captain', href: '/club-captain' },
-  { label: 'Players Profile', href: '/players' },
+  { label: 'About Us', href: '/about/' },
+  { label: 'Club Captain', href: '/club-captain/' },
+  { label: 'Players Profile', href: '/players/' },
   {
     label: 'Our Franchises',
-    href: '/franchises',
-    children: [{ label: 'Uppsala Tigers', href: '/franchises/uppsala-tigers' }],
+    href: '/franchises/',
+    children: [
+      { label: 'Uppsala Tigers', href: '/franchises/uppsala-tigers/' },
+    ],
   },
   {
     label: 'Events',
-    href: '/tournaments',
+    href: '/tournaments/',
     ariaLabel: 'International Tournaments and Events',
     // No /tournaments/previous|current|future routes exist (ROUTE-CONTRACT
     // authorises /tournaments only; statuses in evidence are Upcoming /
@@ -28,12 +33,12 @@ export const primaryNav: NavItem[] = [
     // the page's own sections: previous = completed, current/future =
     // upcoming fixtures. A dedicated route needs a contract amendment.
     children: [
-      { label: 'Previous Events', href: '/tournaments#completed' },
-      { label: 'Current Events', href: '/tournaments#upcoming' },
-      { label: 'Future Events', href: '/tournaments#upcoming' },
+      { label: 'Previous Events', href: '/tournaments/#completed' },
+      { label: 'Current Events', href: '/tournaments/#upcoming' },
+      { label: 'Future Events', href: '/tournaments/#upcoming' },
     ],
   },
-  { label: 'Contact Us', href: '/contact' },
+  { label: 'Contact Us', href: '/contact/' },
 ];
 
 /**
@@ -41,7 +46,7 @@ export const primaryNav: NavItem[] = [
  */
 export const primaryCta = {
   label: 'Join the Club',
-  href: '/join',
+  href: '/join/',
 };
 
 /**
@@ -49,8 +54,8 @@ export const primaryCta = {
  * the client's IA without widening primary navigation.
  */
 export const secondaryNav: NavItem[] = [
-  { label: 'Community', href: '/community' },
-  { label: 'Coaching & Development', href: '/coaching' },
-  { label: 'Club News', href: '/news' },
-  { label: 'FAQ', href: '/faq' },
+  { label: 'Community', href: '/community/' },
+  { label: 'Coaching & Development', href: '/coaching/' },
+  { label: 'Club News', href: '/news/' },
+  { label: 'FAQ', href: '/faq/' },
 ];

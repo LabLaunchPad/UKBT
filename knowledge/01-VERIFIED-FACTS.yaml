@@ -29,7 +29,7 @@ project:
   formats_played: [T10, T20, "50-Over"]  # EV-20260826-026, from the Club Captain's career statistics tables
   sister_franchises: ["Uppsala Tigers (Sweden)"]  # EV-20260826-026 — "Our Franchises" nav section
   aggregate_stats:                   # site-wide banner copy — not individually itemized
-    players: "40+"                    # EV-20260909-001 (client direct 2026-09-09), supersedes EV-20260826-026's "30+"
+    players: "50+"                    # EV-20260916-001 (owner direct 2026-09-16), supersedes EV-20260909-001's "40+"
     countries_internationals: "15+"
     international_tournaments: "7+"
   official_social_media:             # EV-20260826-026
@@ -285,6 +285,54 @@ blockers:
   BL-02: {state: RESOLVED, blocks: "Stage 6 and all Adelux-derived material", evidence: [EV-20260826-024, EV-20260826-025], note: "superseded from OPEN — Envato Elements license HAXKDZUTYV confirmed scoped to UKBT ('Track B UNLOCKED')"}
   BL-03: {state: RESOLVED, blocks: "application code — no frozen architecture", evidence: "contracts/REPOSITORY-CONTRACT.md Status: FROZEN", note: "superseded from OPEN — see architecture block above"}
   BL-05: {state: RESOLVED_BY_DECISION, blocks: "adoption of Isotope (moot — decided DO_NOT_ADOPT)", evidence: EV-20260826-005, note: "state label corrected from OPEN; the DO_NOT_ADOPT decision was already recorded in this same entry"}
+
+deployment: # established 2026-09-15 — PR #66 postmortem, contracts/DEPLOYMENT-CONTRACT.md amendment
+  adapter: "@astrojs/cloudflare active (production dependency); output is dist/client/ + dist/server/entry.mjs"
+  worker_entry: "apps/web/dist/server/entry.mjs"
+  assets_directory: "apps/web/dist/client"
+  on_demand_routes: ["src/pages/tina-island/[name].ts (sole prerender=false POST route)"]
+  mapping_gate: "scripts/check-deploy-mapping.mjs (CI deploy-mapping job, deploy:verify step)"
+  smoke_gate: "scripts/smoke-deploy.mjs <base-url> (SMOKE_STATUS; 6/6 PASS 2026-09-15; FAIL since 2026-09-23 from GH-runner egress challenge only — see smoke_runner_challenge_20260923)"
+  failure_injection: "scripts/test-deploy-failure-injection.mjs (9 cases, all must pass)"
+  control_plane: "contracts/AI-EXECUTION-CONTRACT.md FROZEN; knowledge/12-AI-CONTROL-PLANE.yaml; scripts/check-control-plane.mjs"
+  branch_protection: "18 required checks on main incl. deploy-mapping, control-plane, failure-injection, perf-gate (set 2026-09-15 via admin API, verified by re-read)"
+  perf_baseline_20260915: # measured from apps/web/dist/client + production; evidence: fresh execution 2026-09-15
+    html_total: "618.9KB over 17 pages (largest players 65.5KB of 72KB budget)"
+    css_total: "79.2KB of 80KB budget (knife-edge: 0.9KB headroom; Footer bundle 34.9KB across 6 scopes)"
+    js_total: "39.5KB of 48KB budget (ClientRouter 16.4KB, Tina bridge 15.5KB admin-only, header 4.2KB, SW 4.3KB)"
+    images: "webp 2.93MB + jpg 2.05MB + png 0.37MB; hero team-huddle.webp 90.8KB eager+fetchpriority-high"
+    fonts: "3 woff2 82.6KB, font-display swap, no preload"
+    third_party_js: "none (no external script src in src/)"
+    hydration: "none (no client: directives; interactivity is inline scripts + ClientRouter)"
+    production: "gzip on (55KB HTML -> 8.9KB transfer); HTML must-revalidate edge HIT; assets immutable/30d HIT"
+    unmeasured: "LCP/CLS/INP lab+field values (no repo tooling; requires Lighthouse/WebPageTest + RUM)"
+  seo_remediation_20260915: # Semrush+SEOmator 2026-09-15 reconciled against live HTTP + source
+    canonical_form: "trailing slash (platform 307s no-slash routes; canonical == served URL)"
+    sitemap: "12 URLs, all slash-form, derived from page canonicals by construction"
+    robots_served: "Cloudflare-managed (Content-Signal + AI-trainer blocks); repo public/robots.txt is NOT what edge serves — dashboard-owned"
+    robots_repo: "minimal Allow + sitemap reference (correct; no code change)"
+    www_host: "dead (no DNS) — owner action: www CNAME + redirect or accept apex-only"
+    join_blocked: "intended (noindex, follow; no canonical by design)"
+    single_incoming_links: "tool artifact — all strategic pages have 17/17 incoming page-links via nav"
+    compression_warnings: "false positives — gzip verified live (55KB -> 8.9KB), alt-svc h3 present"
+    lcp_preload_srcset: "rejected/deferred (hero fetchpriority-high in initial HTML; no image pipeline)"
+    hsts_preload: "rejected (irreversible; couples to www fix)"
+    external_403s: "stat-provider bot-wall (cricinfo/cricheroes 403 even with browser UA); links kept as user citations"
+    thin_pages_eeat_legal: "BLOCKED_REQUIRES_CONTENT — no filler, no fabricated address/authors/dates/policies"
+    llms_txt: "added (verified facts only)"
+    homepage_meta: "144 chars via Tina metaDescription field (was 37-char tagline)"
+
+  tina_visual_editing_20260923: # proven live end-to-end 2026-09-23; evidence: artifacts/audit/20260923-tina-admin-closure.md + certification + fbf05f2
+    admin_login: "/admin/ 200 + Tina bundle 200, single live CSP with frame-ancestors for Tina hosts"
+    admin_origin: "PUBLIC_TINA_ADMIN_ORIGIN bare https://ukbanglatigers.co.uk (slash fixed 2026-09-19)"
+    real_save: "headline edit -> tinacloud-app[bot] commit fbf05f2 -> Workers Builds -> live headline verified"
+    owner_oauth: "owner-confirmed watched GitHub-OAuth + Save/Revert session works from owner login (2026-09-23)"
+    render_boundary: "PROD renders isPublishable-only (fail-closed, ADR-001); U-23 blanket approval EV-20260923-001 (124 records)"
+    coop: "Cross-Origin-Opener-Policy same-origin-allow-popups live (popup postMessage restored, PR #97)"
+  smoke_runner_challenge_20260923: # standing external cause; evidence: main run 35816266024 + retry, artifacts/audit/20260923-final-closeout.md
+    symptom: "post-deploy smoke FAIL all 6 paths: 403 mitigated=challenge (Just a moment...) from GH-runner egress, rays a3f6b6*"
+    user_facing: "production 200 externally same window (homepage incl. new headline, /about, /admin/)"
+    rule_needed: "owner dashboard Security Events lookup for ray a3f6b6da2a2d433c; gate stays enforced, nothing weakened"
 
 unknowns:
   total: 27

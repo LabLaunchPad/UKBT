@@ -7,7 +7,8 @@
     "ignore": [
       "apps/**/dist/**",
       "apps/**/.astro/**",
-      "**/src/styles/generated/**"
+      "**/src/styles/generated/**",
+      ".opencode/**"
     ]
   },
   "formatter": { "enabled": true, "indentStyle": "space", "indentWidth": 2 },

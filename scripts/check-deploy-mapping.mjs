@@ -17,15 +17,56 @@ import { globSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const root = dirname(dirname(fileURLToPath(import.meta.url)));
+// Sandbox override for scripts/test-deploy-failure-injection.mjs: point the
+// gate at a fixture tree instead of the real repo. Production behavior
+// unchanged (env var unset in CI and deploy:verify).
+const root = process.env.UKBT_CHECK_ROOT
+  ? resolve(process.env.UKBT_CHECK_ROOT)
+  : dirname(dirname(fileURLToPath(import.meta.url)));
 const failures = [];
 const fail = (rule, detail) => failures.push({ rule, detail });
 
 // Minimal JSONC strip: line comments, block comments, trailing commas.
+// String-aware (audit 2026-09-18): the previous regex stripped `//` inside
+// string values too (e.g. a route value containing " //"), corrupting the
+// parse; walk the text tracking in-string state instead.
+function stripJsonc(text) {
+  let out = '';
+  let inString = false;
+  for (let i = 0; i < text.length; i++) {
+    const ch = text[i];
+    if (inString) {
+      out += ch;
+      if (ch === '\\') {
+        out += text[i + 1] ?? '';
+        i++;
+      } else if (ch === '"') {
+        inString = false;
+      }
+      continue;
+    }
+    if (ch === '"') {
+      inString = true;
+      out += ch;
+      continue;
+    }
+    if (ch === '/' && text[i + 1] === '/') {
+      while (i < text.length && text[i] !== '\n') i++;
+      continue;
+    }
+    if (ch === '/' && text[i + 1] === '*') {
+      i += 2;
+      while (i < text.length && !(text[i] === '*' && text[i + 1] === '/')) i++;
+      i++;
+      continue;
+    }
+    out += ch;
+  }
+  return out;
+}
 function parseJsonc(text) {
-  const noBlock = text.replace(/\/\*[\s\S]*?\*\//g, '');
-  const noLine = noBlock.replace(/(^|\s)\/\/.*$/gm, '$1');
-  const noTrailing = noLine.replace(/,(\s*[}\]])/g, '$1');
+  const noComments = stripJsonc(text);
+  const noTrailing = noComments.replace(/,(\s*[}\]])/g, '$1');
   return JSON.parse(noTrailing);
 }
 
