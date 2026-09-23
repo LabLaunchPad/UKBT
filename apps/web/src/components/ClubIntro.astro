@@ -188,19 +188,31 @@ const TEAM_SLIDES = [
     background: rgba(var(--ukbt-color-brand-primary-rgb, 0, 30, 58), 0.28);
     backdrop-filter: blur(6px);
   }
+  /* 24x24 hit area (WCAG 2.5.8 floor) with the 8px visual dot centred
+     via ::after, so the pill stays compact while the target passes. */
   .ukbt-about__dot {
-    width: 8px;
-    height: 8px;
+    position: relative;
+    width: 24px;
+    height: 24px;
     border-radius: 50%;
-    border: 1px solid rgba(var(--ukbt-color-neutral-0-rgb, 255, 255, 255), 0.9);
-    background: rgba(var(--ukbt-color-neutral-0-rgb, 255, 255, 255), 0.45);
+    border: none;
+    background: transparent;
     padding: 0;
     cursor: pointer;
     transition:
       background var(--ukbt-motion-duration-fast) var(--ukbt-motion-easing-standard),
       transform var(--ukbt-motion-duration-fast) var(--ukbt-motion-easing-standard);
   }
-  .ukbt-about__dot.is-active {
+  .ukbt-about__dot::after {
+    content: '';
+    position: absolute;
+    inset: 8px;
+    border-radius: 50%;
+    border: 1px solid rgba(var(--ukbt-color-neutral-0-rgb, 255, 255, 255), 0.9);
+    background: rgba(var(--ukbt-color-neutral-0-rgb, 255, 255, 255), 0.45);
+    transition: inherit;
+  }
+  .ukbt-about__dot.is-active::after {
     background: var(--ukbt-color-neutral-0);
     transform: scale(1.25);
   }

@@ -9,6 +9,7 @@ import PageBanner from '../../components/PageBanner.astro';
 import WhyChooseUsComponent from '../../components/WhyChooseUs.astro';
 import { about as aboutTruth } from '../../content/about-data';
 import { homepage } from '../../content/homepage-data';
+import { isSiteRelativeUrl } from '../allowed-urls';
 import { getAbout, getFaq, getHomepage } from './data';
 import {
   AboutSchema,
@@ -79,11 +80,17 @@ export const islands = {
         headline: d.headline,
         social: homepage.social,
         primaryCtaLabel: d.primaryCtaLabel,
-        primaryCtaLink: d.primaryCtaLink,
+        // R-CTA-01: overlay-derived hrefs are attacker-influenced — gate on
+        // site-relative, fall back to component defaults (never raw).
+        primaryCtaLink: isSiteRelativeUrl(d.primaryCtaLink)
+          ? (d.primaryCtaLink as string)
+          : undefined,
         secondaryCta: d.secondaryCtaLabel
           ? {
               label: d.secondaryCtaLabel,
-              href: d.secondaryCtaLink || '/tournaments/',
+              href: isSiteRelativeUrl(d.secondaryCtaLink)
+                ? (d.secondaryCtaLink as string)
+                : '/tournaments/',
             }
           : undefined,
         heroImage: d.heroImage,

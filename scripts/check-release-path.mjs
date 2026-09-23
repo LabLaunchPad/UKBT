@@ -59,6 +59,16 @@ if (!smoke) {
       'smoke-verify must need the workers-deploy job (post-deploy observation)',
     );
   }
+  // Skipped-deploy tolerance (P0-4): while WORKERS_DEPLOY_VIA_CI is
+  // unset the deploy job is SKIPPED. Without !failure() the smoke job
+  // would skip alongside it and the Workers Builds publish would go
+  // unobserved — a silent absence where post-deploy smoke must run.
+  if (!/!failure\(\)/.test(smoke)) {
+    fail(
+      'smoke-skipped-deploy-not-tolerated',
+      'smoke-verify must tolerate a skipped workers-deploy (!failure()) so smoke still observes the Builds publish',
+    );
+  }
   // Hardened 2026-09-18 (audit): the assertions below used to test the raw
   // job block, so a comment mentioning the token satisfied the gate — the
   // exact weakness check-control-plane.mjs:77 fixed for job keys. They now
@@ -173,6 +183,14 @@ if (!deploy) {
   if (!/if:\s*github\.event_name\s*==\s*['"]push['"]/.test(deploy)) {
     fail('deploy-not-push-only', 'workers-deploy must run on push only');
   }
+  // Production deploy is main-only: without the ref pin a push to any
+  // branch carrying this job would attempt a production wrangler deploy.
+  if (!/github\.ref\s*==\s*['"]refs\/heads\/main['"]/.test(deploy)) {
+    fail(
+      'deploy-not-main-ref',
+      'workers-deploy must be pinned to refs/heads/main',
+    );
+  }
   if (!/vars\.WORKERS_DEPLOY_VIA_CI\s*==\s*['"]true['"]/.test(deploy)) {
     fail(
       'deploy-ungated',
@@ -208,7 +226,37 @@ if (!deploy) {
   }
 }
 
+// Deploy-authority declaration (P0-4, repo-side explicit statement).
+// The repo cannot observe the dashboard's Workers Builds git
+// integration, so the strongest safe machine-checkable statement is:
+// intended authority is the CI-gated workers-deploy job; until the owner
+// sets WORKERS_DEPLOY_VIA_CI=true AND disconnects the Builds git
+// integration, git-connected Builds can publish past red CI. Emitted as
+// a loud warning on every PASS — never a silent green.
+const warnings = [];
+const deployAuthority = {
+  intended: 'CI_GATED(workers-deploy)',
+  effectiveUntilOptIn: 'BUILDS_UNGATED',
+};
+if (deploy && /vars\.WORKERS_DEPLOY_VIA_CI/.test(deploy)) {
+  warnings.push({
+    rule: 'independent-authority-risk',
+    detail:
+      'INTENDED_AUTHORITY=CI_GATED(workers-deploy); EFFECTIVE_UNTIL_OPTIN=BUILDS_UNGATED — Workers Builds can publish past red CI until WORKERS_DEPLOY_VIA_CI=true + Builds git integration disconnected (owner dashboard action)',
+  });
+}
+
 const status = failures.length === 0 ? 'PASS' : 'FAIL';
-console.log(JSON.stringify({ RELEASE_PATH_STATUS: status, failures }));
+console.log(
+  JSON.stringify({
+    RELEASE_PATH_STATUS: status,
+    failures,
+    warnings,
+    deployAuthority,
+  }),
+);
+console.log(
+  `DEPLOY_AUTHORITY = ${deployAuthority.intended}; EFFECTIVE_UNTIL_OPTIN = ${deployAuthority.effectiveUntilOptIn}`,
+);
 console.log(`RELEASE_PATH_STATUS = ${status}`);
 process.exit(failures.length === 0 ? 0 : 1);
