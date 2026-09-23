@@ -3,7 +3,14 @@
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=()
-  Cross-Origin-Opener-Policy: same-origin
+  # COOP must be same-origin-allow-popups, NOT same-origin: the TinaCloud
+  # login popup (app.tina.io) returns session tokens via window.opener.
+  # same-origin severs the opener for cross-origin popups — observed live
+  # 2026-09-23 as "No opener window available to send message to", which
+  # leaves the login window open forever with a retry loop and no visual
+  # editing. allow-popups keeps full isolation except the popup channel
+  # OAuth needs. CORP below is unaffected (subresources, not popups).
+  Cross-Origin-Opener-Policy: same-origin-allow-popups
   Cross-Origin-Resource-Policy: same-origin
   # No X-Frame-Options: it would override frame-ancestors below and block
   # the Tina admin's same-origin edit iframe (audit 2026-09-18). CSP
