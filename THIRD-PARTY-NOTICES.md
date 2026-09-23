@@ -32,3 +32,24 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
+
+## Self-hosted fonts (apps/web/public/fonts/)
+
+The site ships three self-hosted font files. Both families are licensed
+under the SIL Open Font License 1.1 (OFL-1.1), which permits embedding
+and self-hosting with resale restrictions only on the fonts themselves.
+License texts are not bundled with the binary files; the canonical texts
+live at the URLs below. Note (open item U-27): the OFL classification was
+inherited from the brand-asset intake and has not been independently
+re-verified against the received files (see
+`artifacts/adelux/ADELUX-SOURCE-FINGERPRINT.md`).
+
+| File | Family | License |
+|---|---|---|
+| `lato-400.woff2` | Lato Regular — Copyright (c) 2010-2014 by tyPoland Lukasz Dziedzic, with Reserved Font Name "Lato" | SIL OFL 1.1 — https://openfontlicense.org |
+| `lato-700.woff2` | Lato Bold — same copyright holder and Reserved Font Name | SIL OFL 1.1 — https://openfontlicense.org |
+| `montserrat-variable.woff2` | Montserrat Variable — Copyright 2011-2017 The Montserrat Project Authors (https://github.com/JulietaUla/Montserrat), OFL-1.1 via google/fonts | SIL OFL 1.1 — https://openfontlicense.org |
+
+OFL grant summary: use, study, modify, embed (including in web pages via
+@font-face) and redistribute are permitted; selling the fonts *themselves*
+is not, and Reserved Font Names apply to derivative fonts only.

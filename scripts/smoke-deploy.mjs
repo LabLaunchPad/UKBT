@@ -58,6 +58,18 @@ async function get(path, init) {
   }
 }
 
+function forensics(r) {
+  // Edge-failure forensics for the failure detail: Ray ID + server +
+  // mitigation flag + body head let the owner locate the exact request in
+  // Cloudflare Security Events. Thresholds unchanged; detail-only.
+  const h = r.headers || new Headers();
+  const ray = h.get('cf-ray') || 'n/a';
+  const server = h.get('server') || 'n/a';
+  const mitigated = h.get('cf-mitigated') || 'n/a';
+  const head = (r.body || '').replace(/\s+/g, ' ').slice(0, 160);
+  return `ray=${ray} server=${server} mitigated=${mitigated} bodyHead=${head}`;
+}
+
 function readBuildId(swBody) {
   const m = swBody.match(/BUILD_ID\s*=\s*'([^']+)'/);
   return m ? m[1] : '';
@@ -117,7 +129,7 @@ if (expectedSha) {
 {
   const r = await get('/');
   if (r.status !== 200) {
-    fail('homepage-status', `GET / -> ${r.status}`);
+    fail('homepage-status', `GET / -> ${r.status} ${forensics(r)}`);
   } else if (!r.body.includes('UK Bangla Tigers')) {
     fail('homepage-content', 'GET / 200 but missing UKBT marker');
   } else {
@@ -129,7 +141,8 @@ if (expectedSha) {
 // full route matrix (representative sample only).
 {
   const r = await get('/about');
-  if (r.status !== 200) fail('subroute-status', `GET /about -> ${r.status}`);
+  if (r.status !== 200)
+    fail('subroute-status', `GET /about -> ${r.status} ${forensics(r)}`);
   else pass('subroute', 'GET /about -> 200');
 }
 
@@ -137,7 +150,7 @@ if (expectedSha) {
 {
   const r = await get('/favicon.svg');
   if (r.status !== 200) {
-    fail('asset-status', `GET /favicon.svg -> ${r.status}`);
+    fail('asset-status', `GET /favicon.svg -> ${r.status} ${forensics(r)}`);
   } else pass('asset', 'GET /favicon.svg -> 200');
 }
 
@@ -149,7 +162,7 @@ if (expectedSha) {
   if (r.status !== 404) {
     fail(
       'not-found-status',
-      `GET /definitely-nonexistent-route-ukbt-test -> ${r.status}`,
+      `GET /definitely-nonexistent-route-ukbt-test -> ${r.status} ${forensics(r)}`,
     );
   } else if (!r.body.includes('bowled out')) {
     fail('not-found-content', '404 without UKBT custom-404 marker');
@@ -180,7 +193,10 @@ if (expectedSha) {
     headers: { 'content-type': 'application/x-tina-preview+json' },
   });
   if (r.status !== 200) {
-    fail('island-status', `POST /tina-island/hero -> ${r.status}`);
+    fail(
+      'island-status',
+      `POST /tina-island/hero -> ${r.status} ${forensics(r)}`,
+    );
   } else if (!r.body.includes('data-tina-island')) {
     fail('island-content', '200 but missing island marker');
   } else {
@@ -194,7 +210,7 @@ if (expectedSha) {
 {
   const r = await get('/admin/');
   if (r.status !== 200) {
-    fail('admin-status', `GET /admin/ -> ${r.status}`);
+    fail('admin-status', `GET /admin/ -> ${r.status} ${forensics(r)}`);
   } else if (!r.body.includes('id="root"')) {
     fail('admin-content', 'GET /admin/ 200 but missing admin app shell');
   } else {

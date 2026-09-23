@@ -340,3 +340,38 @@ page, is authoritative here.
 - Missing Tina Cloud credentials (`PUBLIC_TINA_CLIENT_ID`/`TINA_TOKEN`)
   remain a SEPARATE tracked issue; proven unrelated to the homepage 404
   (island route renders 200 from local content with no secrets).
+
+## AMENDMENT 04 — CI-gated deploy path (2026-09-18)
+
+**Source:** independent multi-agent audit (2026-09-18). The 2026-09-10
+removal of the `workers-deploy` job left git-connected Workers Builds as
+the only deploy path: it publishes every merge to `main` **independently
+of CI**, so no gate in this repository could block a release. This is
+incompatible with the release-gate premise of this contract.
+
+**Decision (amends the 2026-09-10 note in ci.yml):**
+1. `workers-deploy` is reinstated as the sole production deploy path:
+   push-to-main only, gated on every merge-blocking gate job, deploying
+   from the repository root via the lockfile-pinned wrangler
+   (`pnpm exec wrangler deploy`).
+2. It is **opt-in** so main does not go red before credentials exist:
+   the job is skipped until the owner sets repository variable
+   `WORKERS_DEPLOY_VIA_CI=true` and provisions `CLOUDFLARE_API_TOKEN`
+   (Workers Scripts:Edit) + `CLOUDFLARE_ACCOUNT_ID` secrets, **then
+   disconnects the Workers Builds git integration** — one deploy path,
+   gated end to end. Skipped is recorded as skipped (honest absence),
+   not PASS.
+3. `scripts/check-release-path.mjs` now asserts this wiring (job present,
+   push-only, flag-gated, `wrangler deploy` in a run step, needs the
+   seo/security/perf gates, no continue-on-error, no exit-swallowing) so
+   the deploy path cannot be silently removed again. Failure-injection
+   coverage extended accordingly.
+4. `smoke-verify` now `needs: [build, workers-deploy]` with
+   `!failure()` gating (independently fixed in review): once the CI
+   deploy is enabled, smoke observes THAT deploy; while the flag is
+   unset the deploy job skips and smoke still observes the Workers
+   Builds publish. `check-release-path.mjs` asserts the ordering
+   (`smoke-not-after-deploy`).
+5. Until step 2 completes, production remains deployed by Workers Builds
+   without gates — this is a **known, dated, time-bounded exposure**, not
+   an approved steady state. Owner action required.

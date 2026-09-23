@@ -9,7 +9,12 @@
 // Structured as an array, one entry today, so a second sponsor can be
 // added the same way later without inventing one now (the same
 // forward-compatible pattern as franchises-data.ts's `ourFranchises`).
-import { type ContentRecord, createRegistry, evaluate } from '@ukbt/truth/gate';
+import {
+  type ContentRecord,
+  createRegistry,
+  evaluate,
+  isPublishable,
+} from '@ukbt/truth/gate';
 import { ContentRecordSchema } from '@ukbt/truth/schema';
 
 const registry = createRegistry([
@@ -48,10 +53,19 @@ for (const s of sponsors) {
   const rec = ContentRecordSchema.parse({
     field: s.field,
     value: s.value,
-    status: 'pending_review',
+    // U-23 closed 2026-09-23: owner approval EV-20260923-001
+    // (Lablaunchpad/admin, all-current-facts, amendable) — approved, not
+    // published (TRUTH-CONTRACT.md keeps approval and going live separate).
+    status: 'approved',
     sources: ['EV-0831-07'],
+    approver: 'Lablaunchpad (admin, 2026-09-23, EV-20260923-001)',
   }) as ContentRecord;
-  const result = evaluate(rec, gateOptions);
+  // Production render boundary (contracts/TRUTH-CONTRACT.md, docs/adr-001):
+  // only approved/published records may publish. Dev keeps evidence-valid
+  // evaluate() so pending_review content stays reviewable.
+  const result = import.meta.env.PROD
+    ? isPublishable(rec, gateOptions)
+    : evaluate(rec, gateOptions);
   if (!result.passed) {
     throw new Error(
       `Truth gate failed for '${rec.field}': ${result.reasons.map((r) => `${r.rule}: ${r.detail}`).join('; ')}`,

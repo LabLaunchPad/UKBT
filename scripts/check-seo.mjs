@@ -33,6 +33,16 @@ if (!existsSync(distDir)) {
 const pick = (html, re) => html.match(re)?.[1] ?? null;
 const pickAll = (html, re) => [...html.matchAll(re)].map((m) => m[1]);
 
+// Double-encoded UTF-8 (mojibake) detector. Audit 2026-09-18: 13 page
+// titles shipped a double-encoded em-dash (bytes c3 a2 e2 82 ac e2 80 9d,
+// renders as "â€"") and every gate stayed green because presence/
+// uniqueness checks never look at encoding. Signs: the replacement
+// character (invalid UTF-8 reached the decoder) or the classic
+// UTF-8-read-as-latin1 lead chars ("â€", "Ã<x>", "Â ") which legitimate
+// English copy never contains.
+const isMojibake = (s) =>
+  /\uFFFD/.test(s) || /â€/.test(s) || /Ã./.test(s) || /Â[\s\u00a0]/.test(s);
+
 const titles = new Map();
 const descriptions = new Map();
 
@@ -53,12 +63,26 @@ for (const file of globSync('**/*.html', { cwd: distDir }).filter(
   if (!noindex) {
     if (!title?.trim()) fail(file, 'title-missing', 'empty <title>');
     else {
+      if (isMojibake(title)) {
+        fail(
+          file,
+          'title-mojibake',
+          `double-encoded text in title: ${title.slice(0, 80)}`,
+        );
+      }
       if (titles.has(title)) {
         fail(file, 'title-duplicate', `also on ${titles.get(title)}`);
       } else titles.set(title, file);
     }
     if (!desc?.trim()) fail(file, 'description-missing', 'empty description');
     else {
+      if (isMojibake(desc)) {
+        fail(
+          file,
+          'description-mojibake',
+          `double-encoded text in description: ${desc.slice(0, 80)}`,
+        );
+      }
       if (descriptions.has(desc)) {
         fail(
           file,

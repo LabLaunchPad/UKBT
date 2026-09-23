@@ -1,7 +1,7 @@
 # Roadmap & Open Items
 
 **Status:** LIVING DOCUMENT — update in place as stages/items close, don't
-fork a second copy. Last updated 2026-09-09.
+fork a second copy. Last updated 2026-09-23.
 
 **Purpose:** one place that answers "what's done, what's next, what's
 blocked, and on whom" without re-deriving it from receipts scattered across
@@ -983,3 +983,104 @@ no new branch — direct continuation):
     read-only advisors in `.opencode/agents/` + `THIRD-PARTY-NOTICES.md`.
     Known harness-policy conflict (ADV-004) proceeds under owner waiver,
     recorded in EV-20260915-001. Zero npm deps, nothing under `apps/web/`.
+
+## Audit batch 2026-09-18 — open items (deferred, recorded per ABSENT != PASS)
+
+Deferred from the 2026-09-18 multi-agent audit + fix loop (fixed the same
+day: mojibake titles x30, unparseable knowledge yaml, JSON-LD escaping,
+island prop parity, motion re-arm on ClientRouter swaps, sw offline catch,
+aria-expanded on <ul>, CSP unsafe-inline -> build-stamped sha256 hashes,
+XFO/frame-ancestors conflict, evidence record EV-20260910-002, gate
+hardening in check-seo/check-security/check-release-path/check-deploy-mapping,
+CI dist artifact sharing + timeouts + fork-PR build fallbacks + gated
+workers-deploy reinstatement, config fixes: allowBuilds/.nvmrc/engines/
+zod hoist/Docker removal/admin gitignore/receipt-schema dedup). Not fixed
+here, deliberately:
+
+1. **Truth-gate registry generation** — source tiers are hand-typed
+   literals inside content modules; nothing reads
+   `artifacts/evidence/*.yaml` at build time (audit P1; the dangling
+   EV-20260910-002 it caused was fixed, but the *mechanism* still
+   self-attests). Fix: generate the registry from evidence yaml
+   (classification -> tier, valid_until -> validUntil) and fail closed on
+   unknown IDs. Also define the T1-T5 taxonomy in knowledge/ (currently
+   defined nowhere).
+2. **Content-trust taint analysis** — `check-content-trust.mjs` is
+   regex-based and single-file: cross-file re-exports escape taint;
+   property-assignment propagation and dynamic import() are untracked.
+   Fix: AST-based pass (the repo's own audit tooling demonstrates the
+   approach).
+3. **Visual comparison gate** — screenshots.spec.ts captures 105 images
+   with zero assertions and compare-geometry.mjs is wired to nothing
+   (audit P1; CI-CONTRACT row amended to PARTIAL this commit). Fix:
+   either implement screenshot/geometry comparison in CI or move capture
+   to a manual artifact job.
+4. **Evidence-expiry enforcement (T4)** — no record sets `validUntil`;
+   the T4 rule is dead in practice until registry generation (item 1)
+   lands.
+5. **Unit coverage for `src/lib/content-trust.ts`** — the trust-class
+   policy map (~230 lines) has no direct test; only the static check
+   script observes it.
+6. **Remaining gate injection suites** — check-ui / check-motion /
+   check-internal-links lack failure-injection tests (check-security and
+   check-seo gained theirs in this batch); check-ui also lacks the
+   `UKBT_CHECK_ROOT` sandbox override.
+7. **Tina visual-edit preview on static hosting** — `?tina-edit=1`
+   requests match static assets (asset-first routing) and never reach the
+   middleware; admin-iframe path now permitted by CSP frame-ancestors
+   (XFO removed this commit) but needs live verification against
+   production before the edit-mode UX can be declared working.
+8. **ogImage prop** — BaseLayout accepts per-page og images but no page
+   passes one; every route shares social-card.jpg.
+9. **Playwright spec hardening** — replace hardcoded `waitForTimeout`s in
+   motion.spec.ts / mobile-ux.spec.ts with `waitForFunction` settle
+   helpers; add WebKit smoke project; upload `test-results/` traces on
+   failure.
+10. **Node engine pinning in CI** — NODE_VERSION '22' floats; pin to the
+    full version in `.nvmrc` (now 22.23.2) and align the workflow.
+
+## TinaCMS visual-editing closure 2026-09-22/23 — merged, smoke RED (external)
+
+Audit-batch item 7 above (edit-mode UX unverified) is now CLOSED: visual
+editing is proven live end-to-end. Evidence chain in
+`artifacts/audit/20260923-tina-admin-closure.md` (+ certification,
+issue-register, blocker-closure certificate, `20260923-final-closeout.md`):
+
+1. **Plumbing:** `/admin/` 200 + Tina bundle 200, single live CSP with
+   `frame-ancestors` allowing Tina hosts, `PUBLIC_TINA_ADMIN_ORIGIN`
+   bare (trailing-slash fixed 2026-09-19), FAQ `RichText→String` +
+   hybrid renderer (no `[object Object]`), 8× `data-tina-field`.
+2. **Real Save:** headline edited in `/admin` → commit `fbf05f2`
+   (`tinacloud-app[bot]`) → Workers Builds → live headline verified.
+   Owner separately confirmed the watched GitHub-OAuth + Save/Revert
+   session works from their login.
+3. **Gates merged (PR #96, `6da2262`):** fail-closed truth render
+   boundary (`isPublishable` in PROD, ADR-001), U-23 blanket approval
+   recorded (`EV-20260923-001`, 124 records
+   `pending_review→approved`), `tina-protocol.spec.ts` route-live pins
+   probe-skip on static CI servers (live covered by T3 matrix +
+   smoke), content-agnostic headline pins, vendor login-button axe
+   exclusion. Playwright green 5m29s.
+4. **Fixes merged:** PR #97 COOP `same-origin-allow-popups` (popup
+   `postMessage` restored), #98 unskip cloud checks (indexing proof
+   live), #99 CSP media/fonts hosts, #100 smoke edge-forensics.
+5. **STANDING BLOCKER — Post-deploy smoke FAIL on `main`** (run
+   `35816266024` + retry, all 6 paths `403 mitigated=challenge`,
+   rays `a3f6b6*`): GH-runner egress is Cloudflare-challenged while
+   production is 200 externally. Owner action: dashboard Security →
+   Events lookup for ray `a3f6b6da2a2d433c` → rule name, then decide
+   (allowlist Actions egress / tune bot policy / bless alternate
+   vantage). Smoke gate stays enforced; nothing weakened.
+   Registry owner contact remains `UNKNOWN`.
+
+## Open issue 2026-09-23 — Tina visual-edit content not reflected in local dev build
+
+User-reported (unreproduced, solve later): content changed via TinaCMS
+visual editing does not show up when running the repo locally
+(`pnpm dev` / local build). Suspects, unverified: local fallback creds
+(`TINA_TOKEN=local-build-fallback`) serve Tina JSON from repo files, so
+cloud-saved edits are invisible locally until pulled; and/or the
+TinaIsland/loader path differs between dev and prod. Next step when
+scheduled: reproduce (edit in `/admin`, compare local vs live render),
+then decide (document the pull-to-see-edits workflow vs dev-mode cloud
+passthrough). Production Save path itself is proven (closure §2 above).

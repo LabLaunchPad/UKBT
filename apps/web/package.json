@@ -6,7 +6,7 @@
   "description": "UK Bangla Tigers production website (Astro, static output). See contracts/REPOSITORY-CONTRACT.md.",
   "scripts": {
     "dev": "astro dev",
-    "build": "pnpm --filter @ukbt/truth tokens:build && node ../../scripts/check-content-trust.mjs && astro build && node ../../scripts/generate-sitemap.mjs && node ../../scripts/build-sw.mjs",
+    "build": "pnpm --filter @ukbt/truth tokens:build && node ../../scripts/check-content-trust.mjs && astro build && node ../../scripts/stamp-csp.mjs && node ../../scripts/generate-sitemap.mjs && node ../../scripts/build-sw.mjs",
     "preview": "astro preview",
     "typecheck": "astro check",
     "test:e2e": "playwright test"
@@ -25,7 +25,7 @@
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
     "@axe-core/playwright": "^4.10.1",
-    "@playwright/test": "^1.49.1",
+    "@playwright/test": "^1.63.0",
     "@tinacms/cli": "^3.0.0",
     "@types/node": "^22.10.2",
     "typescript": "^5.7.2",

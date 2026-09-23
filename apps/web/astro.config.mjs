@@ -1,8 +1,10 @@
 import { defineConfig } from 'astro/config';
+import { fileURLToPath } from 'node:url';
 import sentry from '@sentry/astro';
 import spotlightjs from '@spotlightjs/astro';
 import tina from '@tinacms/astro/integration';
 import cloudflare from '@astrojs/cloudflare';
+import { tinaAdminDevRedirect } from '@tinacms/astro/vite';
 
 const integrations = [spotlightjs(), tina()];
 if (process.env.SENTRY_DSN) {
@@ -13,6 +15,20 @@ export default defineConfig({
   output: 'static',
   // Canonical production domain, supplied by the owner 2026-09-06.
   site: 'https://ukbanglatigers.co.uk',
+
+  // The Tina generated client lives at the repo root (tina/__generated__/,
+  // where `tinacms build` emits it — outside this app's Vite root), so it
+  // is aliased rather than reached with fragile relative depth.
+  vite: {
+    plugins: [tinaAdminDevRedirect()],
+    resolve: {
+      alias: {
+        '@tina-client': fileURLToPath(
+          new URL('../../tina/__generated__/client.ts', import.meta.url),
+        ),
+      },
+    },
+  },
 
   // Pinned to the literal IPv4 loopback, not the default `localhost`.
   // Real CI failure (PR #1, check_run 98063976034): `astro preview`'s

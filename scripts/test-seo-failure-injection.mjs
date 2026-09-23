@@ -142,6 +142,48 @@ const cases = [
     expectRule: 'title-duplicate',
   },
   {
+    // Audit 2026-09-18: 13 page titles shipped a double-encoded em-dash
+    // ("â€"" — the byte sequence c3 a2 e2 82 ac e2 80 9d) and every gate
+    // stayed green. This case pins the rule that now catches it.
+    name: 'mojibake-title',
+    gate: seoGate,
+    files: {
+      'index.html': GOOD_HOME,
+      'about/index.html': GOOD_ABOUT.replace(
+        '<title>T</title>',
+        '<title>About page \u00e2\u20ac\u201d UK Bangla Tigers</title>',
+      ),
+    },
+    expectPass: false,
+    expectRule: 'title-mojibake',
+  },
+  {
+    name: 'mojibake-description',
+    gate: seoGate,
+    files: {
+      'index.html': GOOD_HOME,
+      'about/index.html': GOOD_ABOUT.replace(
+        'content="About page"',
+        `content="About \u00e2\u20ac\u201d page"`,
+      ),
+    },
+    expectPass: false,
+    expectRule: 'description-mojibake',
+  },
+  {
+    name: 'replacement-char-title',
+    gate: seoGate,
+    files: {
+      'index.html': GOOD_HOME,
+      'about/index.html': GOOD_ABOUT.replace(
+        '<title>T</title>',
+        '<title>About \uFFFD page</title>',
+      ),
+    },
+    expectPass: false,
+    expectRule: 'title-mojibake',
+  },
+  {
     name: 'no-slash-internal-link',
     gate: linksGate,
     files: {
