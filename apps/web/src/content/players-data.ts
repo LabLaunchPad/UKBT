@@ -15,7 +15,12 @@
 // One supplied file carries no name and is never rendered.
 // Individual full profiles (bio, stats) remain UNKNOWN and are stated
 // as such rather than invented; no stats tables, no quotations.
-import { type ContentRecord, createRegistry, evaluate } from '@ukbt/truth/gate';
+import {
+  type ContentRecord,
+  createRegistry,
+  evaluate,
+  isPublishable,
+} from '@ukbt/truth/gate';
 import { ContentRecordSchema } from '@ukbt/truth/schema';
 
 const registry = createRegistry([
@@ -365,7 +370,12 @@ function gateRecords(
       status: 'pending_review',
       sources: r.sources,
     }) as ContentRecord;
-    const result = evaluate(rec, gateOptions);
+    // Production render boundary (contracts/TRUTH-CONTRACT.md, docs/adr-001):
+    // only approved/published records may publish. Dev keeps evidence-valid
+    // evaluate() so pending_review content stays reviewable.
+    const result = import.meta.env.PROD
+      ? isPublishable(rec, gateOptions)
+      : evaluate(rec, gateOptions);
     if (!result.passed) {
       throw new Error(
         `Truth gate failed for '${rec.field}': ${result.reasons.map((r2) => `${r2.rule}: ${r2.detail}`).join('; ')}`,

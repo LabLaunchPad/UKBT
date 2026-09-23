@@ -5,7 +5,12 @@
 // publication — 'approved'/'published' require a named human approver
 // (T6), which does not yet exist. See artifacts/brand/UKBT-BRAND-FOUNDATION.md
 // and artifacts/pages/HOMEPAGE-CONTRACT.md for the decisions this data reflects.
-import { type ContentRecord, createRegistry, evaluate } from '@ukbt/truth/gate';
+import {
+  type ContentRecord,
+  createRegistry,
+  evaluate,
+  isPublishable,
+} from '@ukbt/truth/gate';
 import { ContentRecordSchema } from '@ukbt/truth/schema';
 import { captainPhoto } from './captain-data';
 import { primaryCta, primaryNav, secondaryNav } from './navigation-data';
@@ -167,7 +172,12 @@ const allRecords: ContentRecord[] = [
 ];
 
 for (const rec of allRecords) {
-  const result = evaluate(rec, gateOptions);
+  // Production render boundary (contracts/TRUTH-CONTRACT.md, docs/adr-001):
+  // only approved/published records may publish. Dev keeps evidence-valid
+  // evaluate() so pending_review content stays reviewable.
+  const result = import.meta.env.PROD
+    ? isPublishable(rec, gateOptions)
+    : evaluate(rec, gateOptions);
   if (!result.passed) {
     throw new Error(
       `Truth gate failed for '${rec.field}': ${result.reasons.map((r) => `${r.rule}: ${r.detail}`).join('; ')}`,

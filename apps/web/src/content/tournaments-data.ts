@@ -2,7 +2,12 @@
 // gate. The full 5-event calendar from EV-20260826-026 (C-009) —
 // tournament-level only, no match-by-match fixtures/results exist in
 // evidence, so none are rendered.
-import { type ContentRecord, createRegistry, evaluate } from '@ukbt/truth/gate';
+import {
+  type ContentRecord,
+  createRegistry,
+  evaluate,
+  isPublishable,
+} from '@ukbt/truth/gate';
 import { ContentRecordSchema } from '@ukbt/truth/schema';
 
 const registry = createRegistry([
@@ -76,7 +81,12 @@ for (const e of events) {
     status: 'pending_review',
     sources: ['EV-026'],
   }) as ContentRecord;
-  const result = evaluate(rec, gateOptions);
+  // Production render boundary (contracts/TRUTH-CONTRACT.md, docs/adr-001):
+  // only approved/published records may publish. Dev keeps evidence-valid
+  // evaluate() so pending_review content stays reviewable.
+  const result = import.meta.env.PROD
+    ? isPublishable(rec, gateOptions)
+    : evaluate(rec, gateOptions);
   if (!result.passed) {
     throw new Error(
       `Truth gate failed for '${rec.field}': ${result.reasons.map((r) => `${r.rule}: ${r.detail}`).join('; ')}`,

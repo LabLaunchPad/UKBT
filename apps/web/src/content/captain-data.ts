@@ -18,7 +18,12 @@
 // this change); per the client's later confirmation London Blaze and
 // Roma Ovest Titans play in the CURRENT franchise team alongside UK
 // Bangla Tigers and Uppsala Tigers (4 current, 8 previous).
-import { type ContentRecord, createRegistry, evaluate } from '@ukbt/truth/gate';
+import {
+  type ContentRecord,
+  createRegistry,
+  evaluate,
+  isPublishable,
+} from '@ukbt/truth/gate';
 import { ContentRecordSchema } from '@ukbt/truth/schema';
 
 const registry = createRegistry([
@@ -89,7 +94,12 @@ const facts = {
 
 const allRecords: ContentRecord[] = Object.values(facts).map((f) => record(f));
 for (const rec of allRecords) {
-  const result = evaluate(rec, gateOptions);
+  // Production render boundary (contracts/TRUTH-CONTRACT.md, docs/adr-001):
+  // only approved/published records may publish. Dev keeps evidence-valid
+  // evaluate() so pending_review content stays reviewable.
+  const result = import.meta.env.PROD
+    ? isPublishable(rec, gateOptions)
+    : evaluate(rec, gateOptions);
   if (!result.passed) {
     throw new Error(
       `Truth gate failed for '${rec.field}': ${result.reasons.map((r) => `${r.rule}: ${r.detail}`).join('; ')}`,
