@@ -13,6 +13,11 @@
 // WebP thumbnails, `public/media/players/`); 8 names without photos
 // stay text-only per CLIENT_REQ_006 — no placeholder silhouettes.
 // One supplied file carries no name and is never rendered.
+// Role + country for all 58 are owner-verbatim from the 2026-09-23 owner
+// list (EV-20260923-002, supersedes EV-20260911-002's taxonomy ban).
+// Renames applied: Kenner Lewis, Hamid Mehmood, Ellias Sunny, Abu Bakar,
+// Sibet Ahmed. Humayun kabir Jyoti case + Srilanka/Sri lanka/Netherands
+// spellings kept verbatim — never normalize.
 // Individual full profiles (bio, stats) remain UNKNOWN and are stated
 // as such rather than invented; no stats tables, no quotations.
 import {
@@ -49,6 +54,11 @@ const registry = createRegistry([
     tier: 'T1',
     url: 'artifacts/evidence/EV-20260911-002.yaml',
   },
+  {
+    id: 'EV-20260923-002',
+    tier: 'T1',
+    url: 'artifacts/evidence/EV-20260923-002.yaml',
+  },
 ]);
 const exemptFields = new Set<string>();
 const twoSourceFields = new Set<string>();
@@ -76,15 +86,17 @@ function slug(name: string): string {
 const UPPSALA_TAG = 'Also plays for Uppsala Tigers';
 const WK_TAG = 'Wicket-keeper';
 const U19_TAG = 'U-19';
-// All-Rounder is a verified tag ONLY for the two players named in
-// EV-20260911-002 (client direction 2026-09-11; Chowdhury additionally
-// corroborated by his gated batting+bowling styles). It must never be
-// set for any other player without its own evidenced record.
+// All-Rounder tag legacy (EV-20260911-002 named only Chowdhury + Shakib).
+// Owner list 2026-09-23 (EV-20260923-002) supersedes that taxonomy ban:
+// `role` now carries the owner-verbatim taxonomy for all 58. Tags below
+// are intentionally untouched display markers (T3/T4 territory), not truth.
 const AR_TAG = 'All-Rounder';
 
 interface RawPlayer {
   name: string;
   country?: string;
+  /** owner-verbatim taxonomy 2026-09-23 (EV-20260923-002) */
+  role?: string;
   alsoUppsala?: boolean;
   wicketKeeper?: boolean;
   under19?: boolean;
@@ -101,6 +113,7 @@ const rawRoster: RawPlayer[] = [
   {
     name: 'Mohammad Chowdhury',
     country: 'England',
+    role: 'All-rounder',
     alsoUppsala: true,
     allRounder: true,
     photoSlug: 'mohammad-chowdhury',
@@ -108,22 +121,25 @@ const rawRoster: RawPlayer[] = [
   {
     name: 'Shakib Al Hasan',
     country: 'Bangladesh',
+    role: 'All-rounder',
     alsoUppsala: true,
     allRounder: true,
     photoSlug: 'shakib-al-hasan',
   },
-  { name: 'Mark James', country: 'England', photoSlug: 'mark-james' },
+  { name: 'Mark James', country: 'England', role: 'All-rounder', photoSlug: 'mark-james' },
   {
     name: 'Karanbir Singh',
     country: 'Austria',
+    role: 'All-rounder',
     alsoUppsala: true,
     photoSlug: 'karanbir-singh',
   },
-  { name: 'Wayne Parnel', country: 'South Africa', photoSlug: 'wayne-parnel' },
-  { name: 'Junaid Siddique', country: 'Canada', photoSlug: 'junaid-siddique' },
+  { name: 'Wayne Parnel', country: 'South Africa', role: 'Bowler', photoSlug: 'wayne-parnel' },
+  { name: 'Junaid Siddique', country: 'Canada', role: 'Bowler', photoSlug: 'junaid-siddique' },
   {
     name: 'Owen Palmer',
     country: 'England',
+    role: 'Wicket-keeper',
     alsoUppsala: true,
     wicketKeeper: true,
     photoSlug: 'owen-palmer',
@@ -131,106 +147,121 @@ const rawRoster: RawPlayer[] = [
   {
     name: 'Shaheryar Butt',
     country: 'Belgium',
+    role: 'Batsman',
     alsoUppsala: true,
     photoSlug: 'shaheryar-butt',
   },
   {
     name: 'Chad Potgieter',
     country: 'South Africa',
+    role: 'Batsman',
     alsoUppsala: true,
     photoSlug: 'chad-potgieter',
   },
   {
     name: 'Roushan Singh',
-    country: 'Portugal',
+    country: 'Netherlands',
+    role: 'Wicket-keeper',
     alsoUppsala: true,
     wicketKeeper: true,
     photoSlug: 'roushan-singh',
   },
-  { name: 'Juan Henry', country: 'Portugal', photoSlug: 'juan-henry' },
+  { name: 'Juan Henry', country: 'Portugal', role: 'All-rounder', photoSlug: 'juan-henry' },
   {
     name: 'Shabbir Rahman',
     country: 'Bangladesh',
+    role: 'Batsman',
     photoSlug: 'shabbir-rahman',
   },
-  { name: 'Kennar Lewis', country: 'West Indies', photoSlug: 'kennar-lewis' },
+  { name: 'Kenner Lewis', country: 'West Indies', role: 'Batsman', photoSlug: 'kenner-lewis' },
   {
     name: 'Jaspreet Singh',
     country: 'Italy',
+    role: 'Bowler',
     alsoUppsala: true,
     photoSlug: 'jaspreet-singh',
   },
-  { name: 'Peter Robert', country: 'England', photoSlug: 'peter-robert' },
-  { name: 'Amahl Nathaniel', country: 'West Indies' },
+  { name: 'Peter Robert', country: 'England', role: 'Batsman', photoSlug: 'peter-robert' },
+  { name: 'Amahl Nathaniel', country: 'West Indies', role: 'Batsman' },
   {
     name: 'Armaan Randhawa',
     country: 'Austria',
+    role: 'Batsman',
     alsoUppsala: true,
     photoSlug: 'armaan-randhawa',
   },
-  { name: 'Sufyan Mehmood', country: 'Oman', photoSlug: 'sufyan-mehmood' },
-  { name: 'Arafat Bhuiyan', country: 'England', photoSlug: 'arafat-bhuiyan' },
+  { name: 'Sufyan Mehmood', country: 'Oman', role: 'All-rounder', photoSlug: 'sufyan-mehmood' },
+  { name: 'Arafat Bhuiyan', country: 'England', role: 'Bowler', photoSlug: 'arafat-bhuiyan' },
   {
     name: 'Jawid Stanigze',
     country: 'Afghanistan',
+    role: 'All-rounder',
     alsoUppsala: true,
     photoSlug: 'jawid-stanigze',
   },
-  { name: 'Rajesh Sharma', country: 'India' },
+  { name: 'Rajesh Sharma', country: 'India', role: 'All-rounder' },
   {
     name: 'Chinthaka Rajapaksha',
-    country: 'Sri Lanka',
+    country: 'Srilanka',
+    role: 'All-rounder',
     alsoUppsala: true,
     photoSlug: 'chinthaka-rajapaksha',
   },
-  { name: 'Elias Sunny', country: 'Bangladesh', photoSlug: 'elias-sunny' },
-  { name: 'Ruman Ahmed', country: 'Bangladesh' },
-  { name: 'Forhad Reza', country: 'Bangladesh', photoSlug: 'forhad-reza' },
+  { name: 'Ellias Sunny', country: 'Bangladesh', role: 'Bowler', photoSlug: 'ellias-sunny' },
+  { name: 'Ruman Ahmed', country: 'Bangladesh', role: 'Batsman' },
+  { name: 'Forhad Reza', country: 'Bangladesh', role: 'All-rounder', photoSlug: 'forhad-reza' },
   {
     name: 'Tasaduq Hussain',
     country: 'Sweden',
+    role: 'Bowler',
     alsoUppsala: true,
     photoSlug: 'tasaduq-hussain',
   },
-  { name: 'Tawfique Khan Tushar', country: 'Bangladesh' },
+  { name: 'Tawfique Khan Tushar', country: 'Bangladesh', role: 'Batsman' },
   {
     name: 'Lemar Momand',
     country: 'Afghanistan',
+    role: 'Bowler',
     alsoUppsala: true,
     photoSlug: 'lemar-momand',
   },
   {
-    name: 'Humayun Kabir Jyoti',
+    name: 'Humayun kabir Jyoti',
     country: 'USA',
+    role: 'Wicket-keeper',
     alsoUppsala: true,
     wicketKeeper: true,
     photoSlug: 'humayun-kabir-jyoti',
   },
-  { name: 'Raminda Wijesooriya', country: 'Sri Lanka' },
-  { name: 'Towker Khan', country: 'USA', photoSlug: 'towker-khan' },
+  { name: 'Raminda Wijesooriya', country: 'Sri lanka', role: 'Batsman' },
+  { name: 'Towker Khan', country: 'USA', role: 'All-rounder', photoSlug: 'towker-khan' },
   {
     name: 'Prashant Shukla',
     country: 'India',
+    role: 'Bowler',
     alsoUppsala: true,
     photoSlug: 'prashant-shukla',
   },
-  { name: 'Anop Ravi', country: 'Canada' },
+  { name: 'Anop Ravi', country: 'Canada', role: 'Wicket-keeper' },
   {
     name: 'Qudratullah Mir Afzal',
     country: 'Sweden',
+    role: 'Bowler',
     alsoUppsala: true,
     photoSlug: 'qudratullah-mir-afzal',
   },
-  { name: 'Elliot Green', country: 'England' },
+  { name: 'Elliot Green', country: 'England', role: 'Bowler' },
   {
-    name: 'Hamid Mahmood',
+    name: 'Hamid Mehmood',
     country: 'Sweden',
+    role: 'Bowler',
     alsoUppsala: true,
-    photoSlug: 'hamid-mahmood',
+    photoSlug: 'hamid-mehmood',
   },
   {
     name: 'Anas Zaheer',
     country: 'Sweden',
+    role: 'Bowler',
     alsoUppsala: true,
     under19: true,
     photoSlug: 'anas-zaheer',
@@ -238,6 +269,7 @@ const rawRoster: RawPlayer[] = [
   {
     name: 'Essa Farooq',
     country: 'Sweden',
+    role: 'Bowler',
     alsoUppsala: true,
     under19: true,
     photoSlug: 'essa-farooq',
@@ -245,85 +277,99 @@ const rawRoster: RawPlayer[] = [
   {
     name: 'Dhrubonil Roy',
     country: 'Sweden',
+    role: 'Bowler',
     alsoUppsala: true,
     under19: true,
     photoSlug: 'dhrubonil-roy',
   },
-  { name: 'Dhavalkumar Norotam', country: 'Portugal' },
-  { name: 'Musa Ahmad', country: 'Netherlands', photoSlug: 'musa-ahmad' },
-  { name: 'Jeremy Martins', country: 'Portugal', photoSlug: 'jeremy-martins' }, // NOT on Uppsala's own squad list — EV-0831-06
-  { name: 'Abu Bakkar', newFromPhotos: true, photoSlug: 'abu-bakkar' },
+  { name: 'Dhavalkumar Norotam', country: 'Portugal', role: 'All-rounder' },
+  { name: 'Musa Ahmad', country: 'Netherands', role: 'Batsman', photoSlug: 'musa-ahmad' },
+  { name: 'Jeremy Martins', country: 'Portugal', role: 'Bowler', photoSlug: 'jeremy-martins' }, // NOT on Uppsala's own squad list — EV-0831-06
+  { name: 'Abu Bakar', country: 'UAE', role: 'Bowler', newFromPhotos: true, photoSlug: 'abu-bakar' },
   {
     name: 'Asif Taniwal',
     country: 'Afghanistan',
+    role: 'Batsman',
     newFromPhotos: true,
     photoSlug: 'asif-taniwal',
   },
-  { name: 'Ayyan Warraich', newFromPhotos: true, photoSlug: 'ayyan-warraich' },
+  { name: 'Ayyan Warraich', country: 'Germany', role: 'Bowler', newFromPhotos: true, photoSlug: 'ayyan-warraich' },
   {
     name: 'CP Rizwan',
     country: 'UAE',
+    role: 'All-rounder',
     newFromPhotos: true,
     photoSlug: 'cp-rizwan',
   },
   {
     name: 'Danish Sarhadi',
     country: 'UAE',
+    role: 'Wicket-keeper',
     newFromPhotos: true,
     photoSlug: 'danish-sarhadi',
   },
   {
     name: 'Ibrahim Maqsood',
+    country: 'UAE',
+    role: 'Bowler',
     newFromPhotos: true,
     photoSlug: 'ibrahim-maqsood',
   },
   {
     name: 'Ibrar Ahmed',
     country: 'UAE',
+    role: 'Bowler',
     newFromPhotos: true,
     photoSlug: 'ibrar-ahmed',
   },
   {
     name: 'Jack Jakir',
     country: 'England',
+    role: 'Bowler',
     newFromPhotos: true,
     photoSlug: 'jack-jakir',
   },
   {
     name: 'Junaid Shamsu',
     country: 'UAE',
+    role: 'All-rounder',
     newFromPhotos: true,
     photoSlug: 'junaid-shamsu',
   },
   {
     name: 'Krish Anand',
     country: 'England',
+    role: 'Bowler',
     newFromPhotos: true,
     photoSlug: 'krish-anand',
   },
   {
     name: 'Muhsin Ali',
     country: 'England',
+    role: 'Batsman',
     newFromPhotos: true,
     photoSlug: 'muhsin-ali',
   },
   {
     name: 'Saghir Ahmad',
     country: 'UAE',
+    role: 'All-rounder',
     newFromPhotos: true,
     photoSlug: 'saghir-ahmad',
   },
-  { name: 'Sibet Hussain', newFromPhotos: true, photoSlug: 'sibet-hussain' },
+  { name: 'Sibet Ahmed', country: 'UAE', role: 'All-rounder', newFromPhotos: true, photoSlug: 'sibet-ahmed' },
   {
     name: 'Syed Aziz',
     country: 'Scotland',
+    role: 'All-rounder',
     newFromPhotos: true,
     photoSlug: 'syed-aziz',
   },
-  { name: 'Taimoor Ali', newFromPhotos: true, photoSlug: 'taimoor-ali' },
+  { name: 'Taimoor Ali', country: 'UAE', role: 'Batsman', newFromPhotos: true, photoSlug: 'taimoor-ali' },
   {
     name: 'Zohair Iqbal',
     country: 'UAE',
+    role: 'Bowler',
     newFromPhotos: true,
     photoSlug: 'zohair-iqbal',
   },
@@ -394,10 +440,11 @@ const roster: { field: string; value: RosterPlayer; sources: string[] }[] =
     value: {
       name: p.name,
       country: p.country,
+      role: p.role,
       tags: tagsFor(p),
       note:
         p.name === 'Roushan Singh'
-          ? 'Country was unconfirmed across three conflicting documents; resolved to Portugal once his own supplied photo and its filename both corroborated it (EV-0831-08).'
+          ? 'Country was unconfirmed across three conflicting documents; owner list 2026-09-23 corrects it to Netherlands (EV-20260923-002).'
           : undefined,
       photo: p.photoSlug ? `/media/players/${p.photoSlug}.webp` : undefined,
       photoAlt: p.photoSlug ? `${p.name} — UK Bangla Tigers` : undefined,
@@ -409,8 +456,10 @@ const roster: { field: string; value: RosterPlayer; sources: string[] }[] =
           ? ['EV-0831-05', 'EV-20260912-001']
           : ['EV-0831-05']),
       // The All-Rounder tag on the two EV-20260911-002 players carries
-      // its own source; every other record's source set is unchanged.
+      // its own source; every roster record additionally cites EV-20260923-002
+      // (owner-verbatim role+country for all 58).
       ...(p.allRounder ? ['EV-20260911-002'] : []),
+      'EV-20260923-002',
     ],
   }));
 
