@@ -280,8 +280,12 @@ for (const r of squad) {
   const rec = ContentRecordSchema.parse({
     field: r.field,
     value: r.value,
-    status: 'pending_review',
+    // U-23 closed 2026-09-23: owner approval EV-20260923-001
+    // (Lablaunchpad/admin, all-current-facts, amendable) — approved, not
+    // published (TRUTH-CONTRACT.md keeps approval and going live separate).
+    status: 'approved',
     sources: r.sources,
+    approver: 'Lablaunchpad (admin, 2026-09-23, EV-20260923-001)',
   }) as ContentRecord;
   // Production render boundary (contracts/TRUTH-CONTRACT.md, docs/adr-001):
   // only approved/published records may publish. Dev keeps evidence-valid
