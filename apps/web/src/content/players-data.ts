@@ -357,7 +357,7 @@ const rawRoster: RawPlayer[] = [
     newFromPhotos: true,
     photoSlug: 'saghir-ahmad',
   },
-  { name: 'Sibet Ahmed', country: 'UAE', role: 'All-rounder', newFromPhotos: true, photoSlug: 'sibet-ahmed' },
+  { name: 'Sibet Ahmed', country: 'England', role: 'All-rounder', newFromPhotos: true, photoSlug: 'sibet-ahmed' },
   {
     name: 'Syed Aziz',
     country: 'Scotland',
