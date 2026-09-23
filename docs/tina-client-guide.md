@@ -121,7 +121,7 @@
 ## Security Notes
 
 - **CSP `frame-ancestors 'none'`** — must add exception for Tina admin origins before visual editing works in production
-- **Free plan limits** — 2 users max, 100MB assets, no editorial workflow
+- **Free plan limits** — 2 users max, 100MB per-asset size cap (no total quota published), no editorial workflow
 - **Git-backed** — all changes committed to repo, full audit trail
 - **No secrets in content** — Tina content is public, never store tokens/keys there
 

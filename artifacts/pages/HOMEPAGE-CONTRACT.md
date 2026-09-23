@@ -29,7 +29,7 @@ HERO_IMAGE_RULE  = Ship the crest/wordmark hero treatment as the committed
 
 1. Nav (7 items: Home, About Us, Club Captain, Players Profile, Our Franchises, International Tournaments/Events, Contact Us — `CLIENT_REQ_001`)
 2. Hero (crest/wordmark + tagline + primary CTA)
-3. Stat strip ("40+ Players," "15+ Countries Internationals," "7+ International Tournaments")
+3. Stat strip ("50+ Players," "15+ Countries Internationals," "7+ International Tournaments")
 4. Club introduction (mission tagline + founding year 2020)
 5. Upcoming tournaments (Nordic Lights, Global T20 Championship — filtered from the 5-event calendar to "Upcoming" only)
 6. Club Captain spotlight (Mohammad Chowdhury — Founder & CEO / Club Captain — short spotlight + link to full profile page; no stats table here per `CLIENT_REQ_003`'s page-type distinction)
@@ -45,7 +45,7 @@ per Stage 6's "do not simply clone the reference page order" rule.
 | Section | Content | Status |
 |---|---|---|
 | Hero tagline | "We are not only a team, but also an institute for learning." / "United by Passion. Driven by Cricket." | OBSERVED, corroborated twice |
-| Stat strip | 40+ / 15+ / 7+ | OBSERVED (players per EV-20260909-001) |
+| Stat strip | 50+ / 15+ / 7+ | OBSERVED (players per EV-20260916-001) |
 | Club introduction | Founding year 2020 | OBSERVED (crest) |
 | Tournaments | Nordic Lights, Global T20 Championship (dates/countries as recorded) | OBSERVED |
 | Captain spotlight | Mohammad Chowdhury, Founder & CEO / Club Captain | OBSERVED |

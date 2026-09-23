@@ -93,7 +93,7 @@ test('no-JS: hero content visible, navigation performs document loads', async ({
     document.documentElement.classList.contains('ukbt-motion-js'),
   );
   expect(motionClass, 'no arming class without JS').toBe(false);
-  await page.locator('.ukbt-header__nav a[href="/about"]').click();
+  await page.locator('.ukbt-header__nav a[href="/about/"]').click();
   await expect(page, 'document navigation works without JS').toHaveURL(
     /\/about\/?$/,
   );
@@ -136,10 +136,10 @@ test('logo intro plays once: fresh visit, never on client navigation', async ({
   await page.waitForTimeout(1000);
 
   // ClientRouter journey: Home → About → Players → Back → Forward.
-  await page.locator('.ukbt-header__nav a[href="/about"]').click();
+  await page.locator('.ukbt-header__nav a[href="/about/"]').click();
   await expect(page, 'landed on About').toHaveURL(/\/about\/?$/);
   expect((await introState()).armed, 'no intro after client nav').toBe(false);
-  await page.locator('.ukbt-header__nav a[href="/players"]').click();
+  await page.locator('.ukbt-header__nav a[href="/players/"]').click();
   await expect(page, 'landed on Players').toHaveURL(/\/players\/?$/);
   expect((await introState()).armed, 'no intro on second nav').toBe(false);
   await page.goBack();
@@ -167,7 +167,7 @@ test('logo intro cannot replay from a surviving html class', async ({
   await page.evaluate(() =>
     document.documentElement.classList.add('ukbt-logo-intro'),
   );
-  await page.locator('.ukbt-header__nav a[href="/about"]').click();
+  await page.locator('.ukbt-header__nav a[href="/about/"]').click();
   await expect(page, 'landed on About').toHaveURL(/\/about\/?$/);
   const state = await page.evaluate(() => {
     const brand = document.querySelector(

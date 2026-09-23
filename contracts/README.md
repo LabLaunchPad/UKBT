@@ -50,6 +50,7 @@ produce these; `RIGHTS-CONTRACT.md` restates and cross-references it.
 |---|---|---|
 | `MOTION-CONTRACT.md` | ACTIVE (2026-09-06) | Token-first motion language, restraint list, micro-interaction matrix |
 | `SEO-CONTRACT.md` Amendment 01 | ACTIVE (2026-09-06) | Track C pipeline implemented; production domain set |
+| `AI-EXECUTION-CONTRACT.md` | FROZEN (2026-09-15) | AI task state machine, evidence record, impact engine, budgets, adversarial review, completion language. Single normative source for agent execution; AGENTS.md/CLAUDE.md/knowledge/12 point here |
 
 ## Rules
 

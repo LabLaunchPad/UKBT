@@ -13,8 +13,14 @@ interface Props {
 }
 const { nav, cta } = Astro.props;
 const currentPath = Astro.url.pathname;
+// Compare slash-insensitively: nav hrefs use the canonical trailing-slash
+// form while Astro.url.pathname has no trailing slash at build time.
+const norm = (p: string) => (p.length > 1 ? p.replace(/\/$/, '') : p);
+const currentNorm = norm(currentPath);
 const isActive = (href: string) =>
-  href === '/' ? currentPath === '/' : currentPath.startsWith(href);
+  href === '/'
+    ? currentNorm === '/'
+    : currentNorm.startsWith(norm(href));
 ---
 
 <a href="#main-content" class="ukbt-skip-link">Skip to main content</a>
@@ -208,8 +214,11 @@ const isActive = (href: string) =>
       const menu = item.querySelector<HTMLElement>('.ukbt-header__dropdown');
       if (!btn || !menu) return;
       btn.setAttribute('aria-expanded', String(open));
-      if (open) menu.setAttribute('aria-expanded', 'true');
-      else menu.removeAttribute('aria-expanded');
+      // Visibility flag lives on data-open: aria-expanded is not a valid
+      // state for a <ul role="menu"> (audit 2026-09-18) — the button is
+      // the only element carrying the ARIA state.
+      if (open) menu.setAttribute('data-open', '');
+      else menu.removeAttribute('data-open');
       if (!open && opts.refocus) btn.focus();
     }
 
@@ -287,7 +296,10 @@ const isActive = (href: string) =>
         if (submenu) {
           const expanded = accordion.getAttribute('aria-expanded') === 'true';
           accordion.setAttribute('aria-expanded', String(!expanded));
-          submenu.setAttribute('aria-expanded', String(!expanded));
+          // data-open (not aria-expanded): the submenu is a plain <ul>;
+          // the accordion button carries the ARIA state.
+          if (!expanded) submenu.setAttribute('data-open', '');
+          else submenu.removeAttribute('data-open');
         }
         return;
       }
@@ -692,8 +704,10 @@ const isActive = (href: string) =>
      compact while the three-child Events menu takes only the room it
      needs — a menu never stretches into a neighbour's trigger zone, so
      two menus can never read as one merged surface.
-     Visibility is driven ONLY by JS-managed aria-expanded (single-open
-     invariant). There is deliberately no :hover display rule. */
+     Visibility is driven ONLY by the JS-managed data-open attribute
+     (single-open invariant; aria-expanded stays on the trigger button —
+     it is not a valid state for a <ul>). There is deliberately no :hover
+     display rule. */
   .ukbt-header__nav .ukbt-header__dropdown {
     display: none;
     position: absolute;
@@ -719,7 +733,7 @@ const isActive = (href: string) =>
      where supported; elsewhere the menu appears instantly (documented
      progressive enhancement — exit is instant everywhere). */
   @starting-style {
-    .ukbt-header__nav .ukbt-header__dropdown[aria-expanded='true'] {
+    .ukbt-header__nav .ukbt-header__dropdown[data-open] {
       opacity: 0;
       translate: 0 -4px;
     }
@@ -735,7 +749,7 @@ const isActive = (href: string) =>
     right: 0;
     height: var(--ukbt-space-2);
   }
-  .ukbt-header__nav .ukbt-header__dropdown[aria-expanded='true'] {
+  .ukbt-header__nav .ukbt-header__dropdown[data-open] {
     display: block;
   }
   .ukbt-header__nav .ukbt-header__dropdown a {
@@ -951,7 +965,7 @@ const isActive = (href: string) =>
     margin: 0;
     padding: 0 0 0 var(--ukbt-space-gap-4);
   }
-  .ukbt-header__drawer-submenu[aria-expanded='true'] {
+  .ukbt-header__drawer-submenu[data-open] {
     display: block;
   }
   .ukbt-header__drawer-submenu a {

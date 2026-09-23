@@ -4,10 +4,14 @@
 //   SEO_STATUS = PASS | FAIL
 // plus machine-readable detail as JSON.
 import { existsSync, globSync, readFileSync } from 'node:fs';
-import { dirname, join } from 'node:path';
+import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const root = dirname(dirname(fileURLToPath(import.meta.url)));
+// Sandbox override for scripts/test-seo-failure-injection.mjs (same pattern
+// as the deploy/perf gates). Production behavior unchanged.
+const root = process.env.UKBT_CHECK_ROOT
+  ? resolve(process.env.UKBT_CHECK_ROOT)
+  : dirname(dirname(fileURLToPath(import.meta.url)));
 // With @astrojs/cloudflare adapter, static output goes to dist/client/.
 // Without adapter, it goes to dist/. Check both locations.
 const distDirClient = join(root, 'apps/web/dist/client');
@@ -29,10 +33,23 @@ if (!existsSync(distDir)) {
 const pick = (html, re) => html.match(re)?.[1] ?? null;
 const pickAll = (html, re) => [...html.matchAll(re)].map((m) => m[1]);
 
+// Double-encoded UTF-8 (mojibake) detector. Audit 2026-09-18: 13 page
+// titles shipped a double-encoded em-dash (bytes c3 a2 e2 82 ac e2 80 9d,
+// renders as "â€"") and every gate stayed green because presence/
+// uniqueness checks never look at encoding. Signs: the replacement
+// character (invalid UTF-8 reached the decoder) or the classic
+// UTF-8-read-as-latin1 lead chars ("â€", "Ã<x>", "Â ") which legitimate
+// English copy never contains.
+const isMojibake = (s) =>
+  /\uFFFD/.test(s) || /â€/.test(s) || /Ã./.test(s) || /Â[\s\u00a0]/.test(s);
+
 const titles = new Map();
 const descriptions = new Map();
 
-for (const file of globSync('**/*.html', { cwd: distDir })) {
+for (const file of globSync('**/*.html', { cwd: distDir }).filter(
+  // Tina admin is an authenticated app shell, not indexable site content.
+  (f) => f !== 'admin' && !f.startsWith('admin/') && !f.startsWith('admin\\'),
+)) {
   if (file === '404.html' || file.endsWith('/404.html')) continue;
   const html = readFileSync(join(distDir, file), 'utf8');
   const robots = pick(html, /<meta name="robots" content="([^"]+)"\s*\/?>/);
@@ -46,12 +63,26 @@ for (const file of globSync('**/*.html', { cwd: distDir })) {
   if (!noindex) {
     if (!title?.trim()) fail(file, 'title-missing', 'empty <title>');
     else {
+      if (isMojibake(title)) {
+        fail(
+          file,
+          'title-mojibake',
+          `double-encoded text in title: ${title.slice(0, 80)}`,
+        );
+      }
       if (titles.has(title)) {
         fail(file, 'title-duplicate', `also on ${titles.get(title)}`);
       } else titles.set(title, file);
     }
     if (!desc?.trim()) fail(file, 'description-missing', 'empty description');
     else {
+      if (isMojibake(desc)) {
+        fail(
+          file,
+          'description-mojibake',
+          `double-encoded text in description: ${desc.slice(0, 80)}`,
+        );
+      }
       if (descriptions.has(desc)) {
         fail(
           file,
@@ -62,8 +93,11 @@ for (const file of globSync('**/*.html', { cwd: distDir })) {
     }
   }
 
-  // Canonical: present iff indexable; absolute, https, production host,
-  // normalized (no trailing slash except root).
+  // Canonical: present iff indexable; absolute, https, production host.
+  // Trailing-slash form is REQUIRED (root excepted): the platform
+  // 307-redirects no-slash route URLs to their slash form, so a no-slash
+  // canonical disagrees with the served URL and puts redirecting URLs in
+  // the sitemap (Semrush 2026-09-15). See src/lib/seo.ts normalizePath.
   const canonical = pick(html, /<link rel="canonical" href="([^"]+)"\s*\/?>/);
   if (noindex) {
     if (canonical) {
@@ -75,8 +109,8 @@ for (const file of globSync('**/*.html', { cwd: distDir })) {
       if (!canonical.startsWith(`${SITE}/`)) {
         fail(file, 'canonical-host', canonical);
       }
-      if (canonical !== `${SITE}/` && canonical.endsWith('/')) {
-        fail(file, 'canonical-trailing-slash', canonical);
+      if (canonical !== `${SITE}/` && !canonical.endsWith('/')) {
+        fail(file, 'canonical-missing-slash', canonical);
       }
     }
   }
@@ -162,7 +196,10 @@ if (!existsSync(sitemapPath)) {
   }
   // Every indexable canonical must appear exactly once; no noindex URL inside.
   const indexableCanonicals = [];
-  for (const file of globSync('**/*.html', { cwd: distDir })) {
+  for (const file of globSync('**/*.html', { cwd: distDir }).filter(
+    // Tina admin is an authenticated app shell, not indexable site content.
+    (f) => f !== 'admin' && !f.startsWith('admin/') && !f.startsWith('admin\\'),
+  )) {
     if (file === '404.html' || file.endsWith('/404.html')) continue;
     const html = readFileSync(join(distDir, file), 'utf8');
     const robots = pick(html, /<meta name="robots" content="([^"]+)"\s*\/?>/);
