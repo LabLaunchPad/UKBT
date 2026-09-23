@@ -712,3 +712,12 @@ observation; apply with judgment, do not generalize further.
 - **Verified-by:** external 200s vs runner 403s, same window; final
   closeout `20260923-final-closeout.md`.
 - **Status:** VERIFIED.
+
+### AL-039: PowerShell Argument Tokenization on `gh pr create --body`
+
+- **Observation:** `gh pr create` fails with `unknown arguments [...] please quote all values that have spaces`.
+- **Cause:** PowerShell parses unquoted or complex multi-line markdown strings containing quotes, hyphens, and escape characters before passing them to native binaries (`gh.exe`).
+- **Rule:** When creating PRs from PowerShell, use `--fill` (inheriting git commit metadata) or write the PR body to a temporary markdown file and pass `--body-file <path>` (or `-F <path>`), rather than inline multi-line `--body` strings.
+- **Verified-by:** PR #102 creation with `--fill`.
+- **Status:** VERIFIED.
+

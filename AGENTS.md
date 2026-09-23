@@ -59,6 +59,8 @@ pnpm monorepo. Node ≥22, pnpm ≥10.
 - **`@astrojs/cloudflare`** is a production dependency — activates the Cloudflare adapter for Tina visual editing islands and `dist/client/` output structure. Don't remove from dependencies.
 - **`server: { host: '127.0.0.1' }`** in astro.config.mjs — pinned by a CI failure. Don't change.
 - **Route set is governed** by `contracts/ROUTE-CONTRACT.md`. Adding/removing a route needs that contract updated.
+- **PowerShell `gh pr create` (`AL-039`)** — avoid inline multi-line `--body` strings due to PowerShell argument tokenization. Use `--fill` or `--body-file <file>`.
+- **Tina local/offline builds** — require `--skip-cloud-checks --skip-search-index` or mock `PUBLIC_TINA_CLIENT_ID` / `TINA_TOKEN` in the environment when testing outside CI push context.
 
 ## Verification order
 
