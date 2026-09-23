@@ -19,7 +19,12 @@
   # stamped at build time (scripts/stamp-csp.mjs) with the sha256 of every
   # inline executable script in dist; check-security.mjs recomputes and
   # enforces it. ld+json data blocks are non-executable and exempt.
-  Content-Security-Policy: default-src 'self'; script-src 'self' __UKBT_CSP_SCRIPT_HASHES__; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://assets.tinajs.io https://*.tinajs.io; font-src 'self' data:; connect-src 'self' https://*.ingest.sentry.io https://*.tina.io https://app.tina.io https://*.tinajs.io https://s3.us-east-1.amazonaws.com https://us.i.posthog.com https://us-assets.i.posthog.com; worker-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'; frame-ancestors 'self' https://*.tina.io https://app.tina.io https://*.tinajs.io; upgrade-insecure-requests
+  Content-Security-Policy: default-src 'self'; script-src 'self' __UKBT_CSP_SCRIPT_HASHES__; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: blob: https://assets.tina.io https://assets.tinajs.io https://*.tinajs.io; font-src 'self' data:; connect-src 'self' https://*.ingest.sentry.io https://*.tina.io https://app.tina.io https://*.tinajs.io https://s3.us-east-1.amazonaws.com https://us.i.posthog.com https://us-assets.i.posthog.com; worker-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'; frame-ancestors 'self' https://*.tina.io https://app.tina.io https://*.tinajs.io; upgrade-insecure-requests
+  # style-src fonts.googleapis.com + img-src assets.tina.io added 2026-09-23:
+  # live-monitored Tina admin breakage (fonts stylesheet + TinaCloud media
+  # team-huddle.webp both blocked). Scoped to the observed Tina asset host
+  # + Google Fonts stylesheet host;
+  # no wildcards, no unsafe-*, script-src untouched.
 
 # PWA-lite cache matrix (2026-09-11): explicit Cache-Control per asset
 # class. HTML intentionally has NO rule — Cloudflare serves it
