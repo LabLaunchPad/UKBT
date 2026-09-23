@@ -1072,3 +1072,15 @@ issue-register, blocker-closure certificate, `20260923-final-closeout.md`):
    (allowlist Actions egress / tune bot policy / bless alternate
    vantage). Smoke gate stays enforced; nothing weakened.
    Registry owner contact remains `UNKNOWN`.
+
+## Open issue 2026-09-23 — Tina visual-edit content not reflected in local dev build
+
+User-reported (unreproduced, solve later): content changed via TinaCMS
+visual editing does not show up when running the repo locally
+(`pnpm dev` / local build). Suspects, unverified: local fallback creds
+(`TINA_TOKEN=local-build-fallback`) serve Tina JSON from repo files, so
+cloud-saved edits are invisible locally until pulled; and/or the
+TinaIsland/loader path differs between dev and prod. Next step when
+scheduled: reproduce (edit in `/admin`, compare local vs live render),
+then decide (document the pull-to-see-edits workflow vs dev-mode cloud
+passthrough). Production Save path itself is proven (closure §2 above).
