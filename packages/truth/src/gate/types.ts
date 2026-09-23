@@ -21,6 +21,7 @@ export interface RegistrySource {
 export type SourceRegistry = ReadonlyMap<string, RegistrySource>;
 
 import type { ContentStatus } from '../schema/provenance.js';
+
 export type { ContentStatus } from '../schema/provenance.js';
 
 export interface ContentRecord {

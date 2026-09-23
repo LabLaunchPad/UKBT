@@ -15,8 +15,8 @@ import { createHash } from 'node:crypto';
 import {
   existsSync,
   globSync,
-  readFileSync,
   readdirSync,
+  readFileSync,
   rmSync,
   writeFileSync,
 } from 'node:fs';
