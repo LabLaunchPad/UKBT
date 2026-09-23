@@ -35,3 +35,7 @@ index:
   AL-032: [trailing slash admin origin, postMessage origin mismatch, isFromAdmin, bridge deaf, TinaCloud edit broken]
   AL-033: [scoped headers CSP, dual content-security-policy, intersection, relaxation no-op, live header count]
   AL-034: [island registration css, duplicated scoped styles, perf budget re-approval, injection fixture]
+  AL-035: [excluding not a function, AxeBuilder exclude, playwright api name, installed dist]
+  AL-036: [cms editable copy pin, headline fragment rot, content-agnostic marker, object Object]
+  AL-037: [static preview server, island route 404, probe skip, live coverage owner]
+  AL-038: [runner egress challenge, smoke 403, Just a moment, independent vantage, mitigated]

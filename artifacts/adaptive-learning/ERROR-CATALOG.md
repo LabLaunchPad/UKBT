@@ -654,3 +654,61 @@ observation; apply with judgment, do not generalize further.
 - **Verified-by:** clean local build = CI value; PERF_STATUS PASS;
   injection 8/8 PASS; PR #90 green.
 - **Status:** VERIFIED.
+
+## AL-035 -- AxeBuilder has .exclude(), not .excluding()
+
+- **Observation:** L4 admin axe fix chained `.excluding('.bg-tina-orange-dark')`;
+  CI Playwright failed `TypeError: (intermediate value).withTags(...).excluding
+  is not a function`. Installed `@axe-core/playwright@4.13.0`
+  `dist/index.js:61` defines `exclude(selector)`.
+- **Cause:** Method name invented from the axe-core (non-Playwright)
+  API memory instead of reading the installed package.
+- **Rule:** Verify chained test-API names against the installed
+  `node_modules` dist before pushing, not from memory.
+- **Verified-by:** `Select-String exclude(selector` hit in installed
+  dist; biome clean; next CI run green.
+- **Status:** VERIFIED.
+
+## AL-036 -- E2E pins on CMS-editable copy rot on first save
+
+- **Observation:** `R-GATE-02` asserted headline fragments
+  (`not just` / `a team.`); the headline is Tina-editable and changed
+  via a real Save (`fbf05f2`), so the pin would break post-merge
+  regardless of the static-server issue.
+- **Cause:** Pinning exact marketing copy that the CMS is designed to change.
+- **Rule:** Pins on CMS-editable regions assert stable markers
+  (`data-tina-island`, eyebrow constants) + absence-of-corruption
+  (`[object Object]`) — never exact editable wording.
+- **Verified-by:** PR #96 CI green after replacement.
+- **Status:** VERIFIED.
+
+## AL-037 -- Live-route pins fail on static preview servers
+
+- **Observation:** 8 `tina-protocol` tests POST `/tina-island/*`
+  expecting 200/403; CI serves `dist/client/` statically
+  (`serve-static.mjs`), so the on-demand Worker route 404s there by
+  design (dev + production serve it; T3 matrix + smoke own that coverage).
+- **Cause:** Asserting server behavior the CI harness never provides.
+- **Rule:** Probe once per worker (`page.request`, cached); `test.skip`
+  with reason where the route is absent; keep live coverage owned
+  explicitly elsewhere. Never weaken the live assertion to fit CI.
+- **Verified-by:** PR #96 Playwright pass; R-GATE-01 still asserts 403
+  where the route is live.
+- **Status:** VERIFIED.
+
+## AL-038 -- Runner-egress challenge is not a user-facing outage
+
+- **Observation:** Post-deploy smoke FAILed all 6 paths (`403
+  mitigated=challenge`, `Just a moment...`) from the GH runner while
+  production returned 200 externally (homepage incl. new headline,
+  `/about`, `/admin/`). Retry failed identically in 9s: standing
+  policy, not transient.
+- **Cause:** Cloudflare challenges runner-egress IPs; smoke runs from
+  that egress.
+- **Rule:** On smoke FAIL, first re-probe from an independent vantage
+  (external fetch) before touching code; attach `ray/server/mitigated`
+  forensics (PR #100) and escalate the rule name via dashboard
+  Security Events. Never relax smoke or protection to fit the runner.
+- **Verified-by:** external 200s vs runner 403s, same window; final
+  closeout `20260923-final-closeout.md`.
+- **Status:** VERIFIED.
