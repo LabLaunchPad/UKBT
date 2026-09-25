@@ -11,10 +11,35 @@ Key OKF layers:
 | Layer | Where |
 |---|---|
 | Knowledge corpus | `knowledge/*.yaml` + `knowledge/00-KNOWLEDGE-CONTRACT.md` |
-| Frozen contracts | `contracts/` (21 Markdown files) |
-| Evidence artifacts | `artifacts/` (21 directories) |
-| Agent roles | `.opencode/agents/` (9 UKBT motion advisors) + `.opencode/skills/` (9 vendored skills with UKBT overlays) + `knowledge/09-AGENT-HARNESS-POLICY.yaml` |
+| Frozen contracts | `contracts/` (20 Markdown files: 17 `*-CONTRACT.md` + `evidence-contract.md` + `README.md` + `AGENTS.md`) |
+| Evidence artifacts | `artifacts/` (20 subdirectories) |
+| Agent roles | `.opencode/agents/` (17 files: 9 UKBT motion advisors + 8 domain) + `.opencode/skills/` (15 dirs: 9 vendored motion + 6 `ukbt-*`) + `knowledge/09-AGENT-HARNESS-POLICY.yaml` |
 | Visual truth | `knowledge/11-VISUAL-TRUTH-POLICY.yaml` + `docs/13-visual-truth-system.md` |
+
+## Navigation contract (progressive disclosure)
+
+Read root `AGENTS.md` first, then the nearest directory `AGENTS.md`, then the
+linked contract/doc/source. Each local file adds directory-local detail only —
+root governance (`AGENTS.md`, `CLAUDE.md`) still applies in full everywhere.
+
+| Directory | Local file | What lives there |
+|---|---|---|
+| `packages/truth/` | `packages/truth/AGENTS.md` | trust boundary: Zod schemas, gate rules, token source |
+| `apps/web/` | `apps/web/AGENTS.md` | Astro site: routes, data modules, Tina adapter, budgets |
+| `scripts/` | `scripts/AGENTS.md` | gate scripts: per-script contracts, 18-step order, exit lines |
+| `.github/` | `.github/AGENTS.md` | CI: 20 jobs (18 required + `smoke-verify` + `workers-deploy` conditional) |
+| `tina/` | `tina/AGENTS.md` | editorial CMS source: 4 collections, EDITORIAL vs TRUTH-SENSITIVE |
+| `contracts/` | `contracts/AGENTS.md` | frozen agreements: amendment mechanics, gate mappings |
+| `knowledge/` | `knowledge/AGENTS.md` | decision substrate: 7 evidence classes, promotion, registry |
+| `artifacts/` | `artifacts/AGENTS.md` | evidence/receipts: append-only, fresh-runs-only, per-category rules |
+| `docs/` | `docs/AGENTS.md` | process/runbooks: `12-roadmap-and-open-items.md` is the only canonical status |
+
+Instruction hierarchy (verified against repo behavior): root `AGENTS.md` +
+`CLAUDE.md` → frozen `contracts/` on their subject (a contract supersedes any
+prose restating it) → nearest directory `AGENTS.md` (local detail, never
+overrides) → `knowledge/` decisions + `docs/` runbooks → task requirements.
+Knowledge-vs-contract conflict → escalate per DR-015, never edit one side
+silently; fail closed.
 
 ## Quick start
 
@@ -29,7 +54,7 @@ pnpm test:e2e                   # playwright, apps/web only
 pnpm deploy:verify              # full release gate (see below)
 ```
 
-`deploy:verify` order: scaffold-self-test → check:control-plane → check:deps → lint → tokens:build → typecheck → test:unit → build → check:deploy-mapping → test:failure-injection → check:links → check:seo → check:ui → check:motion → check:security → check:perf. This is the authoritative release gate — never claim a subset of it passing equals a release pass.
+`deploy:verify` order (18 steps, `package.json:42`): scaffold-self-test → check:control-plane → check:deps → lint → tokens:build → typecheck → test:unit → build → check:deploy-mapping → check:release-path → check:content-trust → test:failure-injection → check:links → check:seo → check:ui → check:motion → check:security → check:perf. This is the authoritative release gate — never claim a subset of it passing equals a release pass.
 
 ## AI execution contract
 
@@ -65,7 +90,7 @@ pnpm monorepo. Node ≥22, pnpm ≥10.
 ## Verification order
 
 ```
-scaffold-self-test → check:control-plane → check:deps → lint → tokens:build → typecheck → test:unit → build → check:deploy-mapping → test:failure-injection → check:links → check:seo → check:ui → check:motion → check:security → check:perf
+scaffold-self-test → check:control-plane → check:deps → lint → tokens:build → typecheck → test:unit → build → check:deploy-mapping → check:release-path → check:content-trust → test:failure-injection → check:links → check:seo → check:ui → check:motion → check:security → check:perf
 ```
 
 For e2e: `pnpm test:e2e` (requires `playwright install chromium` first in CI; some envs pre-install at `/opt/pw-browsers/chromium`).
@@ -122,6 +147,8 @@ Every material claim must be classified (FACT, DERIVED, OBSERVED, MEASURED, INFE
 | STATED_BUT_UNVERIFIED | Explicitly stated, not independently verified | No |
 | ASSUMPTION | Working hypothesis | No |
 | UNKNOWN | Not established | No |
+| CONFLICTING | Credible evidence disagrees — STOP, escalate, do not choose | No |
+| PROPOSAL | Agent-generated candidate — not authoritative until accepted | No |
 
 ## Agent topology (from `knowledge/09-AGENT-HARNESS-POLICY.yaml`)
 
@@ -151,7 +178,7 @@ Release is PASS only when `deploy:verify` passes fresh with no open blocker. `ar
 - Public pages without `<TinaIsland>` are byte-identical to a Tina-free Astro app
 - Free plan: 2 users, 2 roles, 1 project, 100MB per-asset size cap (no total quota published), NO editorial workflow
 - Required env vars: `PUBLIC_TINA_CLIENT_ID`, `TINA_TOKEN` (secret), `TINA_BRANCH`, `PUBLIC_TINA_ADMIN_ORIGIN`
-- Performance budgets adjusted: `htmlPerPage` 64→72KB, `cssTotal` 56→60KB, `jsTotal` 32→48KB to accommodate Tina bridge (15.5KB) and Cloudflare adapter overhead. See `scripts/check-perf.mjs`.
+- Performance budgets adjusted: `htmlPerPage` 64→72KB, `cssTotal` 56→96KB, `jsTotal` 32→48KB to accommodate Tina bridge (15.5KB) and Cloudflare adapter overhead. See `scripts/check-perf.mjs`.
 
 ## OpenCode Agent OS — Project Rules
 
