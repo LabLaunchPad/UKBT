@@ -259,7 +259,7 @@ const {
   }
   .ukbt-hero__headline {
     font-family: var(--ukbt-font-family-heading);
-    font-size: clamp(2.5rem, 1.5rem + 4vw, 4.5rem);
+    font-size: var(--ukbt-font-size-display);
     font-weight: 700;
     line-height: 1.05;
     margin: 0;
@@ -317,9 +317,6 @@ const {
     .ukbt-hero__continuity {
       left: var(--ukbt-space-section-wrapper-sm, 16px);
       right: var(--ukbt-space-section-wrapper-sm, 16px);
-    }
-    .ukbt-hero__headline {
-      font-size: clamp(2rem, 1.2rem + 4vw, 3rem);
     }
     /* Match the Section component's mobile step-down (120px -> 80px) so
        padding doesn't consume the small-viewport hero. */
