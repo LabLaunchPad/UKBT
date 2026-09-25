@@ -1,0 +1,47 @@
+id: EV-20260926-003
+classification: STATED_BUT_UNVERIFIED
+claim: >
+  Per the owner's direct instruction (2026-09-26 chat, with a screenshot
+  of the Uppsala Tigers "Team Officials" grid): (1) add Faruk Ahmed as
+  Assistant Coach to the team-officials list, on BOTH the Uppsala
+  franchise page and the main /players officials block — he is noted as
+  Sweden-based; (2) update Javed Butt's picture. No portrait file for
+  either instruction was supplied with the message: a whole-tree search
+  (apps/web/public, apps/web/dist) finds no `faruk-ahmed.*` asset, and
+  the two existing Javed Butt assets (uppsala-squad/javed-butt.jpg,
+  players/javed-butt.webp — viewed 2026-09-26) are the same hotel-doorway
+  photograph, so no alternate Javed portrait exists on record.
+source: "Owner instruction in project chat, 2026-09-26 (first-party client-supplied, same class as EV-20260926-001/-002)."
+source_type: first_party_client_supplied
+retrieved_at: 2026-09-26
+verified_at: 2026-09-26
+valid_until: null
+justification_for_null: >
+  Records the instruction's contents as supplied, not a perishable
+  external claim. No independent evidence on record corroborates Faruk
+  Ahmed's role beyond this instruction (append-only registry search:
+  no hits for "Faruk" anywhere in tracked files before this record).
+scope: "uppsalaOfficials (franchises-data.ts) + rawOfficials (players-data.ts)."
+method: >
+  Owner's two requests quoted from the 2026-09-26 message. Follow-up
+  clarifications confirmed by the owner in-chat: Faruk renders as a
+  monogram (initials) card until a portrait is supplied; Javed Butt's
+  current photo stays unchanged until a new portrait is supplied;
+  officials cards keep the role-only convention (Sweden base recorded
+  here, not displayed on the card).
+result: |
+  Publishable as client-stated org content under the
+  STATED_BUT_UNVERIFIED class via this record. Applied 2026-09-26 as:
+  { role: 'Assistant Coach', name: 'Faruk Ahmed' } appended to both
+  officials lists with no photo (monogram variant); Javed Butt assets
+  untouched. Officials count becomes 5 on both surfaces (was 4).
+related_files:
+  - apps/web/src/content/franchises-data.ts
+  - apps/web/src/content/players-data.ts
+relates_to: [EV-20260926-002, EV-20260912-001, EV-20260831-005]
+notes: >
+  OPEN FOLLOW-UPS (not silent): (1) Faruk Ahmed portrait — when
+  supplied, wire as media/uppsala-squad/faruk-ahmed.jpg +
+  media/players/faruk-ahmed.webp and set both photo fields; (2) Javed
+  Butt replacement portrait — when supplied, replace both javed-butt
+  assets keeping filenames/slugs. Neither blocks this change.

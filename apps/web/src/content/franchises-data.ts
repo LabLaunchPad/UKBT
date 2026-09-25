@@ -371,9 +371,12 @@ export interface TeamOfficial {
 
 // EV-20260831-005 — "Uppsala Tigers Players & Managements List".
 // Photos: EV-20260831-008. Only the Coach is pictured in Uppsala Tigers
-// kit; the other three officials' photos show no team clothing/branding
+// kit; the other officials' photos show no team clothing/branding
 // — affiliation there rests on the client's own naming, not on this
 // project's independent visual confirmation (MANIFEST.md's breakdown).
+// Faruk Ahmed (Assistant Coach) added per owner instruction
+// EV-20260926-003 with no photo — monogram variant until a portrait
+// is supplied.
 export const uppsalaOfficials: TeamOfficial[] = [
   {
     role: 'Coach',
@@ -394,6 +397,10 @@ export const uppsalaOfficials: TeamOfficial[] = [
     role: 'Team Mentor',
     name: 'Javed Butt',
     photo: '/media/uppsala-squad/javed-butt.jpg',
+  },
+  {
+    role: 'Assistant Coach',
+    name: 'Faruk Ahmed',
   },
 ];
 
