@@ -1,6 +1,6 @@
 # tina — editorial CMS source (never truth)
 
-Local rules for the TinaCMS editorial layer. Root governance (`AGENTS.md`, `CLAUDE.md`) still applies in full — this file only adds Tina-local detail. Runbook: `docs/tina-integration.md`; client guide: `docs/tina-client-guide.md`.
+Local rules for the TinaCMS editorial layer. Root governance (`AGENTS.md`, `CLAUDE.md`) still applies in full — this file only adds Tina-local detail. Runbook: `<root>/docs/tina-integration.md`; client guide: `<root>/docs/tina-client-guide.md`.
 
 ## Scope
 
@@ -8,34 +8,34 @@ Local rules for the TinaCMS editorial layer. Root governance (`AGENTS.md`, `CLAU
 
 ## Role
 
-Lets editors change words (headlines, CTAs, FAQs, about copy), not facts. TRUTH-SENSITIVE content (players, stats, dates, org claims) stays code-owned in `apps/web/src/content/*-data.ts` under the Zod gate; Tina fields are EDITORIAL and gated by content-trust/allowed-urls instead.
+Lets editors change words (headlines, CTAs, FAQs, about copy), not facts. TRUTH-SENSITIVE content (players, stats, dates, org claims) stays code-owned in `<root>/apps/web/src/content/*-data.ts` under the Zod gate; Tina fields are EDITORIAL and gated by content-trust/allowed-urls instead.
 
 ## Source of Truth
 
 - Schema source: `config.ts` (collections below verified against it)
-- Runtime policy: `apps/web/src/lib/content-trust.ts` (field classification D-001/D-003/D-005/D-006) + `apps/web/src/lib/tina/loaders.ts` (Zod + allowed-urls)
+- Runtime policy: `<root>/apps/web/src/lib/content-trust.ts` (field classification D-001/D-003/D-005/D-006) + `<root>/apps/web/src/lib/tina/loaders.ts` (Zod + allowed-urls)
 - Gate: `<root>/scripts/check-content-trust.mjs`; parity guard: `<root>/scripts/check-tina-field-parity.mjs`
-- Content files: `apps/web/content/*/*.json` (4 files, tracked)
+- Content files: `<root>/apps/web/content/*/*.json` (4 files, tracked)
 
 ## Structure
 
 | Collection (`config.ts` name) | Path | Content file | Editable surface |
 |---|---|---|---|
-| `homepage` | `apps/web/content/homepage` | `homepage.json` | Eyebrow, headline, tagline, meta description, hero image, primary/secondary CTAs (site-relative links only), club-intro lede, why-choose-us cards |
-| `about` | `apps/web/content/about` | `about.json` | Hero subline, story rich-text, feature image + alt, leadership intro, management graphic |
-| `faq` | `apps/web/content/faq` | `faq.json` | Page heading/eyebrow, Q&A items (question ≤120 chars, answer ≤500, `visible` flag) |
-| `siteSettings` | `apps/web/content/site` | `siteSettings.json` | Taglines, contact email/phone (`tel:` links), social links (`https://` only), social card |
+| `homepage` | `<root>/apps/web/content/homepage` | `homepage.json` | Eyebrow, headline, tagline, meta description, hero image, primary/secondary CTAs (site-relative links only), club-intro lede, why-choose-us cards |
+| `about` | `<root>/apps/web/content/about` | `about.json` | Hero subline, story rich-text, feature image + alt, leadership intro, management graphic |
+| `faq` | `<root>/apps/web/content/faq` | `faq.json` | Page heading/eyebrow, Q&A items (question ≤120 chars, answer ≤500, `visible` flag) |
+| `siteSettings` | `<root>/apps/web/content/site` | `siteSettings.json` | Taglines, contact email/phone (`tel:` links), social links (`https://` only), social card |
 
-All collections: `format: 'json'`, `allowedActions: { create: false, delete: false }` (edit-in-place only). Rich-text (`storyBody`, `answer`) uses the `slatejson` parser — edits must preserve it.
+All collections: `format: 'json'`, `allowedActions: { create: false, delete: false }` (edit-in-place only). Only `storyBody` (about) is `rich-text`, and it carries no `parser` key (omitted → Tina default `markdown`, per `<root>/artifacts/negative-cases-matrix.md` GAP 1.1); `answer` (faq) is a plain `string` + textarea field, not rich-text — edits must preserve these types.
 
 ## Dependencies
 
-`tinacms` + `@tinacms/cli` (root devDependencies). Branch resolution in `config.ts`: `TINA_BRANCH || GITHUB_BRANCH || WORKERS_CI_BRANCH || CF_PAGES_BRANCH || 'main'`. Media root: `apps/web/public/media`. Search disabled by design (`--skip-search-index`; do not provision `TINA_SEARCH_TOKEN`).
+`tinacms` + `@tinacms/cli` (root devDependencies). Branch resolution in `config.ts`: `TINA_BRANCH || GITHUB_BRANCH || WORKERS_CI_BRANCH || CF_PAGES_BRANCH || 'main'`. Media root: `<root>/apps/web/public/media`. Search disabled by design (`--skip-search-index`; do not provision `TINA_SEARCH_TOKEN`).
 
 ## Allowed
 
-- Editing EDITORIAL field values in `apps/web/content/*/*.json` (or via TinaCloud, which commits to the branch)
-- Adding EDITORIAL fields: `config.ts` field + classification in `content-trust.ts` + loader Zod shape + parity coverage, all together — unclassified or dynamically-named fields FAIL `check-content-trust`
+- Editing EDITORIAL field values in `<root>/apps/web/content/*/*.json` (or via TinaCloud, which commits to the branch)
+- Adding EDITORIAL fields: `config.ts` field + classification in `<root>/apps/web/src/lib/content-trust.ts` + loader Zod shape + parity coverage, all together — unclassified or dynamically-named fields FAIL `check-content-trust`
 
 ## Protected / Generated
 
@@ -57,21 +57,21 @@ node <root>/scripts/check-content-trust.mjs       # classification + JSON-LD bou
 pnpm --filter @ukbt/web typecheck                 # astro check
 ```
 
-Local/offline builds need the Tina env or fallbacks: `PUBLIC_TINA_CLIENT_ID` / `TINA_TOKEN` (CI provides PR-only fallbacks; push builds fail closed without real values — see `.github/AGENTS.md`). `tina/config.ts` itself falls back to `null` client/token for local shells.
+Local/offline builds need the Tina env or fallbacks: `PUBLIC_TINA_CLIENT_ID` / `TINA_TOKEN` (CI provides PR-only fallbacks; push builds fail closed without real values — see `.github/AGENTS.md`). `<root>/tina/config.ts` itself falls back to `null` client/token for local shells.
 
 ## Failure Modes
 
 - `tina-lock.json` stale vs `config.ts` — TinaCloud branch not indexed / local GraphQL schema mismatch; regenerate, don't patch by hand.
-- New CMS field without `content-trust.ts` classification — build fails closed; classify first.
+- New CMS field without `<root>/apps/web/src/lib/content-trust.ts` classification — build fails closed; classify first.
 - TRUTH-SENSITIVE field exposed to Tina — content-trust violation; keep it code-owned.
-- Rich-text parser drifted from `slatejson` — renders `[object Object]`; parity + content-trust gates catch it, fix at `config.ts`.
+- `storyBody` rich-text has no `parser` key (default `markdown`); a type/parser change without matching loader handling renders `[object Object]` — `check-tina-field-parity` does NOT assert parser values (zero `parser`/`slate` checks in the script), so review rich-text fields in `config.ts` by hand; fix at `config.ts`.
 - Assuming a green parity check proves the live TinaCloud index — it proves source-level mapping only; live index sync is a separate, credentialed verification.
 
 ## Related
 
 - Root `AGENTS.md` (§ TinaCMS Cloud Free Integration, OpenCode rules), `apps/web/AGENTS.md` (Tina adapter, island route, EDITORIAL boundary), `packages/truth/AGENTS.md` (gate/schemas)
-- `docs/tina-integration.md` (runbook), `docs/tina-client-guide.md`
-- `.opencode/skills/ukbt-tinacms/SKILL.md`, `.opencode/skills/ukbt-schema-contract/SKILL.md`
+- `<root>/docs/tina-integration.md` (runbook), `<root>/docs/tina-client-guide.md`
+- `<root>/.opencode/skills/ukbt-tinacms/SKILL.md`, `<root>/.opencode/skills/ukbt-schema-contract/SKILL.md`
 
 ## Workflow
 

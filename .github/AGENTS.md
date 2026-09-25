@@ -4,7 +4,7 @@ Local rules for workflows and CI-owned config. Root governance (`AGENTS.md`, `CL
 
 ## Scope
 
-`<root>/.github/workflows/ci.yml` (single workflow), plus `CODEOWNERS`, `dependabot.yml`, `pull_request_template.md`. The workflow implements `contracts/CI-CONTRACT.md` gates.
+`<root>/.github/workflows/ci.yml` (single workflow), plus `CODEOWNERS`, `dependabot.yml`, `pull_request_template.md`. The workflow implements `<root>/contracts/CI-CONTRACT.md` gates.
 
 ## Role
 
@@ -14,7 +14,7 @@ Workflows are infrastructure, not scripts: they decide what "mergeable" and "dep
 
 - Workflow: `workflows/ci.yml` (job keys + `needs` graph below verified against it)
 - Gate scripts: `<root>/scripts/` (see `scripts/AGENTS.md`)
-- Contracts: `contracts/CI-CONTRACT.md`, `contracts/DEPLOYMENT-CONTRACT.md`
+- Contracts: `<root>/contracts/CI-CONTRACT.md`, `<root>/contracts/DEPLOYMENT-CONTRACT.md`
 
 ## Structure
 
@@ -30,7 +30,7 @@ Workflows are infrastructure, not scripts: they decide what "mergeable" and "dep
 | `lint` | always | Biome, needs install |
 | `typecheck` | always | `tokens:build` + `tinacms build --skip-search-index` first, then `tsc` |
 | `unit-tests` | always | `pnpm test:unit` (truth gate + content schema) |
-| `build` | always | `pnpm run build`; uploads `apps/web/dist` artifact once (3-day retention) |
+| `build` | always | `pnpm run build`; uploads `<root>/apps/web/dist` artifact once (3-day retention) |
 | `deploy-mapping` | always | Needs `build`; downloads `dist`, no rebuild |
 | `link-integrity` | always | Needs `build`; same artifact pattern |
 | `seo-gate` | always | Needs `build`; same artifact pattern |
@@ -63,7 +63,7 @@ Pinned runner (`ubuntu-24.04`), pinned Node (`NODE_VERSION: '22'`), SHA-pinned a
 - Branch behavior: `pull_request` + `push: [main]`. PR-only Tina fallbacks (`fork-pr-client-id-fallback` / `fork-pr-token-fallback`) apply to PRs only — push builds fail closed without real secrets, which is the signal that provisioning broke.
 - `dist` is built ONCE in `build` and downloaded by the 8 dist-crawling jobs — never add a second full build to a gate job.
 - Gate scripts are pure Node: checkout + `dist` artifact is all they need (no `pnpm install`).
-- Tina env for `build`/`typecheck`/`visual-and-accessibility`: `PUBLIC_TINA_CLIENT_ID` (vars) + `TINA_TOKEN` (secrets), with PR-only fallbacks; search stays `--skip-search-index` (see `tina/config.ts` comment).
+- Tina env for `build`/`typecheck`/`visual-and-accessibility`: `PUBLIC_TINA_CLIENT_ID` (vars) + `TINA_TOKEN` (secrets), with PR-only fallbacks; search stays `--skip-search-index` (see `<root>/tina/config.ts` comment).
 
 ## Validation
 
@@ -75,13 +75,13 @@ No local file validates this directory except reading it: CI runs on push/PR. Be
 - Removing `smoke-verify` / its `needs: [build, workers-deploy]` / `--expect-sha` binding — fails `check-release-path`; the release would verify against stale or no bytes.
 - Adding `pnpm run build` to a gate job instead of downloading the artifact — slow, and gates would verify different bytes than what ships.
 - Workflow-wide Tina fallback (applying to push builds) — would ship an admin shell with a dead token; fallbacks are PR-only by design.
-- Editing `wrangler.jsonc` paths without running `check-deploy-mapping` — platform-layer 404s behind green gates (2026-09-15 incident).
+- Editing `<root>/wrangler.jsonc` paths without running `check-deploy-mapping` — platform-layer 404s behind green gates (2026-09-15 incident).
 
 ## Related
 
 - Root `AGENTS.md` (pipeline, Tina env gotcha), `scripts/AGENTS.md` (per-script contracts), `tina/AGENTS.md` (Tina build env)
-- `contracts/CI-CONTRACT.md`, `contracts/DEPLOYMENT-CONTRACT.md`
-- `artifacts/adaptive-learning/` (check the index before touching deploy wiring)
+- `<root>/contracts/CI-CONTRACT.md`, `<root>/contracts/DEPLOYMENT-CONTRACT.md`
+- `<root>/artifacts/adaptive-learning/` (check the index before touching deploy wiring)
 
 ## Workflow
 
