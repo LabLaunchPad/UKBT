@@ -153,3 +153,9 @@ control). NOT REVERSIBLE at the trust level once a fact is `published`
 incorrectly — a false published fact is a real-world event (per AEO/GEO
 rationale, other systems may quote it), which is why T1-T9 are strict
 before publication rather than lenient-with-cleanup-after.
+
+## AMENDMENT 2026-09-25 (repo-sync) — R-02: gate authorizes real facts
+
+**Status:** PROPOSED — needs owner re-approval at PR review (frozen text above preserved verbatim).
+
+§ Validation method, lines 122-124 (`organization_facts_verified = 0` … "zero facts should pass the gate today") is superseded. Roster facts pass the gate and publish: 58 names + Uppsala 20+4 (`apps/web/src/content/players-data.ts:12-23`; `apps/web/src/content/franchises-data.ts:24-27,33-36`; registries `players-data.ts:34-65`, `franchises-data.ts:45-79`; `knowledge/01-VERIFIED-FACTS.yaml:65,70`; `knowledge/07-CONTENT-TRUTH-POLICY.yaml:107-110`). The gate-authorization model (T6 approver) now operates on owner supplies EV-20260923-002 / EV-20260831-005/-006/-008, not on zero facts. T1-T9 themselves are unchanged — this amendment records that the gate has admissible facts to pass, not a rule loosening (gate weakening remains forbidden per § Change authority).

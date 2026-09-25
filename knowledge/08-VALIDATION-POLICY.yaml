@@ -47,7 +47,7 @@ current_state:  # regenerated 2026-09-25 — CI implemented, merge-blocking; hon
   ci_workflow_present: true  # .github/workflows/ci.yml — 20 jobs (18 required + smoke-verify + workers-deploy conditional)
   ci_state: IMPLEMENTED  # merge-blocking on main; deploy:verify = 18 steps (package.json:42)
   gates_implemented: 12  # of the 15 CI-CONTRACT table rows; the other three are NO/PARTIAL below, recorded not faked
-  ran_and_passed:
+  ran_and_passed:  # disambiguation: these 12 entries are this file's own check list, NOT a 1:1 transcription of the 12 implemented CI-CONTRACT rows — names group several rows per entry (e.g. links_routes_seo_ui_motion_security_perf); full row↔job reconciliation is contracts/CI-CONTRACT.md AMENDMENT 2026-09-25 (repo-sync)
     - {check: install, command: "pnpm install --frozen-lockfile"}
     - {check: governance_scaffold, command: "node scripts/scaffold-self-test.mjs"}
     - {check: dependency_allowlist, command: "node scripts/check-dependency-allowlist.mjs"}

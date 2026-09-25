@@ -152,3 +152,11 @@ Whether to reshape real content to populate them, retire them, or leave
 them as forward-looking schemas for content types not yet gathered
 (fixtures/results genuinely don't exist yet) is a separate, smaller
 decision than RM-5 was — not resolved here, not invented as a default.
+
+## AMENDMENT 2026-09-25 (repo-sync) — R-01: zero-facts, location, reversibility superseded
+
+**Status:** PROPOSED — needs owner re-approval at PR review (frozen text + 2026-08-27 amendment above preserved verbatim).
+
+1. **Zero-facts (§ Outputs, lines 11-13):** superseded. Real gated instances exist: `apps/web/src/content/players-data.ts:12-23` (58 roster records + 4 officials, 50 pictured + 8 monograms) and `apps/web/src/content/franchises-data.ts:33-36,45-79` (Uppsala 20 + 4, all pictured), each gated via `ContentRecordSchema.parse` + `evaluate()` per file headers (`players-data.ts:26-32`; `franchises-data.ts:37-43`). `knowledge/07-CONTENT-TRUTH-POLICY.yaml:107-110` (updated 2026-09-25) records `organization_facts_verified: ">0"`, `evidence_registry_populated: true`; `knowledge/01-VERIFIED-FACTS.yaml:65,70` records both rosters KNOWN.
+2. **Location rule (§ Forbidden behavior, line 65; § Dependency, line 89):** superseded. Content lives at `apps/web/src/content/*-data.ts` (8 modules, verified by listing) validated against `@ukbt/truth` — the enforced shape is `ContentRecordSchema` in `packages/truth/src/schema/provenance.ts:59` (per-field `{field, value, status, sources}` records), not the Stage-3 aggregate types; the 2026-08-27 amendment above (lines 115-146) already admits the real content files never matched aggregate shapes. INV-013 co-location holds at gate/schema level, not file-path level. `apps/web/src/content/` is the sanctioned location with its validation binding (`ContentRecordSchema.parse` before `evaluate()`, plus the parse-time proof in `packages/truth/src/schema/content-types.test.ts:57`).
+3. **Reversibility (§ Reversibility, lines 104-107):** superseded. Instance data exists (58 + Uppsala 20+4); schema renames now migrate live content, not greenfield.

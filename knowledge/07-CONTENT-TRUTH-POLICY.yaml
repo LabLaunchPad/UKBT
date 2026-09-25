@@ -106,6 +106,7 @@ aeo_geo:
 
 current_state:  # updated 2026-09-25 — roster KNOWN; see knowledge/01 leadership.full_roster_status + sister_franchise_uppsala_tigers.squad_status
   organization_facts_verified: ">0"  # 58 roster records (apps/web/src/content/players-data.ts:33-64 registry, EV-20260923-002) + Uppsala 20 players + 4 officials (apps/web/src/content/franchises-data.ts:45-79 registry, EV-20260831-005/-006/-008), gated via ContentRecordSchema.parse + evaluate() and published
+  organization_facts_type_note: "int->string, deliberate: the string '>0' avoids fabricating exact 58+20+4 arithmetic (Roy shared photo, Jeremy Martins cross-listed) — schema owner to restore a numeric type with a backing evidence record once the count is exact"
   evidence_registry_populated: true  # per-file gate registries above
   remaining_unknown: "Full individual bios/stats beyond the Club Captain; full committee beyond Founder/CEO/(Acting) Chairman/Vice-Chairman"
   consequence: "Content-bearing pages publish only gate-approved facts; UNKNOWNs stay explicit per the rule above."
