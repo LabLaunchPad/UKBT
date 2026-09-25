@@ -29,8 +29,6 @@ const pages = [
   { route: '/franchises/uppsala-tigers', slug: 'franchises-uppsala-tigers' },
   { route: '/tournaments', slug: 'tournaments' },
   { route: '/contact', slug: 'contact' },
-  { route: '/community', slug: 'community' },
-  { route: '/coaching', slug: 'coaching' },
   { route: '/services', slug: 'services' },
   { route: '/membership', slug: 'membership' },
   { route: '/join', slug: 'join' },

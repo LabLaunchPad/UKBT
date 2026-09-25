@@ -219,3 +219,27 @@ rendered content changes from a showcase to a grid landing.
 **Status:** PROPOSED — needs owner re-approval at PR review (AMENDMENT 03 above preserved verbatim).
 
 Per the controller ruling (Shape A): the reserved `/__smoke` path is implemented as the prerendered static endpoint `/smoke.json` (`apps/web/src/pages/smoke.json.ts`, `{"ok":true,"buildId":"<short-SHA>"}`). Exact `/__smoke` JSON was rejected (round-1 report: no verified build→runtime SHA channel for an SSR route without out-of-scope `astro.config`/`wrangler`/`ci.yml` wiring), and `/__smoke.json` as a file route is un-buildable — Astro excludes `_`-prefixed `src/pages` files from the router and `dist/` (routing docs "Excluding pages", verified 2026-09-25). AUTHORISED: `/smoke.json` static route (no organisational claim; sitemap/gate-neutral by construction — gates crawl `**/*.html|css|js`), the append-only `public/_headers` `Cache-Control: no-store` rule for it, the `smoke-deploy.mjs` try-`/smoke.json`-first + `/sw.js` fallback identity order, and the `scripts/build-smoke.mjs` post-build SHA stamp + its `apps/web/package.json` `build`-chain wiring (in-file SHA bake rejected: the adapter prerender shim stubs `node:child_process`).
+
+---
+
+## AMENDMENT 04 — removal of `/community` and `/coaching` (18 → 16 routes)
+
+**Date:** 2026-09-26 · **Authority:** `EV-20260926-002` (owner instruction: "these pages are not needed, so we need to delete these pages") · **Status:** AMENDED (frozen text + AMENDMENTS 01-03 preserved verbatim)
+
+### What changed
+
+`/community` and `/coaching` are removed from the authorised route set. Both `.astro` files are deleted; their `secondaryNav` entries, `SEO_ROUTES` registry entries, `llms.txt` lines, and Playwright route-list entries are removed with them. Stale generated captures (`artifacts/ui/screenshots` community/coaching PNGs) are removed as regenerated output, not evidence.
+
+### Why this is consistent with the frozen text
+
+Route removal is not route derivation — the frozen text governs how routes get *added* (UKBT evidence, never the template list). A client instruction to remove two of their own IA's routes is the same first-party evidence class AMENDMENT 01/02 accept, applied in reverse. No content is invented or relocated by this change.
+
+### Conditions attached
+
+1. **Deleted URLs fall through to `/404`** (`not_found_handling: 404-page`). No redirect file is created — removal-only was ordered, and inventing redirect targets would be scope expansion.
+2. **No other route's content changes.** The shared `FranchiseTeaser` component (previously rendered on `/community`) is untouched and continues on `/` and `/tournaments`.
+3. **The rule survives this amendment.** Reinstating either route needs its own stated UKBT evidence — "it existed before" is not sufficient justification on its own.
+
+### Route set authorised (delta)
+
+Removes `/community` and `/coaching` from the AMENDMENT 01 set. Authorised set is now 16 `.astro` routes: `/`, `/about`, `/club-captain`, `/players`, `/franchises`, `/franchises/uppsala-tigers`, `/tournaments`, `/news`, `/news/[slug]`, `/contact`, `/faq`, `/services`, `/membership`, `/join`, `/offline`, `/404` — plus the `tina-island/[name]` endpoint (AMENDMENT 02/03) and `/smoke.json` static endpoint (AMENDMENT 03 follow-up).

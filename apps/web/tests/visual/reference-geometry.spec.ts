@@ -48,8 +48,6 @@ const REFERENCE_PAGES = [
   { file: 'index.html', ukbtRoute: '/' },
   { file: 'about.html', ukbtRoute: '/about' },
   { file: 'event.html', ukbtRoute: '/tournaments' },
-  { file: 'community.html', ukbtRoute: '/community' },
-  { file: 'coaching.html', ukbtRoute: '/coaching' },
   { file: 'service.html', ukbtRoute: '/services' },
   { file: 'membership.html', ukbtRoute: '/membership' },
   { file: 'booking.html', ukbtRoute: '/join' },

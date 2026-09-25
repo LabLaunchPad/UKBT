@@ -41,8 +41,6 @@ const ALL_ROUTES = [
   '/join',
   '/membership',
   '/services',
-  '/coaching',
-  '/community',
   '/404',
 ];
 

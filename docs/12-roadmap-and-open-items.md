@@ -31,7 +31,7 @@ gate changes state, not the paragraph prose elsewhere.
 | 6 | Reference analysis | DONE (evidence-based, not live-template) | `artifacts/ui/REFERENCE-ANALYSIS.md`, `knowledge/06-TEMPLATE-BOUNDARY.yaml` |
 | 7 | Homepage | DONE | `artifacts/pages/HOMEPAGE-CONTRACT.md`, `artifacts/receipts/HOMEPAGE.md` |
 | 8 | Independent homepage red team | DONE, all 8 findings remediated (F8 has one deliberate, documented partial exception) | `artifacts/review/HOMEPAGE-REDTEAM.md` — see § 2.1 below |
-| 9 | Scale to remaining pages | DONE for route count (18 `.astro` files under `apps/web/src/pages/`) — content completeness is a separate, **partially blocked** item, see § 3 | route list: `about, club-captain, coaching, community, contact, faq, franchises, franchises/uppsala-tigers, index, join, membership, news(+[slug]), offline, players, services, tournaments, 404` |
+| 9 | Scale to remaining pages | DONE for route count (16 `.astro` files under `apps/web/src/pages/`, per ROUTE-CONTRACT AMENDMENT 04 which removed `/community` and `/coaching` on owner instruction EV-20260926-002) — content completeness is a separate, **partially blocked** item, see § 3 | route list: `about, club-captain, contact, faq, franchises, franchises/uppsala-tigers, index, join, membership, news(+[slug]), offline, players, services, tournaments, 404` |
 | 10 | Full-site verification & release | **PASS** (2026-08-27 re-run) | `artifacts/receipts/RELEASE.md` — `RELEASE_STATUS = PASS`; see § 2.2 |
 | 11 | Adaptive learning + replay | STARTED 2026-09-09 | `artifacts/adaptive-learning/` (catalog + checklist + protocol + index, prompt-07 schema); wired into `AGENTS.md`; adversarial replay (prompt 08) still open |
 

@@ -54,8 +54,6 @@ export const primaryCta = {
  * the client's IA without widening primary navigation.
  */
 export const secondaryNav: NavItem[] = [
-  { label: 'Community', href: '/community/' },
-  { label: 'Coaching & Development', href: '/coaching/' },
   { label: 'Club News', href: '/news/' },
   { label: 'FAQ', href: '/faq/' },
 ];

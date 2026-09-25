@@ -397,14 +397,17 @@ export const uppsalaOfficials: TeamOfficial[] = [
   },
 ];
 
+// EV-20260926-001 — owner-supplied intro copy (2026-09-26 instruction):
+// Uppsala as the owned-and-managed franchise side, participating in
+// the Nordic Smash T20. Replaces the "Based in Sweden" / past-tense
+// "Competed in..." facts. The ICC-approval, Stockholm-venue, and
+// 15-20 June 2026 date sub-claims rest on that client instruction
+// alone (STATED_BUT_UNVERIFIED); see the record's KNOWN TENSION note
+// re tournaments-data.ts, which is deliberately untouched.
 export const uppsalaFacts = [
   {
-    title: 'Based in Sweden',
-    body: "UK Bangla Tigers' sister franchise, competing internationally.",
-  },
-  {
     title: 'Nordic Smash T20',
-    body: 'Competed in the Nordic Smash T20 tournament, Sweden.',
+    body: 'Uppsala Tigers is a franchise team, owned and managed by UK Bangla Tigers, to participate in the inaugural ICC approved franchise tournament in Stockholm, Sweden called Nordic Smash T20 to be held on the 15th till 20th of June 2026.',
   },
 ];
 
