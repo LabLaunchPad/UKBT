@@ -2,12 +2,12 @@
 // SquadGrid — filterable editorial roster grid for /players.
 //
 // Filter dimensions derive ONLY from verified RosterPlayer fields:
-// photo presence, Wicket-keeper tag, U-19 tag, Uppsala affiliation.
+// photo presence, Wicket-keeper tag, U-19 tag, Uppsala affiliation,
+// plus the All-Rounders role (owner-verbatim role, EV-20260923-002 —
+// the same source matches('r') reads as badge text).
 // A filter renders only when at least one record matches it — no empty
-// categories, no invented counts. Role filters (Batsmen/Bowlers/
-// All-Rounders) are deliberately not offered even though the role
-// taxonomy exists for all 58 (EV-20260923-002) — dimensions stay
-// photo/Wk/U-19/Uppsala by design, not because no taxonomy exists.
+// categories, no invented counts. Other role filters (Batsmen/Bowlers)
+// are deliberately not offered by design, not because no taxonomy exists.
 //
 // Progressive enhancement: the filter bar is hidden until the
 // component script runs (data-squad-ready), so no-JS renders the full
@@ -80,8 +80,14 @@ const allFilters: Filter[] = [
   {
     key: 'r',
     label: 'All-Rounders',
-    count: players.filter((p) => (p.tags ?? []).includes('All-Rounder'))
-      .length,
+    // Render count mirrors matches('r') badge logic (role-derived badge +
+    // legacy All-Rounder tag): role is the grouping truth (EV-20260923-002).
+    count: players.filter(
+      (p) =>
+        (p.role === 'All-rounder' ? 'All-Rounder' : (p.role ?? '')).includes(
+          'All-Rounder',
+        ) || (p.tags ?? []).includes('All-Rounder'),
+    ).length,
   },
   {
     key: 'j',

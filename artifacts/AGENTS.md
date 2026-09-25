@@ -39,7 +39,7 @@ Append-only memory: evidence records, verification receipts, review output, adap
 
 ## Protected / Generated
 
-- Historical records stay verbatim: never edit an old receipt, red-team finding, or `HANDOFF.md` — write a new dated record instead.
+- Historical records stay verbatim: never edit an old receipt, red-team finding, or the frozen 2026-09-15 `HANDOFF.md` section below (living top refreshed 2026-09-25) — write a new dated record instead.
 - Receipts record fresh runs only: `RELEASE.md` must reflect a fresh `deploy:verify`; a previous PASS is not a current PASS.
 - Governed visual artifacts (`visual/`, `responsive/`, `renders/`): replace by re-running the governed process, not by hand-editing.
 

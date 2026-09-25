@@ -60,7 +60,7 @@ Limiting: filter bar competes with squad heading for primary scan line; grid gut
 
 ### 2. Repository Grounding
 
-Astro 7 static, `@ukbt/truth` workspace:*, Style-Dictionary tokens→`apps/web/src/styles/generated/tokens.css`, `Section` is rhythm primitive (120px block, 20px inline → 80px ≤767px), `SquadCard`/`SquadGrid` are isolated components, Playwright + axe at 7 viewports, 16-gate `deploy:verify`.
+Astro 7 static, `@ukbt/truth` workspace:*, Style-Dictionary tokens→`apps/web/src/styles/generated/tokens.css`, `Section` is rhythm primitive (120px block, 20px inline → 80px ≤767px), `SquadCard`/`SquadGrid` are isolated components, Playwright + axe at 7 viewports, 18-gate `deploy:verify`.
 
 ### 3. Evidence Register
 

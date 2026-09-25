@@ -51,6 +51,9 @@ Proves the release is shippable. `deploy:verify` (18 steps, `<root>/package.json
 | `compare-geometry.mjs` | Diffs measured vs reference geometry, per-page/viewport table | Manual (parity harness) | No | exit non-zero on P0 mismatch |
 | `convert-images-to-webp.sh` | One-off JPEG→WebP migration (sharp / ImageMagick / cwebp; run from root) | Manual, bash (not node) | No | `set -e` |
 
+`check-tina-field-parity.mjs` stays advisory (no CI job): it depends on TinaCloud
+live-index state (Area B), so gating on it would fail PRs on cloud state, not repo truth.
+
 ## Dependencies
 
 None — pure Node stdlib by design (see `check-internal-links.mjs` header: a parser dep would need an allowlist entry for a one-file check). `dependency-allowlist.json` is data consumed by `check-dependency-allowlist.mjs`, not code.
