@@ -75,17 +75,43 @@ function readBuildId(swBody) {
   return m ? m[1] : '';
 }
 
+function readSmokeBuildId(jsonBody) {
+  // Build-attested identity endpoint (repo-sync Task 7, Shape A):
+  // `/smoke.json` is prerendered static `{"ok":true,"buildId":"<sha>"}`.
+  // Non-JSON / missing buildId means "no endpoint here" (older deploy,
+  // fixture servers) — the caller falls back to /sw.js, never fails.
+  try {
+    const data = JSON.parse(jsonBody);
+    return typeof data.buildId === 'string' ? data.buildId : '';
+  } catch {
+    return '';
+  }
+}
+
 // 0. Deploy-wait + identity (REM-002). PROVES: the observed deployment is
 // the build CI produced (BUILD_ID prefix-matches the merge SHA) before any
 // health assertion runs. DOES NOT PROVE: provenance (short-string marker).
+// Identity source order: `/smoke.json` first (build-attested JSON), then
+// `/sw.js` fallback (stale/older deploys, fixture servers). A
+// challenge-looking 403 on either source is never a pass — it fails with
+// ray forensics like every other non-200 below.
 // Skipped with a warning for manual runs without --expect-sha.
 if (expectedSha) {
   const short = expectedSha.slice(0, 7);
   const deadline = Date.now() + waitSecs * 1000;
   let observed = '';
+  let via = '';
   for (;;) {
-    const r = await get('/sw.js');
-    observed = r.status === 200 ? readBuildId(r.body) : '';
+    const s = await get('/smoke.json');
+    const smokeId = s.status === 200 ? readSmokeBuildId(s.body) : '';
+    if (smokeId) {
+      observed = smokeId;
+      via = '/smoke.json';
+    } else {
+      const r = await get('/sw.js');
+      observed = r.status === 200 ? readBuildId(r.body) : '';
+      via = observed ? '/sw.js' : '';
+    }
     if (observed && (expectedSha.startsWith(observed) || observed === short))
       break;
     if (Date.now() >= deadline) break;
@@ -104,7 +130,7 @@ if (expectedSha) {
   } else {
     pass(
       'deployment-identity',
-      `live BUILD_ID '${observed}' matches expected '${short}'`,
+      `live BUILD_ID '${observed}' via ${via} matches expected '${short}'`,
     );
   }
   if (failures.length > 0) {

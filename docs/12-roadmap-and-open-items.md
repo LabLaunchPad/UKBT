@@ -1067,8 +1067,32 @@ issue-register, blocker-closure certificate, `20260923-final-closeout.md`):
    production is 200 externally. Owner action: dashboard Security →
    Events lookup for ray `a3f6b6da2a2d433c` → rule name, then decide
    (allowlist Actions egress / tune bot policy / bless alternate
-   vantage). Smoke gate stays enforced; nothing weakened.
-   Registry owner contact remains `UNKNOWN`.
+    vantage). Smoke gate stays enforced; nothing weakened.
+    Registry owner contact remains `UNKNOWN`.
+6. **Smoke identity endpoint (repo-sync Task 7, `feat/smoke`):**
+    build-attested `/smoke.json`
+    (`apps/web/src/pages/smoke.json.ts`, prerendered static
+    `{"ok":true,"buildId":"<short-SHA>"}` — the SHA is stamped
+    post-build by `scripts/build-smoke.mjs` (wired into the web `build`
+    chain), mirroring `scripts/build-sw.mjs`: in-file `git rev-parse`
+    was tried and REJECTED (prerendered endpoints execute in the
+    adapter runtime shim where `node:child_process` is stubbed —
+    `execSync ... is not implemented`, observed 2026-09-25). No
+    leading underscore: Astro excludes `_`-prefixed `src/pages` files
+    from the router and `dist/` ["Excluding pages"], so the reserved
+    `/__smoke` path is un-buildable as a file route); `smoke-deploy.mjs` tries
+    `/smoke.json` first, falls back to `/sw.js`; `Cache-Control:
+    no-store` via an append-only `public/_headers` rule (`nosniff`
+    already global).
+    Sitemap/perf/UI/SEO/security gates crawl `**/*.html|css|js` — the
+    `.json` output is invisible to all of them (verified, no gate
+    edits). Dashboard runbook (OWNER ACTION — free-plan Bot Fight Mode
+    CANNOT be skipped by rule, per plan Web-research 2026-09-25):
+    Security → Events lookup by Ray ID → identify the exact Service →
+    BFM off/upgrade, vs SBFM (Pro+) path-scoped Skip
+    `(http.request.uri.path eq "/smoke.json")` on bot products only,
+    vs WAF managed-rule exception. No endpoint shape dodges free-plan
+    BFM — the endpoint fixes deployment identity, not the challenge.
 
 ## Roster cards v1 — owner-verbatim 58-player cards, merged 2026-09-25 (PR #106, squash `cdf4800`)
 
