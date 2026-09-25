@@ -5,8 +5,9 @@
 // Carries its own ukbt-squad-* hooks, asserted by pages.spec.ts.
 //
 // Truth posture: every rendered line maps to a verified player field.
-// The role line renders the owner-verbatim `role` from data
-// (EV-20260923-002 supersedes EV-20260911-002's taxonomy ban —
+// The player role renders as a badge on the media (owner-verbatim `role`
+// from data, All-rounder displayed as All-Rounder per owner screenshot;
+// EV-20260923-002 supersedes EV-20260911-002's taxonomy ban —
 // All-rounder 17, Bowler 22, Wicket-keeper 5, Batsman 14); no
 // taxonomy is invented here. Badges stay Wicket-keeper / U-19 /
 // All-Rounder display markers. The Uppsala affiliation renders as
@@ -63,6 +64,12 @@ const badges = [
 const meta = (p.tags ?? []).filter(
   (t) => !(t in BADGE_LABELS) && t !== 'Also plays for Uppsala Tigers',
 );
+// ponytail: role label lives on the media badge for players (deduped
+// against tag badges); officials keep the role-led text line.
+const roleLabel = p.role === 'All-rounder' ? 'All-Rounder' : p.role;
+const mediaBadges = isOfficial
+  ? badges
+  : [...new Set([roleLabel, ...badges])];
 const uppsala = (p.tags ?? []).includes('Also plays for Uppsala Tigers');
 
 // Monogram for the text-only variant: initials of the verified name.
@@ -86,15 +93,15 @@ const initials = p.name
           height="320"
           loading="lazy"
         />
-        {badges.length > 0 && (
-          <p class="ukbt-squad-card__badge">{badges.join(' · ')}</p>
+        {mediaBadges.length > 0 && (
+          <p class="ukbt-squad-card__badge">{mediaBadges.join(' · ')}</p>
         )}
       </div>
     ) : (
       <div class="ukbt-squad-card__text">
         <span aria-hidden="true">{initials}</span>
-        {badges.length > 0 && (
-          <p class="ukbt-squad-card__badge">{badges.join(' · ')}</p>
+        {mediaBadges.length > 0 && (
+          <p class="ukbt-squad-card__badge">{mediaBadges.join(' · ')}</p>
         )}
       </div>
     )
@@ -105,16 +112,11 @@ const initials = p.name
       isOfficial ? (
         <p class="ukbt-squad-card__role">{p.role}</p>
       ) : (
-        <>
-          <p class="ukbt-squad-card__role">{p.role}</p>
-          {
-            p.country ? (
-              <p class="ukbt-squad-card__country">{p.country}</p>
-            ) : (
-              <p class="ukbt-squad-card__country">Country unconfirmed</p>
-            )
-          }
-        </>
+        p.country ? (
+          <p class="ukbt-squad-card__country">{p.country}</p>
+        ) : (
+          <p class="ukbt-squad-card__country">Country unconfirmed</p>
+        )
       )
     }
     {
