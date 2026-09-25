@@ -49,7 +49,7 @@ const notOpenNote =
     <div class="ukbt-join__row">
       <p class="ukbt-join__field ukbt-join__field--wide">
         <label class="ukbt-join__label" for="join-full-name">
-          Full name <span class="ukbt-join__req">(required)</span>
+          Full name <span class="ukbt-join__state">(required)</span>
         </label>
         <input
           class="ukbt-join__control"
@@ -62,7 +62,7 @@ const notOpenNote =
       </p>
       <p class="ukbt-join__field">
         <label class="ukbt-join__label" for="join-date-of-birth">
-          Date of birth <span class="ukbt-join__req">(required)</span>
+          Date of birth <span class="ukbt-join__state">(required)</span>
         </label>
         <input
           class="ukbt-join__control"
@@ -75,13 +75,13 @@ const notOpenNote =
       </p>
       <p class="ukbt-join__field">
         <label class="ukbt-join__label" for="join-nationality">
-          Nationality <span class="ukbt-join__req">(required)</span>
+          Nationality <span class="ukbt-join__state">(required)</span>
         </label>
         <input class="ukbt-join__control" id="join-nationality" name="nationality" type="text" required />
       </p>
       <p class="ukbt-join__field">
         <label class="ukbt-join__label" for="join-country-of-residency">
-          Country of residency <span class="ukbt-join__req">(required)</span>
+          Country of residency <span class="ukbt-join__state">(required)</span>
         </label>
         <input
           class="ukbt-join__control"
@@ -94,7 +94,7 @@ const notOpenNote =
       </p>
       <p class="ukbt-join__field">
         <label class="ukbt-join__label" for="join-phone">
-          Phone number <span class="ukbt-join__req">(required)</span>
+          Phone number <span class="ukbt-join__state">(required)</span>
         </label>
         <input
           class="ukbt-join__control"
@@ -109,7 +109,7 @@ const notOpenNote =
       </p>
       <p class="ukbt-join__field ukbt-join__field--wide">
         <label class="ukbt-join__label" for="join-email">
-          Email <span class="ukbt-join__req">(required)</span>
+          Email <span class="ukbt-join__state">(required)</span>
         </label>
         <input
           class="ukbt-join__control"
@@ -128,13 +128,13 @@ const notOpenNote =
     <div class="ukbt-join__row">
       <p class="ukbt-join__field">
         <label class="ukbt-join__label" for="join-statistics-url">
-          Main statistics link <span class="ukbt-join__opt">(optional)</span>
+          Main statistics link <span class="ukbt-join__state">(optional)</span>
         </label>
         <input class="ukbt-join__control" id="join-statistics-url" name="statisticsUrl" type="url" />
       </p>
       <p class="ukbt-join__field">
         <label class="ukbt-join__label" for="join-video-links">
-          Video links <span class="ukbt-join__opt">(optional)</span>
+          Video links <span class="ukbt-join__state">(optional)</span>
         </label>
         <textarea
           class="ukbt-join__control ukbt-join__control--multiline"
@@ -164,13 +164,73 @@ const notOpenNote =
   </fieldset>
 
   {
+    // Consent + attestation (spec §"Copy + data protection" — required, and
+    // the reason exact date of birth is defensible: the club develops young
+    // players, so we need to know who is behind an application).
+    //
+    // Real required checkboxes, not decorative text: an unattributed
+    // paragraph is not a consent, and it would be skipped by anyone who
+    // assumed consent is implied. They are named, so a later adapter can
+    // carry them, and they join the SAME error-summary pass as every other
+    // control (the script selects `input[name]`, so a checkbox is already
+    // in scope — nothing in the script needed to change for them).
+    //
+    // Copy is deliberately thin about data handling. v1 sends nothing, so
+    // there is no live policy to describe, no retention promise to make and
+    // no lawful basis to assert — only what the applicant is agreeing to
+    // and the fact that nothing leaves the browser today. The `/privacy/`
+    // href is Task 3's page; `check-internal-links.mjs` owns that link.
+  }
+  <fieldset class="ukbt-join__group">
+    <legend class="ukbt-eyebrow">Before you send</legend>
+    <div class="ukbt-join__row">
+      <p class="ukbt-join__field ukbt-join__field--wide">
+        <input
+          class="ukbt-join__checkbox"
+          id="join-consent"
+          name="consent"
+          type="checkbox"
+          aria-describedby="join-consent-hint"
+          required
+        />
+        <label class="ukbt-join__check-label" for="join-consent">
+          I accept how the club uses my details <span class="ukbt-join__state">(required)</span>
+        </label>
+        <span class="ukbt-join__hint" id="join-consent-hint">
+          Read the <a href="/privacy/">privacy notice</a> for how the club handles applicant
+          details. While online applications are closed, nothing typed on this form is sent or
+          stored.
+        </span>
+      </p>
+      <p class="ukbt-join__field ukbt-join__field--wide">
+        <input
+          class="ukbt-join__checkbox"
+          id="join-age-attestation"
+          name="ageAttestation"
+          type="checkbox"
+          aria-describedby="join-age-hint"
+          required
+        />
+        <label class="ukbt-join__check-label" for="join-age-attestation">
+          I am 18 or over, or a parent or guardian is applying with me
+          <span class="ukbt-join__state">(required)</span>
+        </label>
+        <span class="ukbt-join__hint" id="join-age-hint">
+          If you are under 18, please have a parent or guardian complete this application with
+          you.
+        </span>
+      </p>
+    </div>
+  </fieldset>
+
+  {
     // Pre-submit honesty notice. Visible BEFORE the click, so the rule
     // holds even for someone who never presses submit. Cream + a gold rule:
     // the SectionHeader grammar, reading as a notice rather than a section.
   }
   <aside class="ukbt-join__notice" aria-labelledby="join-notice-heading">
     <p class="ukbt-eyebrow" id="join-notice-heading">Before you apply</p>
-    <p class="ukbt-join__notice-body">
+    <p>
       <strong>Online applications are not open yet.</strong> Nothing typed here is sent or
       stored, and there is no confirmation to wait for. The club's working channels today are:
     </p>
@@ -256,7 +316,10 @@ const notOpenNote =
         // Rule source: `required` + `type` on the markup. Message source:
         // the browser's own `validationMessage`. Nothing is re-implemented.
         // One pass, so a field fixed since the last submit loses its marker
-        // without needing a separate "clear" step.
+        // without needing a separate "clear" step. The selector is
+        // `input[name], textarea[name]`, so the required consent and
+        // age-attestation checkboxes are in this pass already — they gate
+        // submit and list in the summary exactly like the text fields.
         const failing: Field[] = [];
         for (const field of fields()) {
           if (field.validity.valid) field.removeAttribute('aria-invalid');
@@ -375,17 +438,38 @@ const notOpenNote =
     letter-spacing: 0.04em;
     color: var(--ukbt-color-brand-primary);
   }
-  /* Required/optional is stated in the label TEXT; this is only the
-     secondary colour signal on top of it (ACCESSIBILITY-CONTRACT: never
-     colour alone). */
-  .ukbt-join__req,
-  .ukbt-join__opt {
+  /* Required/optional is stated in the label TEXT; one shared treatment for
+     both words, because colour must not imply a severity difference the
+     text doesn't make (ACCESSIBILITY-CONTRACT: never colour alone). */
+  .ukbt-join__state {
     font-weight: var(--ukbt-font-weight-medium);
     color: var(--ukbt-color-neutral-500);
   }
   .ukbt-join__hint {
     font-size: var(--ukbt-font-size-0);
     color: var(--ukbt-color-neutral-700);
+  }
+
+  /* Consent + attestation. Layout comes from the existing `.ukbt-join__row`
+     / `.ukbt-join__field--wide` pair (box, then label, then hint, stacked and
+     full width), so these three rules are the whole addition. The 32px box
+     is `--ukbt-space-8`; a label's entire text toggles its box, so the
+     effective target is the whole row — well over the 24px axe floor. */
+  .ukbt-join__checkbox {
+    width: var(--ukbt-space-8);
+    height: var(--ukbt-space-8);
+    margin: 0;
+  }
+  /* Error state as a shape change, not only a colour change, so an
+     unchecked-and-invalid box is distinguishable without colour. */
+  .ukbt-join__checkbox[aria-invalid='true'] {
+    outline: var(--ukbt-border-width-md) solid var(--ukbt-color-feedback-danger);
+    outline-offset: 2px;
+  }
+  /* Consent text is prose, not a field name: body size, and deliberately
+     NOT the uppercase-bold `.ukbt-join__label` treatment. */
+  .ukbt-join__check-label {
+    font-size: var(--ukbt-font-size-1);
   }
 
   /* Controls: 44px min-height from the geometry token (above the 24px axe
@@ -406,9 +490,6 @@ const notOpenNote =
   .ukbt-join__control--multiline {
     min-height: calc(var(--ukbt-space-8) * 3);
     resize: vertical;
-  }
-  .ukbt-join__control:hover:not(:disabled) {
-    border-color: var(--ukbt-border-strong);
   }
   /* No `transition` on any of these: state changes are instant, which is
      the reduced-motion-safe outcome by construction (MOTION-CONTRACT). */
@@ -436,7 +517,6 @@ const notOpenNote =
     color: var(--ukbt-color-feedback-danger);
   }
   .ukbt-join__errors ul {
-    margin: 0;
     padding-inline-start: var(--ukbt-space-4);
   }
   .ukbt-join__errors li + li {
@@ -459,13 +539,9 @@ const notOpenNote =
     border-radius: var(--ukbt-radius-ref-sm);
     padding: var(--ukbt-space-4);
   }
-  .ukbt-join__notice-body {
-    margin: var(--ukbt-space-3) 0 0 0;
-    color: var(--ukbt-color-neutral-900);
-  }
   .ukbt-join__channels {
     list-style: none;
-    margin: var(--ukbt-space-3) 0 0 0;
+    margin: var(--ukbt-space-4) 0 0 0;
     padding: 0;
     display: flex;
     flex-wrap: wrap;
