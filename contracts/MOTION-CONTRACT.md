@@ -86,3 +86,10 @@ listeners register once per document behind a `window` guard.
 
 `scripts/check-motion.mjs` (`MOTION_STATUS`) + `tests/visual/motion.spec.ts`,
 both required in CI. Changing this contract is a re-approval event.
+
+## AMENDMENT 2026-09-25 (repo-sync) — R-04: guarded multi-script reality + matrix gap
+
+**Status:** PROPOSED — needs owner re-approval at PR review (frozen text above preserved verbatim).
+
+1. **Invariant 4 "One observer" (lines 24-27):** restated, not loosened. Reveals still arm via `html.ukbt-motion-js` + `.is-visible` (`apps/web/src/layouts/BaseLayout.astro:145-215`; `apps/web/src/styles/base.css:214-233`), and the reveal IntersectionObserver itself remains single (`BaseLayout.astro:194`). BUT Header/SquadGrid/ClubIntro/motion each run once + re-init on the canonical `astro:page-load` hook behind `window` once-guards (`SquadGrid.astro:131-135,186-188`; `ClubIntro.astro:305,393-395`; `BaseLayout.astro:163-165,181,215`, with the comment at lines 150,179 citing the 2026-09-25 Astro docs research). That is N guarded entry points sharing one reveal observer, not "one observer" unqualified. The guarded re-init pattern is hereby blessed as the compliant implementation of this invariant: exactly-once per document (`window.__ukbt*Wired`), re-arm on `astro:page-load`, no per-element observers, no scroll listeners with layout reads. (Event-name note: Task 5 normalized the motion controller's legacy `astro:page` listener to `astro:page-load` — same hook, canonical name; behavior identical.)
+2. **Micro-matrix gap:** no row yet covers the SquadGrid filter (`data-uppsala` hook, `SquadCard.astro:14,87`) or monogram-fallback cards (8 photo-less players, `knowledge/01-VERIFIED-FACTS.yaml:65`). Both exist with no motion spec: filter changes and monogram cards MUST resolve with no layout-shifting motion (transform/opacity only per invariant 5; instant under reduced motion per the two-tier model). A dedicated matrix row is backlog, not silent approval — recorded here so the gap is governed.

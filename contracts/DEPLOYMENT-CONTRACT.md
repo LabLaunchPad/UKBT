@@ -375,3 +375,9 @@ incompatible with the release-gate premise of this contract.
 5. Until step 2 completes, production remains deployed by Workers Builds
    without gates — this is a **known, dated, time-bounded exposure**, not
    an approved steady state. Owner action required.
+
+## AMENDMENT 05 (2026-09-25, repo-sync) — R-08: flag-only (frozen Pages text is history)
+
+**Status:** PROPOSED — needs owner re-approval at PR review (frozen text + all prior amendments preserved verbatim; this block adds no new deployment behavior).
+
+No edit is proposed to any frozen line. This block exists so nobody "fixes" the frozen block without a re-approval record: § Outputs lines 13-16 (`HOST = Cloudflare Pages` / `STATIC_OUTPUT = apps/web build output` / `FUNCTIONS … NOT ACTIVATED`) and the 2026-08-27 amendment narrative line 129 ("no adapter, no Functions") are HISTORY. Current truth is the amendment chain: Workers + `@astrojs/cloudflare` adapter, `dist/client/` + `dist/server/entry.mjs`, sole on-demand route `tina-island/[name].ts`, mapping gate (`scripts/check-deploy-mapping.mjs`) + smoke gate (`scripts/smoke-deploy.mjs`), AMENDMENT 04 CI-gated deploy path (lines 344-377). Evidence: `knowledge/01-VERIFIED-FACTS.yaml:293-295` (on_demand_routes, smoke_gate); DEPLOYMENT amendments 2026-08-27 → 2026-09-15 → AMENDMENT 04.

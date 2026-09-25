@@ -203,3 +203,13 @@ reorganisation of the single existing page.
 Adds `/franchises/uppsala-tigers` to the route set in AMENDMENT 01.
 `/franchises` itself is unchanged as a route (same path), only its
 rendered content changes from a showcase to a grid landing.
+
+---
+
+## AMENDMENT 03 (2026-09-25, repo-sync) — R-10: route-set reality + `/__smoke` reservation
+
+**Status:** PROPOSED — needs owner re-approval at PR review (frozen text + AMENDMENTS 01-02 preserved verbatim).
+
+1. **Reversibility (§ Reversibility, lines 97-100: "No route exists yet"):** superseded. 18 routes live (verified by listing `apps/web/src/pages/`: 16 root `.astro` files + `franchises/uppsala-tigers.astro` + `news/[slug].astro`; same 18-route list in `apps/web/AGENTS.md` Structure). Reversibility now reads: route removal migrates links/sitemap/SEO, not greenfield derivation.
+2. **Route-set delta:** AMENDMENT 01 authorises 16 incl. `/404` (lines 150-155); AMENDMENT 02 adds `/franchises/uppsala-tigers` (17; lines 201-205). Two live routes were never authorised in either set and are AUTHORISED here with evidence: `/offline` (offline fallback page, `apps/web/src/pages/offline.astro`) and the `tina-island/[name]` endpoint (`apps/web/src/pages/tina-island/[name].ts`, sole `prerender=false` POST route per `knowledge/01-VERIFIED-FACTS.yaml:293`). Neither carries an organisational claim beyond its function; content rules for their rendered output are unchanged.
+3. **`/​__smoke` RESERVED (not implemented):** the path `/__smoke` is RESERVED for Task 7's build-attested smoke endpoint. Reservation only — no route, no behavior, no sitemap entry is authorised by this block; implementation lands (or is reported NEEDS_CONTEXT) in Task 7.

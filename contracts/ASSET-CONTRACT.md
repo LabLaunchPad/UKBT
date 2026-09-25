@@ -149,3 +149,11 @@ can see which is which.
    photographs carry other organisations' sponsor logos and event
    branding. Where such an asset is used, its `INDEPENDENT_VERIFICATION`
    field names what is visible. This is disclosure, not clearance.
+
+## AMENDMENT 02 (2026-09-25, repo-sync) — R-06: reversibility (assets shipped)
+
+**Status:** PROPOSED — needs owner re-approval at PR review (frozen text + AMENDMENT 01 preserved verbatim).
+
+§ Reversibility, lines 91-95 ("No asset is currently committed to `apps/web` (it does not exist yet)") is superseded: assets shipped — 50/58 player photos + 8 monogram fallbacks (`apps/web/src/content/players-data.ts:12-15`; `knowledge/01-VERIFIED-FACTS.yaml:65`); Uppsala 20+4 all pictured, Roy sharing `/media/players/dhrubonil-roy.webp` (`apps/web/src/content/franchises-data.ts:24-27`); per-photo manifest at `apps/web/src/assets/MANIFEST.md` (verified present). Reversibility now reads: asset changes migrate or reclassify live manifest entries (with evidence records per § Change authority), not greenfield intake design.
+
+Recorded, no change (per audit R-06 note): the frozen four-class scheme + AMENDMENT 01 fifth class (Client-authorised) stand correctly amended; rendered cards dropping the affiliation note (`SquadCard.astro:14` — filter hook only, never visible text) does NOT violate AMENDMENT 01 rule 4, because disclosure lives in the manifest `INDEPENDENT_VERIFICATION` field, not rendered UI.
