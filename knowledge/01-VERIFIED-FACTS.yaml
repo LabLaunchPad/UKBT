@@ -67,7 +67,7 @@ leadership:                          # U-04 further narrowed, not closed — EV-
 
 sister_franchise_uppsala_tigers:
   status: "Owned and managed by UK Bangla Tigers"  # EV-20260831-005, stated on the document itself; consistent with, not new beyond, EV-20260826-028's Companies House corroboration
-  squad_status: KNOWN (20 named players + 4 team officials, 20+4 ALL pictured)  # EV-20260831-005/-006/-008 + EV-20260912-001; Dhrubonil Roy via shared /media/players/dhrubonil-roy.webp (no dedicated uppsala-squad/ file) — apps/web/src/content/franchises-data.ts:24-27. See apps/web/src/content/franchises-data.ts's uppsalaSquad/uppsalaOfficials.
+  squad_status: KNOWN (20 named players + 5 team officials; 20+4 pictured, Faruk Ahmed monogram pending photo)  # EV-20260831-005/-006/-008 + EV-20260912-001 + EV-20260926-003 (Faruk Ahmed, Assistant Coach, both lists); Dhrubonil Roy via shared /media/players/dhrubonil-roy.webp (no dedicated uppsala-squad/ file) — apps/web/src/content/franchises-data.ts:24-27. See apps/web/src/content/franchises-data.ts's uppsalaSquad/uppsalaOfficials.
   overseas_signings:                  # SUPERSEDED — see squad_status above and EV-20260831-005/-006. Kept here as history, not current.
     superseded: true
     superseded_by: EV-20260831-005

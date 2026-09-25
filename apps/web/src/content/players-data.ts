@@ -3,15 +3,19 @@
 // Players" document (EV-20260831-005, explicitly about the club's
 // players) and the 2026-09-12 photo drop — 59 portraits plus the
 // "Players & Managements List" PDF (EV-20260912-001: 20 players with
-// Captain/Wk/U-19/country roles, 4 team officials). Owner direction:
+// Captain/Wk/U-19/country roles, 4 team officials) plus the owner's
+// 2026-09-26 instruction adding a fifth official, Faruk Ahmed as
+// Assistant Coach (EV-20260926-003 — monogram until a portrait is
+// supplied). Owner direction:
 // use all pictures as UK Bangla Tigers players with picture and name,
 // roles from the PDF, new filename spellings win over the older roster
 // (Juan Henri->Juan Henry, Kennar Lewis->Kenner Lewis, Pater Robert
 // Harness->Peter Robert, Mark James Nunn->Mark James).
 //
 // Result: 58 players (42 existing, 4 renamed, 16 new from filenames)
-// + 4 officials. 50 players + 4 officials pictured (uniform 320px
+// + 5 officials. 50 players + 4 officials pictured (uniform 320px
 // WebP thumbnails, `public/media/players/`); 8 names without photos
+// plus Faruk Ahmed (official, portrait pending per EV-20260926-003)
 // stay text-only per CLIENT_REQ_006 — no placeholder silhouettes.
 // One supplied file carries no name and is never rendered.
 // Role + country for all 58 are owner-verbatim from the 2026-09-23 owner
@@ -61,6 +65,11 @@ const registry = createRegistry([
     id: 'EV-20260923-002',
     tier: 'T1',
     url: 'artifacts/evidence/EV-20260923-002.yaml',
+  },
+  {
+    id: 'EV-20260926-003',
+    tier: 'T1',
+    url: 'artifacts/evidence/EV-20260926-003.yaml',
   },
 ]);
 const exemptFields = new Set<string>();
@@ -470,12 +479,14 @@ const rawRoster: RawPlayer[] = [
 interface RawOfficial {
   name: string;
   role: string;
-  photoSlug: string;
+  photoSlug?: string;
 }
 
 // Team Officials from the PDF list (EV-20260912-001) — rendered as a
 // separate block on /players, same card component, role line instead
-// of country (staff have no playing country).
+// of country (staff have no playing country). Faruk Ahmed added per
+// owner instruction EV-20260926-003; no photoSlug until a portrait is
+// supplied, so his card renders the monogram variant.
 const rawOfficials: RawOfficial[] = [
   { name: 'Shaftab Khalid', role: 'Coach', photoSlug: 'shaftab-khalid' },
   { name: 'AGM Sabbir', role: 'Team Manager', photoSlug: 'agm-sabbir' },
@@ -485,6 +496,7 @@ const rawOfficials: RawOfficial[] = [
     photoSlug: 'md-ashraful-alam',
   },
   { name: 'Javed Butt', role: 'Team Mentor', photoSlug: 'javed-butt' },
+  { name: 'Faruk Ahmed', role: 'Assistant Coach' },
 ];
 
 function tagsFor(p: RawPlayer): string[] | undefined {
@@ -563,10 +575,13 @@ const officials: { field: string; value: RosterPlayer; sources: string[] }[] =
     value: {
       name: o.name,
       role: o.role,
-      photo: `/media/players/${o.photoSlug}.webp`,
-      photoAlt: `${o.name} — UK Bangla Tigers ${o.role}`,
+      photo: o.photoSlug ? `/media/players/${o.photoSlug}.webp` : undefined,
+      photoAlt: o.photoSlug
+        ? `${o.name} — UK Bangla Tigers ${o.role}`
+        : undefined,
     },
-    sources: ['EV-20260912-001'],
+    sources:
+      o.name === 'Faruk Ahmed' ? ['EV-20260926-003'] : ['EV-20260912-001'],
   }));
 
 gateRecords(officials);
