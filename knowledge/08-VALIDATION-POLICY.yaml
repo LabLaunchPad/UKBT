@@ -43,31 +43,28 @@ weak_evidence_note:
     are reclassified WEAK_EVIDENCE. Real assurance comes from the fail-closed
     gate (T1), not from grep.
 
-current_state:
-  ci_workflow_present: false
-  ci_state: ABSENT              # NOT pass — nothing exists to run
-  gates_implemented: 0
+current_state:  # regenerated 2026-09-25 — CI implemented, merge-blocking; honest NO/PARTIAL survivors per contracts/CI-CONTRACT.md current-state block (2026-09-18)
+  ci_workflow_present: true  # .github/workflows/ci.yml — 20 jobs (18 required + smoke-verify + workers-deploy conditional)
+  ci_state: IMPLEMENTED  # merge-blocking on main; deploy:verify = 18 steps (package.json:42)
+  gates_implemented: 12  # of the 15 CI-CONTRACT table rows; the other three are NO/PARTIAL below, recorded not faked
   ran_and_passed:
-    - {check: scaffold_self_test, command: "node scripts/scaffold-self-test.mjs", exit: 0}
-  weak_evidence:
-    - invented_fact_grep
-    - year_literal_grep
-    - secret_scan_heuristic
-  absent:
-    - install
-    - typecheck
-    - lint
-    - unit
-    - integration
-    - content_schema
-    - truth_gate
-    - placeholder_detection
-    - build
-    - routes
-    - links
-    - seo
-    - accessibility
-    - e2e
+    - {check: install, command: "pnpm install --frozen-lockfile"}
+    - {check: governance_scaffold, command: "node scripts/scaffold-self-test.mjs"}
+    - {check: dependency_allowlist, command: "node scripts/check-dependency-allowlist.mjs"}
+    - {check: control_plane, command: "node scripts/check-control-plane.mjs"}
+    - {check: lint, command: "pnpm lint (Biome)"}
+    - {check: typecheck, command: "pnpm typecheck (tsc --noEmit)"}
+    - {check: unit, command: "pnpm test:unit (Vitest, packages/truth)"}
+    - {check: build, command: "pnpm build (astro build)"}
+    - {check: deploy_mapping, command: "node scripts/check-deploy-mapping.mjs"}
+    - {check: content_schema_and_truth_gate, command: "Zod ContentRecordSchema.parse + evaluate() per content-data module"}
+    - {check: links_routes_seo_ui_motion_security_perf, command: "check-*.mjs gates + Playwright e2e/axe suites"}
+    - {check: secret_scan, command: "CI secret-scan job"}
+  weak_evidence: []  # Stage-1 grep heuristics retired with real gates; visual comparison stays PARTIAL (e2e + axe run merge-blocking, screenshot/geometry diff never existed)
+  absent:  # ABSENT != PASS — recorded here and in ci.yml's closing note, not faked
+    - placeholder_detection  # NO — never wired; CI-CONTRACT item 1
+    - visual_comparison  # PARTIAL — e2e/axe run, diff itself absent; CI-CONTRACT item 2
+    - git_cleanliness  # NO — never wired; CI-CONTRACT item 3
 
 # ============================================================================
 # VISUAL FIDELITY AS A FIRST-CLASS ACCEPTANCE GATE — added at requester direction
