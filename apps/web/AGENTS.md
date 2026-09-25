@@ -14,7 +14,7 @@ Renders gate-approved content. Every organization-specific claim arrives via typ
 
 - Routes: `contracts/ROUTE-CONTRACT.md` (adding/removing a route needs that contract updated, not just a file)
 - Content policy: `knowledge/07-CONTENT-TRUTH-POLICY.yaml`; Tina boundary: root `AGENTS.md` § TinaCMS (EDITORIAL vs TRUTH-SENSITIVE)
-- SEO authority: `src/lib/seo.ts`; CSP hashes: `scripts/stamp-csp.mjs`; perf budgets: `scripts/check-perf.mjs`
+- SEO authority: `src/lib/seo.ts`; CSP hashes: `<root>/scripts/stamp-csp.mjs`; perf budgets: `<root>/scripts/check-perf.mjs`
 
 ## Structure
 
@@ -27,7 +27,7 @@ Renders gate-approved content. Every organization-specific claim arrives via typ
 
 ## Dependencies
 
-`@ukbt/truth` as `workspace:*` (schemas, gate, tokens). `@astrojs/cloudflare` is a production dependency and the ACTIVE adapter — it moves static output to `dist/client/` and emits the Worker entry; root `wrangler.jsonc` (`main` + `assets.directory`) must mirror that layout (enforced by `scripts/check-deploy-mapping.mjs`). Don't remove the adapter.
+`@ukbt/truth` as `workspace:*` (schemas, gate, tokens). `@astrojs/cloudflare` is a production dependency and the ACTIVE adapter — it moves static output to `dist/client/` and emits the Worker entry; root `wrangler.jsonc` (`main` + `assets.directory`) must mirror that layout (enforced by `<root>/scripts/check-deploy-mapping.mjs`). Don't remove the adapter.
 
 ## Allowed
 
@@ -44,9 +44,9 @@ Renders gate-approved content. Every organization-specific claim arrives via typ
 ## Conventions
 
 - Content flow: `src/content/*-data.ts` (Zod + `@ukbt/truth/gate`, fail-closed at build, PROD gated by `isPublishable`) → props → render. Parallel Tina path: `content/*/*.json` → `lib/tina/loaders` (Zod + allowed-urls) → `TinaIsland` → `/tina-island/*` re-render. Tina editorial fields are NOT truth-gated (gated by content-trust/allowed-urls/XSS choke instead).
-- Client JS (4 `<script>` roots, no framework, all ClientRouter-proofed): `BaseLayout` logo-intro + single-IntersectionObserver reveal; `Header` delegated drawer/dropdown/focus-trap; `SquadGrid` DOM-derived filters; `ClubIntro` 4s slideshow. Each guards with `window.__ukbt*Wired` and re-inits on `astro:page-load`.
+- Client JS (4 `<script>` roots, no framework, all ClientRouter-proofed behind `window.__ukbt*Wired` once-guards): `BaseLayout` logo-intro resets on `astro:before-swap` + `astro:after-swap`, motion reveal re-arms on `astro:page`; `Header` delegates drawer/dropdown/focus-trap at document level and resets state on `astro:after-swap`; `SquadGrid` filters and `ClubIntro` 4s slideshow init on `astro:page-load` (slideshow also stops on `astro:before-swap`).
 - CSS: tokens-only values; animate `transform`/`opacity` only; two-tier reduced-motion (instant states, soft-fade entrances).
-- Perf budgets (`scripts/check-perf.mjs`): HTML 72KB/page, CSS 96KB total, JS 48KB total. CSP: no `unsafe-inline` (hashes via `stamp-csp.mjs`).
+- Perf budgets (`<root>/scripts/check-perf.mjs`): HTML 72KB/page, CSS 96KB total, JS 48KB total. CSP: no `unsafe-inline` (hashes via `<root>/scripts/stamp-csp.mjs`).
 
 ## Validation
 

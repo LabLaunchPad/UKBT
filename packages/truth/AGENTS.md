@@ -41,7 +41,7 @@ Runtime: `zod` only. Dev: `typescript`, `vitest`, `style-dictionary`. Consumed b
 ## Protected / Generated
 
 - `apps/web/src/styles/generated/` is build output of `src/tokens/approved/**` via `style-dictionary` — never hand-edit; edit the source JSON and rebuild.
-- `tina/__generated__/`, `dist/` — never touch (see root `AGENTS.md`).
+- Root `tina/__generated__/`, `dist/` — never touch (see root `AGENTS.md`).
 
 ## Conventions
 
