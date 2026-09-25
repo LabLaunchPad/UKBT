@@ -1,0 +1,41 @@
+id: EV-20260926-004
+classification: STATED_BUT_UNVERIFIED
+claim: >
+  Per the owner's direct decision (2026-09-26 chat): re-approve the CSS
+  transfer budget 96→97KB on the measured 96.04KB (98348 bytes, +44 over
+  96KB) produced by the approved Direction A homepage redesign
+  ("The Alternating Ledger"). Same justification pattern as the 88→96
+  re-approval (2026-09-19): measured clean-build bytes, reproduces
+  deterministically (byte-identical bundles across rebuilds), headroom
+  intentionally tight (~1KB). The 3-loop fix attempt (commit e85ff1e,
+  −74 render-identical bytes) proved no further in-scope cuts exist
+  without changing approved design.
+source: "Owner decision in project chat, 2026-09-26 (first-party client-supplied)."
+source_type: first_party_client_supplied
+retrieved_at: 2026-09-26
+verified_at: 2026-09-26
+valid_until: null
+justification_for_null: >
+  Records a budget re-approval decision, not a perishable external claim.
+  The measured figure (98348 bytes) is attested by fresh
+  `node scripts/check-perf.mjs` runs on the redesign bytes.
+scope: "scripts/check-perf.mjs cssTotal budget only; no other budget changes."
+method: >
+  Task 6 finish-gate BLOCKED at loop cap 3/3 with visual/copy PASS and
+  sole FAIL css-weight +44B; controller independently re-ran check-perf.mjs
+  (PERF_STATUS = FAIL confirmed); owner chose re-approval over a directed
+  design cut in-chat 2026-09-26.
+result: |
+  Authorizes editing scripts/check-perf.mjs cssTotal 96→97KB with the
+  dated header comment, as a re-approval event (not a drive-by edit).
+  All other budgets unchanged.
+related_files:
+  - scripts/check-perf.mjs
+  - apps/web/src/components/AboutCTA.astro
+  - apps/web/src/components/TournamentGrid.astro
+  - apps/web/src/pages/index.astro
+relates_to: [EV-20260926-003]
+notes: >
+  Precedent chain (script header): 56→72 Stacki, html/js Tina bumps,
+  72→80 Cloudflare adapter, 80→88 Tina islands, 88→96 island registration
+  (2026-09-19), now 96→97 homepage Direction A (2026-09-26).
