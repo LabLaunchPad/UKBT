@@ -721,3 +721,67 @@ observation; apply with judgment, do not generalize further.
 - **Verified-by:** PR #102 creation with `--fill`.
 - **Status:** VERIFIED.
 
+### AL-040 — PowerShell background jobs are reaped; use a Scheduled Task for a persistent local server
+
+- **Observation:** `Start-Job { node serve-static.mjs }` served 200 within
+  the turn but every job was gone (`Get-Job` empty, port closed) by the
+  next turn — repeatedly, across five restarts.
+- **Outcome:** registered Scheduled Task `UKBT-Preview` (user account,
+  `node <repo>/apps/web/tests/serve-static.mjs`, started on demand via
+  `Start-ScheduledTask`) — survives turns; verified 200 after.
+- **Cause:** harness-scoped background jobs die with the turn; only
+  session-external processes (MCP servers, Task Scheduler) persist.
+- **Counterexample:** jobs still fine for in-turn background work
+  (build-then-probe in one command); persistence need is the trigger.
+- **Rule:** when a local server must outlive the turn, register it as a
+  Scheduled Task (or equivalent session-external runner) instead of
+  `Start-Job`; note its stop/remove commands alongside the URL.
+- **Verified-by:** 200 from `http://127.0.0.1:4321/players/` served by
+  the task after the registering turn ended.
+- **Status:** PROVISIONAL.
+
+### AL-041 — schtasks.exe cannot take spaced paths; use the ScheduledTask cmdlets
+
+- **Observation:** `schtasks /create /tr` with a spaced repo path failed
+  with `Invalid argument/option` — PowerShell-to-native quoting mangled
+  the path.
+- **Outcome:** `New-ScheduledTaskAction -Execute node -Argument
+  '"<full spaced path>"'` + `Register-ScheduledTask` worked first
+  try; same class of fix as AL-039.
+- **Cause:** legacy CLIs re-parse the command line; embedded quotes do
+  not survive two parsing layers.
+- **Counterexample:** spaceless paths work with schtasks; but cmdlets
+  are strictly safer regardless.
+- **Rule:** prefer `New-ScheduledTaskAction` / `Register-ScheduledTask`
+  over `schtasks.exe` whenever a path may contain spaces.
+- **Verified-by:** `UKBT-Preview` registered and running.
+- **Status:** PROVISIONAL.
+
+### AL-042 — Component scripts that bind at load go dead after a ClientRouter navigation
+
+- **Observation:** homepage slideshow dots worked on fresh entry but did
+  nothing after navigating to another page and back; same signature as
+  the earlier mobile-hamburger death (fixed by delegation). `SquadGrid`
+  filters share it — worse: the `data-squad-ready` gate means the filter
+  buttons stay hidden, not just inert.
+- **Outcome:** open — fix plan `docs/superpowers/plans/ukbt-clientrouter-rewire.md`.
+- **Cause:** Astro bundled `<script>` runs once per document load;
+  `<ClientRouter />` swaps `<body>` without reload and never re-runs
+  already-executed scripts, so listeners bound directly to swapped-out
+  elements point at detached nodes. (`Header.astro` and the
+  `BaseLayout` motion controller already carry the proofed pattern:
+  document-delegated handlers + `window.__ukbt*Wired` once-guard +
+  `astro:page-load` re-init / `astro:after-swap` reset.)
+- **Counterexample:** document-level delegation and `astro:*`
+  lifecycle listeners survive swaps by construction — only direct
+  per-element binding at load is affected.
+- **Rule:** every component `<script>` must assume its DOM will be
+  swapped: re-query per event or re-init on `astro:page-load` behind a
+  window once-guard; never cache element references at load. Audit all
+  five scripts (Header, BaseLayout x2, ClubIntro, SquadGrid) when
+  touching any one.
+- **Verified-by:** code-reading + in-repo comments documenting the same
+  mechanism (Header.astro:169-179, BaseLayout.astro:172-178); Playwright
+  repro spec ships with the fix plan.
+- **Status:** PROVISIONAL.
+

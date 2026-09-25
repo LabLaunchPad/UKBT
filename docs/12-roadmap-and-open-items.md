@@ -1073,6 +1073,43 @@ issue-register, blocker-closure certificate, `20260923-final-closeout.md`):
    vantage). Smoke gate stays enforced; nothing weakened.
    Registry owner contact remains `UNKNOWN`.
 
+## Roster cards v1 — owner-verbatim 58-player cards, merged 2026-09-25 (PR #106, squash `cdf4800`)
+
+Owner roster list 2026-09-23 (sole authority, verbatim) is now live on
+`/players/` and shared with `/franchises/uppsala-tigers/` via one
+`SquadCard` component. Evidence: `artifacts/evidence/EV-20260923-002.yaml`;
+CI run `36129209093` — all 18 required checks PASS (Playwright 4m42s,
+perf/UI/SEO/motion/security green); task reviews PASS per task + final
+review APPROVE_WITH_MINORS, fix wave committed.
+
+1. **T1 data:** all 58 owner-verbatim role+country pairs in
+   `players-data.ts` (Sibet Ahmed=England per brief:71; `Srilanka` /
+   `Sri lanka` / `Netherands` kept verbatim; `Wayne Parnel` one-l,
+   `Humayun kabir Jyoti` lowercase-k); roles All-rounder 17 / Bowler 22 /
+   Wicket-keeper 5 / Batsman 14; England 10 / UAE 9; #46 absent.
+2. **T2 photos:** 5 R100 slug renames + `MANIFEST.md` sync; 54/54 slugs
+   resolve, 8 monogram fallbacks, 0 orphans.
+3. **T3 card:** persistent role+country slots (CLS-proof), facts never
+   pushed by media height.
+4. **T4 Uppsala:** same `SquadCard` both pages; 20 Uppsala roles filled
+   from the owner list; per-source splits preserved un-normalized
+   (Roushan=Portugal, `Hamid Mahmood` + `hamid-mahmood.jpg`,
+   `Humayun Kabir Jyoti` capital-K on Uppsala).
+5. **T6 role-in-picture (owner visual check):** role mentioned once, in
+   the picture badge (`All-rounder`→`All-Rounder`, others verbatim,
+   deduped; 58 badges); text = name → country → Uppsala affiliation;
+   officials stay role-led.
+6. **Pending, not blocking:** `feat/players-uiux-v2` branch (card order,
+   spine, pill states, review APPROVE_WITH_MINORS) is implemented but
+   UNMERGED — owner decision required before merge.
+7. **Local preview:** `astro dev` stays blocked on this machine
+   (Device Guard kills `workerd`, miniflare spawn UNKNOWN −4094); static
+   preview runs as Scheduled Task `UKBT-Preview`
+   (`http://127.0.0.1:4321/`, AL-040) — stops on logoff/reboot.
+8. **ClientRouter rewire (AL-042):** slideshow dots + squad filters
+   re-armed on `astro:page-load` — spec
+   `tests/visual/clientrouter-rewire.spec.ts` red→green.
+
 ## Open issue 2026-09-23 — Tina visual-edit content not reflected in local dev build
 
 User-reported (unreproduced, solve later): content changed via TinaCMS
