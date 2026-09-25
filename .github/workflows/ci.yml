@@ -1,9 +1,9 @@
 name: CI
 
-# Implements the gate set required by contracts/CI-CONTRACT.md, to the
-# extent those gates are meaningfully checkable at the FOUNDATION stage
-# (no real routes/content exist yet — see the note at the bottom of this
-# file for gates deliberately not wired yet, and why).
+# Implements the production-stage gate set required by contracts/CI-CONTRACT.md
+# over the real routes and content (18 routes + 12+ organization facts as of
+# 2026-09-25 — see the history note at the bottom of this file for how the
+# original FOUNDATION-stage framing was corrected).
 #
 # Every job here is REQUIRED (merge-blocking) unless explicitly marked
 # otherwise — a job that cannot fail the build is decorative
@@ -404,7 +404,7 @@ jobs:
 # faked with a vacuous always-pass step). Corrected 2026-08-26 (Stage 10
 # release gate, artifacts/receipts/RELEASE.md) — the reasons below used
 # to be "no real content/routes exist yet," which stopped being true once
-# 16 real routes and 12+ real organization facts landed; that stale
+# 18 real routes and 12+ real organization facts landed; that stale
 # reasoning was itself a defect this receipt found and fixed:
 #
 #   - Content schema validation against real content: CLOSED 2026-09-18.
@@ -427,9 +427,10 @@ jobs:
 #     page's internal hrefs against the real dist/ output. Verified to
 #     actually fail: tested against a deliberately broken link before
 #     being trusted, not assumed correct from reading the script.
-#   - SEO metadata completeness: partially covered (pages.spec.ts asserts
-#     the noindex/indexable split across all 16 routes) but no test
-#     asserts every indexable page has a non-empty title/description.
+#   - SEO metadata completeness: covered — pages.spec.ts asserts the
+#     noindex/indexable split across all 18 routes, and RM-4
+#     (pages.spec.ts:276-304, CLOSED 2026-09-25) asserts every indexable
+#     page has a non-empty title and meta description.
 #
 # These become real, addable jobs once packages/truth/src/content/ and
 # real routes exist (contracts/CONTENT-CONTRACT.md, contracts/ROUTE-

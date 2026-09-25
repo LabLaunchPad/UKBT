@@ -12,6 +12,10 @@ import { expect, test } from '@playwright/test';
  * introduced while fixing /404's own heading-order gap — none visible to
  * the existing desktop-only scans. This file closes that gap so it can't
  * silently reopen.
+ *
+ * Scope is the 16 static content routes by design: /offline is covered by
+ * sw.spec.ts (offline-shell precache + fallback), and /news/[slug] renders
+ * nothing (getStaticPaths returns [] until real posts land).
  */
 
 const ALL_ROUTES = [

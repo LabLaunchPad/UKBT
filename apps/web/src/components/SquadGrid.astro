@@ -4,9 +4,10 @@
 // Filter dimensions derive ONLY from verified RosterPlayer fields:
 // photo presence, Wicket-keeper tag, U-19 tag, Uppsala affiliation.
 // A filter renders only when at least one record matches it — no empty
-// categories, no invented counts. The reference's Batsmen/Bowlers/
-// All-Rounders filters are deliberately absent: the data model proves
-// no such taxonomy.
+// categories, no invented counts. Role filters (Batsmen/Bowlers/
+// All-Rounders) are deliberately not offered even though the role
+// taxonomy exists for all 58 (EV-20260923-002) — dimensions stay
+// photo/Wk/U-19/Uppsala by design, not because no taxonomy exists.
 //
 // Progressive enhancement: the filter bar is hidden until the
 // component script runs (data-squad-ready), so no-JS renders the full

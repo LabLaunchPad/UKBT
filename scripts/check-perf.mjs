@@ -71,7 +71,10 @@ for (const file of distHtml('**/*.html')) {
   const html = readFileSync(join(distDir, file), 'utf8');
   const htmlBytes = Buffer.byteLength(html);
   if (htmlBytes > BUDGETS.htmlPerPage) {
-    fail('html-weight', `${file}: ${kb(htmlBytes)} > 72KB`);
+    fail(
+      'html-weight',
+      `${file}: ${kb(htmlBytes)} > ${kb(BUDGETS.htmlPerPage)}`,
+    );
   }
   const seen = new Set(
     [...html.matchAll(/<img\b[^>]*src="(\/[^"]+)"/g)].map((m) => m[1]),

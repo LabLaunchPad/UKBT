@@ -147,9 +147,12 @@ const graphs = structuredData
       Arms the page (html.ukbt-motion-js) so initial states apply only
       when observation is live; marks each element once and unobserves.
       No-JS, no-IO, or reduced-motion all resolve to static visible
-      content. Re-arms on ClientRouter swaps via the astro:page
-      listener wired inside (the script itself does not re-execute —
-      Astro 7 deselects already-run scripts on swap).
+      content. Re-arms on ClientRouter swaps via the astro:page-load
+      listener wired inside (the canonical post-navigation hook per the
+      Astro View Transitions docs, verified 2026-09-25 — fires on both
+      initial load and every swap to restore listeners; the script
+      itself does not re-execute — Astro 7 deselects already-run
+      scripts on swap).
     */}
     <script>
       // First-visit logo-intro lifecycle: ClientRouter swaps the body
@@ -173,7 +176,10 @@ const graphs = structuredData
       // [data-motion] element in the current DOM. Astro 7's ClientRouter
       // swap deselects already-run scripts AND swapRootAttributes wipes
       // runtime-added <html> classes, so init must re-run per navigation
-      // via astro:page — a window guard keeps the listener single-shot
+      // via astro:page-load — the canonical hook name per the Astro View
+      // Transitions docs (verified 2026-09-25; same hook the rewired
+      // Header/SquadGrid/ClubIntro scripts already use) — with a window
+      // guard keeping the listener single-shot
       // (audit 2026-09-18: scroll-reveal silently died after one
       // client-side navigation).
       const motionWindow = window as unknown as Record<string, boolean | undefined>;
@@ -206,7 +212,7 @@ const graphs = structuredData
       };
       if (!motionWindow['__ukbtMotionWired']) {
         motionWindow['__ukbtMotionWired'] = true;
-        document.addEventListener('astro:page', initMotion);
+        document.addEventListener('astro:page-load', initMotion);
       }
       initMotion();
     </script>
