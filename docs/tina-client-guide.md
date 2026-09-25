@@ -73,7 +73,7 @@
 
 ## How to Use Tina Admin
 
-1. **Go to** `https://your-site.com/admin` (or `/admin/index.html`)
+1. **Go to** `https://ukbanglatigers.co.uk/admin`
 2. **Log in** with your TinaCMS credentials (max 2 users on free plan)
 3. **Select** the content collection you want to edit (Homepage, About, FAQ, Site Settings)
 4. **Edit** fields using the form — labels are in plain English
@@ -120,7 +120,7 @@
 
 ## Security Notes
 
-- **CSP `frame-ancestors 'none'`** — must add exception for Tina admin origins before visual editing works in production
+- **CSP `frame-ancestors` exception already shipped** — `frame-ancestors 'self' https://*.tina.io https://app.tina.io https://*.tinajs.io` (see `apps/web/public/_headers`); verify it is still present before debugging visual editing in production
 - **Free plan limits** — 2 users max, 100MB per-asset size cap (no total quota published), no editorial workflow
 - **Git-backed** — all changes committed to repo, full audit trail
 - **No secrets in content** — Tina content is public, never store tokens/keys there
@@ -132,7 +132,7 @@
 | Budget | Before | After | Reason |
 |--------|--------|-------|--------|
 | `htmlPerPage` | 64KB | 72KB | Tina admin + inline schema |
-| `cssTotal` | 56KB | 72KB | Tina admin styles |
+| `cssTotal` | 56KB | 96KB | Tina admin styles |
 | `jsTotal` | 32KB | 48KB | Tina bridge (15.5KB) + Cloudflare adapter |
 
 **Rationale**: TinaCMS bridge adds ~15KB JS for visual editing. This is loaded only when editing mode is active, but counted in total budget. Public site without editing remains lean.
