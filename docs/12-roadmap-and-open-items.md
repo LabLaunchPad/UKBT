@@ -1083,12 +1083,13 @@ perf/UI/SEO/motion/security green); task reviews PASS per task + final
 review APPROVE_WITH_MINORS, fix wave committed.
 
 1. **T1 data:** all 58 owner-verbatim role+country pairs in
-   `players-data.ts` (Sibet Ahmed=England per brief:71; `Srilanka` /
-   `Sri lanka` / `Netherands` kept verbatim; `Wayne Parnel` one-l,
-   `Humayun kabir Jyoti` lowercase-k); roles All-rounder 17 / Bowler 22 /
+   `players-data.ts` (Sibet Ahmed=England per brief:71; `Humayun kabir
+   Jyoti` lowercase-k kept verbatim; display spelling corrected per owner
+   2026-09-25: Wayne Parnell, Sri Lanka x2, Netherlands); roles All-rounder 17 / Bowler 22 /
    Wicket-keeper 5 / Batsman 14; England 10 / UAE 9; #46 absent.
-2. **T2 photos:** 5 R100 slug renames + `MANIFEST.md` sync; 54/54 slugs
-   resolve, 8 monogram fallbacks, 0 orphans.
+2. **T2 photos:** 5 R100 slug renames + `MANIFEST.md` sync; 54/54 photo
+   slugs resolve to files; of 58 players, 50 with photos and 8 monogram
+   fallbacks, 0 orphans.
 3. **T3 card:** persistent role+country slots (CLS-proof), facts never
    pushed by media height.
 4. **T4 Uppsala:** same `SquadCard` both pages; 20 Uppsala roles filled
