@@ -1069,7 +1069,7 @@ issue-register, blocker-closure certificate, `20260923-final-closeout.md`):
    (allowlist Actions egress / tune bot policy / bless alternate
     vantage). Smoke gate stays enforced; nothing weakened.
     Registry owner contact remains `UNKNOWN`.
-6. **Smoke identity endpoint (repo-sync Task 7, `feat/smoke`):**
+6. **Smoke identity endpoint (repo-sync Task 7, `feat/repo-sync`):**
     build-attested `/smoke.json`
     (`apps/web/src/pages/smoke.json.ts`, prerendered static
     `{"ok":true,"buildId":"<short-SHA>"}` — the SHA is stamped
@@ -1086,7 +1086,8 @@ issue-register, blocker-closure certificate, `20260923-final-closeout.md`):
     already global).
     Sitemap/perf/UI/SEO/security gates crawl `**/*.html|css|js` — the
     `.json` output is invisible to all of them (verified, no gate
-    edits). Dashboard runbook (OWNER ACTION — free-plan Bot Fight Mode
+    edits). Served content-type `application/json` for `/smoke.json`
+    is assumed from platform MIME, not asserted. Dashboard runbook (OWNER ACTION — free-plan Bot Fight Mode
     CANNOT be skipped by rule, per plan Web-research 2026-09-25):
     Security → Events lookup by Ray ID → identify the exact Service →
     BFM off/upgrade, vs SBFM (Pro+) path-scoped Skip

@@ -19,7 +19,10 @@ const GOOD_SHA = 'abc1234def5678';
 const results = [];
 
 // Fixture server: implements every smoke endpoint; `mode` injects one fault.
-function serve(mode, swBuildId, flipAfter = 0) {
+// `smokeJson` (undefined = no /smoke.json endpoint, falls through to the
+// generic HTML handler like older deploys) sets the /smoke.json body when
+// defined; `swBuildId` is the /sw.js BUILD_ID once past `flipAfter` hits.
+function serve(mode, swBuildId, flipAfter = 0, smokeJson) {
   let swHits = 0;
   const server = createServer((req, res) => {
     const url = new URL(req.url || '/', 'http://x');
@@ -30,6 +33,11 @@ function serve(mode, swBuildId, flipAfter = 0) {
             'content-security-policy': "default-src 'self'",
             'x-content-type-options': 'nosniff',
           };
+    if (url.pathname === '/smoke.json' && smokeJson !== undefined) {
+      res.writeHead(200, { 'content-type': 'application/json' });
+      res.end(smokeJson);
+      return;
+    }
     if (url.pathname === '/sw.js') {
       swHits += 1;
       const id = swHits > flipAfter ? swBuildId : 'stale000';
@@ -105,9 +113,9 @@ function runSmoke(url, sha, waitSecs) {
 
 async function runCase(
   name,
-  { mode, sha, waitSecs, flipAfter, expectExit, expectRule },
+  { mode, sha, waitSecs, flipAfter, swId, smokeJson, expectExit, expectRule },
 ) {
-  const server = await serve(mode, GOOD_SHA, flipAfter);
+  const server = await serve(mode, swId || GOOD_SHA, flipAfter, smokeJson);
   const port = server.address().port;
   const { code, out } = await runSmoke(
     `http://127.0.0.1:${port}`,
@@ -169,6 +177,23 @@ await runCase('broken-admin-fails', {
   waitSecs: 0,
   expectExit: 1,
   expectRule: 'admin-content',
+});
+await runCase('smoke-json-first-passes', {
+  mode: 'ok',
+  sha: GOOD_SHA,
+  waitSecs: 0,
+  swId: 'stale000',
+  smokeJson: JSON.stringify({ ok: true, buildId: 'abc1234' }),
+  expectExit: 0,
+  expectRule: 'via /smoke.json',
+});
+await runCase('mismatched-smoke-json-fails', {
+  mode: 'ok',
+  sha: GOOD_SHA,
+  waitSecs: 0,
+  smokeJson: JSON.stringify({ ok: true, buildId: 'fffffff' }),
+  expectExit: 1,
+  expectRule: 'deployment-identity',
 });
 
 const failed = results.filter((r) => !r.pass);

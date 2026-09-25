@@ -214,7 +214,7 @@ rendered content changes from a showcase to a grid landing.
 2. **Route-set delta:** AMENDMENT 01 authorises 16 incl. `/404` (lines 150-155); AMENDMENT 02 adds `/franchises/uppsala-tigers` (17; lines 201-205). Two live routes were never authorised in either set and are AUTHORISED here with evidence: `/offline` (offline fallback page, `apps/web/src/pages/offline.astro`) and the `tina-island/[name]` endpoint (`apps/web/src/pages/tina-island/[name].ts`, sole `prerender=false` POST route per `knowledge/01-VERIFIED-FACTS.yaml:293`). Neither carries an organisational claim beyond its function; content rules for their rendered output are unchanged.
 3. **`/​__smoke` RESERVED (not implemented):** the path `/__smoke` is RESERVED for Task 7's build-attested smoke endpoint. Reservation only — no route, no behavior, no sitemap entry is authorised by this block; implementation lands (or is reported NEEDS_CONTEXT) in Task 7.
 
-### AMENDMENT 03 follow-up (2026-09-25, repo-sync Task 7) — `/__smoke` implemented as `/__smoke.json` static
+### AMENDMENT 03 follow-up (2026-09-25, repo-sync Task 7) — `/__smoke` implemented as `/smoke.json` static
 
 **Status:** PROPOSED — needs owner re-approval at PR review (AMENDMENT 03 above preserved verbatim).
 

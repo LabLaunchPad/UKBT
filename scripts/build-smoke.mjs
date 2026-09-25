@@ -26,6 +26,13 @@ const distSmoke = existsSync(distSmokeClient)
   ? distSmokeClient
   : distSmokeLegacy;
 
+if (!existsSync(distSmoke)) {
+  console.error(
+    `build-smoke: smoke.json not found (checked ${distSmokeClient} and ${distSmokeLegacy})`,
+  );
+  process.exit(1);
+}
+
 let buildId = 'dev';
 try {
   buildId = execSync('git rev-parse --short HEAD', {
