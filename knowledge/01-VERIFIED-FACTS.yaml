@@ -62,7 +62,7 @@ leadership:                          # U-04 further narrowed, not closed — EV-
   vice_chairman: "Sayem Rahman"          # NEW — EV-20260826-029
   club_captain: "Mohammad Chowdhury"
   full_committee_status: UNKNOWN     # Founder/CEO, Chairman, Vice-Chairman now named; still not a complete committee
-  full_roster_status: KNOWN (names/countries only)  # NEW — EV-20260831-005/-006: 42-name roster now on record (apps/web/src/content/players-data.ts). Full individual profiles (bio/stats/photo) beyond the Club Captain remain UNKNOWN — this closes the roster-existence unknown, not the profile-completeness one.
+  full_roster_status: KNOWN (58 names + role/country each)  # EV-20260923-002 (owner list 2026-09-23) + PR #106 merged 2026-09-25: apps/web/src/content/players-data.ts carries all 58; Sibet Ahmed=England; display spelling corrected per owner 2026-09-25 (Wayne Parnell, Sri Lanka x2, Netherlands; slugs unchanged); #46 absent. Roles All-rounder 17 / Bowler 22 / Wicket-keeper 5 / Batsman 14. 50 with photos, 8 monogram fallbacks (no repo photos found for the 8 — initials stay until owner supplies). Full individual profiles (bio/stats) beyond the Club Captain remain UNKNOWN.
   homepage_critical: false           # explicit: full roster/committee are NOT required for the Homepage Contract (see artifacts/STAGE_7_READINESS_MATRIX.md)
 
 sister_franchise_uppsala_tigers:

@@ -16,8 +16,10 @@
 // Role + country for all 58 are owner-verbatim from the 2026-09-23 owner
 // list (EV-20260923-002, supersedes EV-20260911-002's taxonomy ban).
 // Renames applied: Kenner Lewis, Hamid Mehmood, Ellias Sunny, Abu Bakar,
-// Sibet Ahmed. Humayun kabir Jyoti case + Srilanka/Sri lanka/Netherands
-// spellings kept verbatim — never normalize.
+// Sibet Ahmed. Humayun kabir Jyoti case kept verbatim — never normalize.
+// Spelling corrected per owner direction 2026-09-25 (supersedes the
+// verbatim rule for these four only): Wayne Parnell, Sri Lanka (x2),
+// Netherlands. Photo slugs unchanged (internal file keys).
 // Individual full profiles (bio, stats) remain UNKNOWN and are stated
 // as such rather than invented; no stats tables, no quotations.
 import {
@@ -140,7 +142,7 @@ const rawRoster: RawPlayer[] = [
     photoSlug: 'karanbir-singh',
   },
   {
-    name: 'Wayne Parnel',
+    name: 'Wayne Parnell',
     country: 'South Africa',
     role: 'Bowler',
     photoSlug: 'wayne-parnel',
@@ -242,7 +244,7 @@ const rawRoster: RawPlayer[] = [
   { name: 'Rajesh Sharma', country: 'India', role: 'All-rounder' },
   {
     name: 'Chinthaka Rajapaksha',
-    country: 'Srilanka',
+    country: 'Sri Lanka',
     role: 'All-rounder',
     alsoUppsala: true,
     photoSlug: 'chinthaka-rajapaksha',
@@ -283,7 +285,7 @@ const rawRoster: RawPlayer[] = [
     wicketKeeper: true,
     photoSlug: 'humayun-kabir-jyoti',
   },
-  { name: 'Raminda Wijesooriya', country: 'Sri lanka', role: 'Batsman' },
+  { name: 'Raminda Wijesooriya', country: 'Sri Lanka', role: 'Batsman' },
   {
     name: 'Towker Khan',
     country: 'USA',
@@ -340,7 +342,7 @@ const rawRoster: RawPlayer[] = [
   { name: 'Dhavalkumar Norotam', country: 'Portugal', role: 'All-rounder' },
   {
     name: 'Musa Ahmad',
-    country: 'Netherands',
+    country: 'Netherlands',
     role: 'Batsman',
     photoSlug: 'musa-ahmad',
   },
