@@ -56,3 +56,10 @@
   Cache-Control: no-cache
 /sw-register.js
   Cache-Control: public, max-age=86400
+
+# Smoke identity endpoint (repo-sync Task 7, Shape A): build-attested
+# `/smoke.json` must never be cached — the smoke gate asserts the live
+# BUILD_ID matches the merge SHA. nosniff already applies via the /*
+# rule above. Append-only: existing rules untouched.
+/smoke.json
+  Cache-Control: no-store

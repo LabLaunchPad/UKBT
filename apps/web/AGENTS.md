@@ -44,7 +44,7 @@ Renders gate-approved content. Every organization-specific claim arrives via typ
 ## Conventions
 
 - Content flow: `src/content/*-data.ts` (Zod + `@ukbt/truth/gate`, fail-closed at build, PROD gated by `isPublishable`) → props → render. Parallel Tina path: `content/*/*.json` → `lib/tina/loaders` (Zod + allowed-urls) → `TinaIsland` → `/tina-island/*` re-render. Tina editorial fields are NOT truth-gated (gated by content-trust/allowed-urls/XSS choke instead).
-- Client JS (4 `<script>` roots, no framework, all ClientRouter-proofed behind `window.__ukbt*Wired` once-guards): `BaseLayout` logo-intro resets on `astro:before-swap` + `astro:after-swap`, motion reveal re-arms on `astro:page`; `Header` delegates drawer/dropdown/focus-trap at document level and resets state on `astro:after-swap`; `SquadGrid` filters and `ClubIntro` 4s slideshow init on `astro:page-load` (slideshow also stops on `astro:before-swap`).
+- Client JS (4 `<script>` roots, no framework, all ClientRouter-proofed behind `window.__ukbt*Wired` once-guards): `BaseLayout` logo-intro resets on `astro:before-swap` + `astro:after-swap`, motion reveal re-arms on `astro:page-load`; `Header` delegates drawer/dropdown/focus-trap at document level and resets state on `astro:after-swap`; `SquadGrid` filters and `ClubIntro` 4s slideshow init on `astro:page-load` (slideshow also stops on `astro:before-swap`).
 - CSS: tokens-only values; animate `transform`/`opacity` only; two-tier reduced-motion (instant states, soft-fade entrances).
 - Perf budgets (`<root>/scripts/check-perf.mjs`): HTML 72KB/page, CSS 96KB total, JS 48KB total. CSP: no `unsafe-inline` (hashes via `<root>/scripts/stamp-csp.mjs`).
 

@@ -13,4 +13,4 @@
 - Tests: `pnpm run test`
 
 ## Deployment
-All changes go through pull requests to main. The branch requires 14 CI checks to pass.
+All changes go through pull requests to main. The branch requires 18 CI checks to pass (plus Workers Builds / deploys).

@@ -1,7 +1,7 @@
 # Roadmap & Open Items
 
 **Status:** LIVING DOCUMENT — update in place as stages/items close, don't
-fork a second copy. Last updated 2026-09-23.
+fork a second copy. Last updated 2026-09-25.
 
 **Purpose:** one place that answers "what's done, what's next, what's
 blocked, and on whom" without re-deriving it from receipts scattered across
@@ -31,17 +31,17 @@ gate changes state, not the paragraph prose elsewhere.
 | 6 | Reference analysis | DONE (evidence-based, not live-template) | `artifacts/ui/REFERENCE-ANALYSIS.md`, `knowledge/06-TEMPLATE-BOUNDARY.yaml` |
 | 7 | Homepage | DONE | `artifacts/pages/HOMEPAGE-CONTRACT.md`, `artifacts/receipts/HOMEPAGE.md` |
 | 8 | Independent homepage red team | DONE, all 8 findings remediated (F8 has one deliberate, documented partial exception) | `artifacts/review/HOMEPAGE-REDTEAM.md` — see § 2.1 below |
-| 9 | Scale to remaining pages | DONE for route count (16 routes exist under `apps/web/src/pages/`) — content completeness is a separate, **partially blocked** item, see § 3 | route list: `about, club-captain, coaching, community, contact, design-system, faq, franchises, index, join, membership, news(+[slug]), players, services, tournaments, 404` |
+| 9 | Scale to remaining pages | DONE for route count (18 `.astro` files under `apps/web/src/pages/`) — content completeness is a separate, **partially blocked** item, see § 3 | route list: `about, club-captain, coaching, community, contact, faq, franchises, franchises/uppsala-tigers, index, join, membership, news(+[slug]), offline, players, services, tournaments, 404` |
 | 10 | Full-site verification & release | **PASS** (2026-08-27 re-run) | `artifacts/receipts/RELEASE.md` — `RELEASE_STATUS = PASS`; see § 2.2 |
 | 11 | Adaptive learning + replay | STARTED 2026-09-09 | `artifacts/adaptive-learning/` (catalog + checklist + protocol + index, prompt-07 schema); wired into `AGENTS.md`; adversarial replay (prompt 08) still open |
 
 **Net position:** the site is built, deployable, and the release gate
 passes cleanly as of the 2026-08-27 re-run (all three prior gaps closed:
-content-schema drift, route/link integrity, SEO completeness). Two
-non-blocking caveats remain, named honestly rather than silently
-resolved: canonical URL is a genuine `UNKNOWN` pending a production-domain
-decision, and branch protection on `main` is a repo-admin action outside
-any code gate (§ 2.3). Client-content items are tracked separately in
+content-schema drift, route/link integrity, SEO completeness). One
+non-blocking caveat remains, named honestly rather than silently
+resolved: the production domain is decided (`https://ukbanglatigers.co.uk`,
+canonical/sitemap/robots live — see September 2026 update below), and branch
+protection on `main` is a repo-admin action outside any code gate (§ 2.3). Client-content items are tracked separately in
 § 3 and don't block the release gate itself.
 
 **September 2026 update:** since that re-run, `deploy:verify` has grown
@@ -217,17 +217,11 @@ This is the first fully successful GitHub-Actions-driven Cloudflare
 Workers deploy after the four stacked fixes above.
 
 **Still open, dashboard-only, cannot be fixed from this repository:**
-- **Branch protection is not applied to `main`** (`docs/11-github-
-  branch-protection.md` — `protected: false`, verified via the GitHub API).
-  The rule, required-check list, and rationale are fully specified in that
-  document; an admin must apply it in the GitHub web UI. Do this before
-  treating `main` as a real production branch — right now a single
-  mistaken push or force-push has no guard.
-- **Cloudflare dashboard's Build command field**: reported empty in one
-  amendment, then reported populated in a later dashboard screenshot
-  supplied directly by the owner — not independently re-verified from
-  this session against a fresh build log since. Confirm on the next real
-  Workers Builds run before considering this fully closed.
+- **Branch protection on `main`** requires 18 checks (verified by
+  re-reading protection 2026-09-15 — see "Performance hardening
+  (2026-09-15)" above). The rule, required-check list, and rationale
+  are fully specified in `docs/11-github-branch-protection.md`; an admin
+  must apply any change in the GitHub web UI.
 
 ### 2.3b Visual truth system adopted; 1920×1080 transcription gap CLOSED
 
@@ -385,14 +379,17 @@ condensed pointer, not a fork of it. Update the source file, not this
 list, when an item closes.
 
 - Contact details (phone, email, venue, hours).
-- Full player roster, full committee list, coaching staff names/roles.
-- UKBT + Uppsala Tigers squad photos (blocked on direct file upload —
-  tooling can't fetch from Google Drive).
+- Full committee list, coaching staff names/roles (still owner-gated).
+- Player roster merged (PR #106): owner-verbatim 58 players + 4 officials
+  on `/players` (50 photos + 8 named monograms, no photos in repo — not a
+  blocked upload); 20 players + 4 officials on
+  `/franchises/uppsala-tigers`, 20/20 pictured after the Roy parity fix
+  (PR #110).
 - Photography rights confirmation for two watermarked photos.
 - FAQ answers, membership tiers/terms, programme pricing, join/trial
   process, match reports/news, a real consented testimonial, full About
   Us history, sponsor names.
-- Decisions: production domain, brand typography confirmation, whether a
+- Decisions: brand typography confirmation, whether a
   working contact form is wanted (none shipped — a form with no backend
   would silently drop real inquiries), analytics/tracking posture.
 
@@ -1070,8 +1067,33 @@ issue-register, blocker-closure certificate, `20260923-final-closeout.md`):
    production is 200 externally. Owner action: dashboard Security →
    Events lookup for ray `a3f6b6da2a2d433c` → rule name, then decide
    (allowlist Actions egress / tune bot policy / bless alternate
-   vantage). Smoke gate stays enforced; nothing weakened.
-   Registry owner contact remains `UNKNOWN`.
+    vantage). Smoke gate stays enforced; nothing weakened.
+    Registry owner contact remains `UNKNOWN`.
+6. **Smoke identity endpoint (repo-sync Task 7, `feat/repo-sync`):**
+    build-attested `/smoke.json`
+    (`apps/web/src/pages/smoke.json.ts`, prerendered static
+    `{"ok":true,"buildId":"<short-SHA>"}` — the SHA is stamped
+    post-build by `scripts/build-smoke.mjs` (wired into the web `build`
+    chain), mirroring `scripts/build-sw.mjs`: in-file `git rev-parse`
+    was tried and REJECTED (prerendered endpoints execute in the
+    adapter runtime shim where `node:child_process` is stubbed —
+    `execSync ... is not implemented`, observed 2026-09-25). No
+    leading underscore: Astro excludes `_`-prefixed `src/pages` files
+    from the router and `dist/` ["Excluding pages"], so the reserved
+    `/__smoke` path is un-buildable as a file route); `smoke-deploy.mjs` tries
+    `/smoke.json` first, falls back to `/sw.js`; `Cache-Control:
+    no-store` via an append-only `public/_headers` rule (`nosniff`
+    already global).
+    Sitemap/perf/UI/SEO/security gates crawl `**/*.html|css|js` — the
+    `.json` output is invisible to all of them (verified, no gate
+    edits). Served content-type `application/json` for `/smoke.json`
+    is assumed from platform MIME, not asserted. Dashboard runbook (OWNER ACTION — free-plan Bot Fight Mode
+    CANNOT be skipped by rule, per plan Web-research 2026-09-25):
+    Security → Events lookup by Ray ID → identify the exact Service →
+    BFM off/upgrade, vs SBFM (Pro+) path-scoped Skip
+    `(http.request.uri.path eq "/smoke.json")` on bot products only,
+    vs WAF managed-rule exception. No endpoint shape dodges free-plan
+    BFM — the endpoint fixes deployment identity, not the challenge.
 
 ## Roster cards v1 — owner-verbatim 58-player cards, merged 2026-09-25 (PR #106, squash `cdf4800`)
 
@@ -1084,11 +1106,13 @@ review APPROVE_WITH_MINORS, fix wave committed.
 
 1. **T1 data:** all 58 owner-verbatim role+country pairs in
    `players-data.ts` (Sibet Ahmed=England per brief:71; `Humayun kabir
-   Jyoti` lowercase-k kept verbatim; display spelling corrected per owner
-   2026-09-25: Wayne Parnell, Sri Lanka x2, Netherlands); roles All-rounder 17 / Bowler 22 /
+   Jyoti` lowercase-k kept verbatim); roles All-rounder 17 / Bowler 22 /
    Wicket-keeper 5 / Batsman 14; England 10 / UAE 9; #46 absent.
-2. **T2 photos:** 5 R100 slug renames + `MANIFEST.md` sync; 54/54 photo
-   slugs resolve to files; of 58 players, 50 with photos and 8 monogram
+   (Display-spelling corrections — Wayne Parnell, Sri Lanka x2,
+   Netherlands — landed in PR #108, see below.)
+2. **T2 photos:** 5 R100 slug renames + `MANIFEST.md` sync; 54 `.webp`
+   files on disk (player + official/management photos per the
+   `players-data.ts` header); of the 58 players, 50 pictured + 8 monogram
    fallbacks, 0 orphans.
 3. **T3 card:** persistent role+country slots (CLS-proof), facts never
    pushed by media height.
@@ -1107,16 +1131,29 @@ review APPROVE_WITH_MINORS, fix wave committed.
    (Device Guard kills `workerd`, miniflare spawn UNKNOWN −4094); static
    preview runs as Scheduled Task `UKBT-Preview`
    (`http://127.0.0.1:4321/`, AL-040) — stops on logoff/reboot.
-8. **ClientRouter rewire (AL-042):** slideshow dots + squad filters
-   re-armed on `astro:page-load` — spec
-   `tests/visual/clientrouter-rewire.spec.ts` red→green.
+
+## ClientRouter rewire — slideshow + filters re-armed, merged 2026-09-25 (PR #107, squash `840bb2b`)
+
+Slideshow dots + squad filters re-init on `astro:page-load` (AL-042);
+spec `tests/visual/clientrouter-rewire.spec.ts` red→green. Evidence:
+PR #107 squash `840bb2b`.
+
+## Roster spelling + officials grid id — merged 2026-09-25 (PR #108, squash `ff59488`)
+
+Display spelling corrected per owner 2026-09-25 (supersede verbatim for
+those four only): Wayne Parnell, Sri Lanka x2, Netherlands; unique
+officials grid id. Evidence: PR #108 squash `ff59488`.
+
+## Affiliation-note removal + photo parity — merged 2026-09-25 (PR #110, squash `30cefe6`)
+
 9. **Affiliation note removal + photo parity (owner 2026-09-25):** note
    line removed from cards (filter kept via `data-uppsala` attribute);
    Dhrubonil Roy only parity gap closed (Uppsala card now uses the
    shared `/media/players/dhrubonil-roy.webp`); Amahl Nathaniel, Rajesh
    Sharma, Ruman Ahmed, Tawfique Khan Tushar, Raminda Wijesooriya, Anop
    Ravi, Elliot Green, Dhavalkumar Norotam stay monogram (no photos in
-   repo). Evidence: dist grep (note text 0/0, `data-uppsala` x20 on
+   repo). SquadGrid hide-rule `:global()` scoping fix; `pages.spec` pin
+   19→20 (Roy parity: 20/20 Uppsala photos). Evidence: dist grep (note text 0/0, `data-uppsala` x20 on
    `/players/`, Roy `<img>` both pages) + guard spec 2/2 green
    (`50 of 58` / `8 of 58` intact) in `.superpowers/sdd/ukbt-affil-note-filters/task-3-report.md`.
 

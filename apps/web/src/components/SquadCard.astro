@@ -40,8 +40,10 @@ const { player: p, variant = 'player', org = 'UK Bangla Tigers' } = Astro.props;
 const isOfficial = variant === 'official';
 
 // Badge-worthy tags: verified playing tags only (Wicket-keeper, U-19,
-// and All-Rounder for the two EV-20260911-002 players). The Uppsala
-// squad spells it 'Wicketkeeper' — same verified role, normalised to
+// and All-Rounder for the two legacy EV-20260911-002 tag records — the
+// role badge itself now renders the owner-verbatim role for all 58 per
+// EV-20260923-002, which supersedes the EV-20260911-002 taxonomy ban).
+// The Uppsala squad spells it 'Wicketkeeper' — same verified role, normalised to
 // the hyphenated display form so both squads read identically. The
 // Uppsala affiliation is exposed separately as a data attribute,
 // never badged.

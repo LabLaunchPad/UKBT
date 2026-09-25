@@ -29,7 +29,7 @@ The official website of **UK Bangla Tigers Cricket Club (CIC, est. 2020)** — a
 |---|---|
 | 🏏 **Club** | UK Bangla Tigers Cricket Club (Community Interest Company) |
 | 📅 **Founded** | 2020 |
-| 👥 **Squad** | 50+ players across the squad |
+| 👥 **Squad** | 58 players + 4 team officials on /players (50 photos, 8 monograms); 20 players + 4 officials on /franchises/uppsala-tigers |
 | 🌍 **Reach** | 15+ countries · internationals on the roster |
 | 🏆 **Stage** | 7+ international tournaments — Safari International T20 Cup, Nordic Smash T20, Asian Challengers Trophy |
 | 🤝 **Family** | Sister franchise **Uppsala Tigers** (Sweden) |

@@ -3,9 +3,9 @@
 # Adding an unevidenced entry here is a defect, not a shortcut.
 
 meta:
-  last_updated: 2026-09-06  # meta refresh only (git HEAD 6f2f1b6); fact entries below unchanged, still evidence-bound
+  last_updated: 2026-09-25  # meta refresh (main HEAD e73dad2 post-#111; drift audit ran at 30cefe6 — .superpowers/sdd/repo-sync/audit-knowledge-contracts.md); fact entries updated per EV-20260923-002, EV-20260831-005/-006/-008, EV-20260826-024/-025
   established_at_sha: 0cd3129
-  last_audited_sha: d08841d   # zoom-out state audit, 2026-08-26 — see architecture.stage_detail below
+  last_audited_sha: e73dad2   # repo-sync audit base 30cefe6 (2026-09-25) merged via #111; see architecture.stage_detail below
   rule: "If it is not evidenced, it does not belong in this file as true."
 
 project:
@@ -67,7 +67,7 @@ leadership:                          # U-04 further narrowed, not closed — EV-
 
 sister_franchise_uppsala_tigers:
   status: "Owned and managed by UK Bangla Tigers"  # EV-20260831-005, stated on the document itself; consistent with, not new beyond, EV-20260826-028's Companies House corroboration
-  squad_status: KNOWN (20 named players + 4 team officials, 19+4 with photos)  # EV-20260831-005/-006/-008, superseding the overseas_signings list below. See apps/web/src/content/franchises-data.ts's uppsalaSquad/uppsalaOfficials.
+  squad_status: KNOWN (20 named players + 4 team officials, 20+4 ALL pictured)  # EV-20260831-005/-006/-008 + EV-20260912-001; Dhrubonil Roy via shared /media/players/dhrubonil-roy.webp (no dedicated uppsala-squad/ file) — apps/web/src/content/franchises-data.ts:24-27. See apps/web/src/content/franchises-data.ts's uppsalaSquad/uppsalaOfficials.
   overseas_signings:                  # SUPERSEDED — see squad_status above and EV-20260831-005/-006. Kept here as history, not current.
     superseded: true
     superseded_by: EV-20260831-005
@@ -334,8 +334,8 @@ deployment: # established 2026-09-15 — PR #66 postmortem, contracts/DEPLOYMENT
     user_facing: "production 200 externally same window (homepage incl. new headline, /about, /admin/)"
     rule_needed: "owner dashboard Security Events lookup for ray a3f6b6da2a2d433c; gate stays enforced, nothing weakened"
 
-unknowns:
-  total: 27
-  open: 22    # U-02 CLOSED, EV-20260826-026; none of U-01/03/04/05/06 fully close, so open count is unchanged by EV-029
-  narrowed_not_closed: [U-01, U-03, U-04, U-05, U-06]  # EV-20260826-026/-028/-029 — see register for exactly what remains open in each
+unknowns:  # recomputed 2026-09-25 vs artifacts/bootstrap/UNKNOWN-EVIDENCE.md ("23 open, 4 resolved, 27 total" at bootstrap: U-02/U-10/U-13/U-14 resolved)
+  total: 27  # register IDs U-01..U-27 unchanged — no new unknowns raised since Stage 2A
+  open: 21    # bootstrap 23 minus U-21 (licence VERIFIED EV-20260826-024; BL-02 RESOLVED) minus U-25 (Envato Elements channel EV-20260826-024)
+  narrowed_not_closed: [U-01, U-03, U-04, U-05, U-06, U-23]  # U-04: roster-existence closed (58 + Uppsala 20+4) but bios/stats/committee open; U-23: blanket approval EV-20260923-001 (124 records) narrows, approver-identity question stays open per gate T6
   register: artifacts/bootstrap/UNKNOWN-EVIDENCE.md

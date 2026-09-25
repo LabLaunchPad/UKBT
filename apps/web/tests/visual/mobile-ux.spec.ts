@@ -13,6 +13,11 @@ import { expect, test } from '@playwright/test';
  *
  * Every assertion below encodes a defect that was measured in a real
  * browser before it was fixed — none is a hypothetical.
+ *
+ * ALL_ROUTES covers the 16 static content routes by design: /offline is
+ * covered by sw.spec.ts (offline-shell precache + fallback), and
+ * /news/[slug] renders nothing (getStaticPaths returns [] until real
+ * posts land).
  */
 
 // Narrow real-device widths. 320 = iPhone SE 1 / small Android, the

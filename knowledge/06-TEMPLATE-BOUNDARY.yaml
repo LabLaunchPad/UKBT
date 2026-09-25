@@ -35,15 +35,15 @@ template:
   version: "1.0.0"
   sha256: cf4907bb60003b719f3d7712e2d06389c2ab7f8a02590bdea570da9780cafb54
   status: NOT_ADMITTED
-  license_status: STATED_BUT_UNVERIFIED
+  license_status: VERIFIED  # rolled forward 2026-09-25 — Envato Elements License Certificate HAXKDZUTYV (EV-20260826-024); mirrors knowledge/01 template block + provenance_chain.B2 below
   in_repository: false
-  evidence: [EV-20260826-005, EV-20260826-006]
+  evidence: [EV-20260826-005, EV-20260826-006, EV-20260826-024, EV-20260826-025]  # -005/-006 pre-licence research kept; -024/-025 appended for licence facts, never deleted
   marketplace:
     themeforest_item_id: "60543035"
     envato_elements_slug: "X3FTRWG"
-    channel_used: UNKNOWN        # U-25 — two different licensing models possible
+    channel_used: Envato Elements (subscription)  # U-25 RESOLVED — EV-20260826-024's license certificate, not the ThemeForest tiered-purchase channel
   other_website_reuse: PROHIBITED_ABSENT_ADDITIONAL_LICENCE
-  cross_framework_reimplementation: LEGAL_REVIEW_REQUIRED   # U-26
+  cross_framework_reimplementation: LIKELY_PERMITTED   # U-26 softened 2026-09-25 — literal porting VERIFIED permitted (one end product); full-grammar reimplementation reasoned likely-permitted in EV-20260826-024, not independently verified vs live terms
   note: >
     NOT_ADMITTED means the original template package is not admitted as a
     redistributable dependency or a generic company template — it is not in
@@ -52,7 +52,7 @@ template:
     below and the pipeline_stages this file defines.
   reference_use_status: FORENSIC_ANALYSIS_ALLOWED
   implementation_status: GOVERNED_ADAPTATION
-  production_status: NOT_CLEARED
+  production_status: CONDITIONALLY_CLEARABLE  # rolled forward 2026-09-25 — BL-02 closed via B2 (EV-20260826-024/-025); per-item truth/asset gating (knowledge/07) still applies, nothing pre-cleared
 
 # ============================================================================
 # LAYER 1 — PERMISSION FACTS (four, explicit, never boolean)
@@ -95,8 +95,7 @@ invalid_inferences_explicitly_rejected:
   - "INVALID: the framework changed, therefore a new licence right exists."
   - "INVALID: forensic extraction is allowed, therefore the licence is verified."
 invalid_inferences_note: >
-  ADELUX_LICENSE_VERDICT stays STATED_BUT_UNVERIFIED until acquisition/
-  licence evidence says otherwise, independent of every other fact here.
+  ADELUX_LICENSE_VERDICT is VERIFIED (EV-20260826-024) — the acquisition-evidence condition below has been met. BUILDER_AUTHORITY (LabLaunchPad-as-author) stays ASSERTED_NOT_EXECUTED on its own terms; adaptation permission flows from LICENSEE authority (B2), independent of every other fact here.
 
 # ============================================================================
 # LAYER 2 — FIVE PIPELINE STAGES (the layer that was missing)
@@ -357,9 +356,9 @@ single_site_scope:
 # LICENSE STATE
 # ============================================================================
 
-license_state:
-  ADELUX_LICENSE_VERDICT: STATED_BUT_UNVERIFIED
-  rule: "Keep this verdict until actual acquisition evidence is provided. Do not invent purchase ID, license holder, license tier, client entitlement, derivative-work rights, or cross-framework rights."
+license_state:  # rolled forward 2026-09-25 — mirrors knowledge/01 template block + provenance_chain.B2/provenance_verdicts of this file
+  ADELUX_LICENSE_VERDICT: VERIFIED  # EV-20260826-024, Envato Elements License Certificate HAXKDZUTYV; supersedes STATED_BUT_UNVERIFIED, history kept per knowledge/04 registry rules
+  rule: "Licence facts above are evidenced, not invented: no purchase ID, holder, tier, entitlement, or cross-framework right beyond what EV-20260826-024/-025 establish."
   if_evidence_later_establishes_a_valid_licence: >
     Update ONLY the applicable rights state, with provenance (a new EV-
     record). Do not rewrite historical evidence — supersede, per

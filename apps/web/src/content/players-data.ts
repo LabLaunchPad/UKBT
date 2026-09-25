@@ -6,7 +6,8 @@
 // Captain/Wk/U-19/country roles, 4 team officials). Owner direction:
 // use all pictures as UK Bangla Tigers players with picture and name,
 // roles from the PDF, new filename spellings win over the older roster
-// (Juan Henry, Kennar Lewis, Peter Robert, Mark James).
+// (Juan Henri->Juan Henry, Kennar Lewis->Kenner Lewis, Pater Robert
+// Harness->Peter Robert, Mark James Nunn->Mark James).
 //
 // Result: 58 players (42 existing, 4 renamed, 16 new from filenames)
 // + 4 officials. 50 players + 4 officials pictured (uniform 320px

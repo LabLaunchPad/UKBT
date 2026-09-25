@@ -32,9 +32,9 @@ team ran would have pre-empted it and defeated the purpose of having one.
 | `SEO-CONTRACT.md` | FROZEN | Metadata/JSON-LD sourced only from gated content |
 | `ACCESSIBILITY-CONTRACT.md` | FROZEN | WCAG 2.2 AA, source-defect repair-by-default rule |
 | `FORM-CONTRACT.md` | FROZEN | UI → interface → Cloudflare Functions adapter boundary |
-| `VISUAL-REGRESSION-CONTRACT.md` | FROZEN | 6-viewport matrix, pinned CI-vs-CI environment, anti-vacuity |
+| `VISUAL-REGRESSION-CONTRACT.md` | FROZEN | 7-viewport matrix, pinned CI-vs-CI environment, anti-vacuity |
 | `CI-CONTRACT.md` | FROZEN | Full required gate set, all merge-blocking |
-| `DEPLOYMENT-CONTRACT.md` | FROZEN | Cloudflare Pages + Functions, rollback posture |
+| `DEPLOYMENT-CONTRACT.md` | FROZEN | Cloudflare Workers + static assets, rollback posture |
 | `RIGHTS-CONTRACT.md` | FROZEN | Binds `knowledge/06-TEMPLATE-BOUNDARY.yaml`'s rights posture into `contracts/` |
 
 Fifteen files, matching the Stage 3 instruction exactly — no additional

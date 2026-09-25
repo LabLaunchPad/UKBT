@@ -229,8 +229,12 @@ pipeline. Faces verified in crops (HEIF, landscape, small-source,
 square, official, new-face samples — no decapitation). Forhad Reza
 source is 215x290 (mild upscale, acceptable at 160px render).
 Excluded: `D4652AE2-….png` (no name — never render an unnamed face);
-`Mohammad Chowdhury.jpg` not separately rendered (captain already
-pictured). The PDF's printed CIC number stays internal-only, never
+Amendment 2026-09-25 (repo-sync): `Mohammad Chowdhury.jpg` renders twice
+by design — roster card `mohammad-chowdhury.webp` (row below) + captain
+spotlight `mohammad-chowdhury-captain.jpg` (players-data.ts photoSlug;
+captain-data.ts captainPhoto). The 2026-09-12 "not separately rendered"
+note above is superseded; EV-20260912-001 carries the same stale line
+and needs an append-only amendment (not touched here). The PDF's printed CIC number stays internal-only, never
 rendered. Kit/sponsor marks visible in several portraits (Uppsala
 Tigers, Wolf Nutrition UK, Safari) are documentary background,
 disclosed not scrubbed. No biographies, statistics, or quotations
@@ -267,7 +271,7 @@ were supplied with the files.
 | `public/media/players/arafat-bhuiyan.webp` | `Arafat Bhuiyan.jpg` (1016x1210) | Arafat Bhuiyan |
 | `public/media/players/shabbir-rahman.webp` | `Shabbir Rahman.jpg` (1077x1078) | Shabbir Rahman |
 | `public/media/players/junaid-siddique.webp` | `Junaid Siddique.jpg` (1032x1002) | Junaid Siddique |
-| `public/media/players/wayne-parnel.webp` | `Wayne Parnel.jpg` (923x731) | Wayne Parnel |
+| `public/media/players/wayne-parnel.webp` | `Wayne Parnel.jpg` (923x731) | Wayne Parnell |
 | `public/media/players/juan-henry.webp` | `Juan Henry.jpg` (800x1200) | Juan Henry (new spelling wins over roster `Juan Henri`) |
 | `public/media/players/kenner-lewis.webp` | `Kennar Lewis.jpg` (894x960) | Kenner Lewis |
 | `public/media/players/peter-robert.webp` | `Peter Robert.jpg` (856x1074) | Peter Robert (new spelling wins over roster `Pater Robert Harness`) |

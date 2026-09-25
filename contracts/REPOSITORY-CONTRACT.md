@@ -171,3 +171,9 @@ this contract — it restates an already-frozen decision in binding form.
 REVERSIBLE. Directory moves and `tsconfig` path changes, per
 `ARCHITECTURE-PROPOSAL-V3.md` §2 — estimated one hour either direction.
 Not irreversible in the sense that would require re-planning to change.
+
+## AMENDMENT 2026-09-25 (repo-sync) — R-07: layer-8 location
+
+**Status:** PROPOSED — needs owner re-approval at PR review (frozen text above preserved verbatim).
+
+Layer-table row 8 (line 60: `| 8 UKBT content/truth | packages/truth/content/ | Not created |`) is superseded as a path: content lives at `apps/web/src/content/*-data.ts` (8 modules — about, captain, franchises, homepage, navigation, players, sponsors, tournaments — verified by listing), schema + gate in `packages/truth` (`ContentRecordSchema` at `packages/truth/src/schema/provenance.ts:59`; gate in `packages/truth/src/gate/`). INV-013 co-location holds at the gate/schema level, not the file-path level. `apps/web/src/content/` is recorded here as the sanctioned exception with its validation binding: every module calls `ContentRecordSchema.parse(...)` before `evaluate()` (e.g. `players-data.ts:26-32`, `franchises-data.ts:37-43`).

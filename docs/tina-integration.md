@@ -3,7 +3,7 @@
 **Created:** 2026-09-14
 **Status:** `TINACMS_FREE_READY_WITH_EXPLICIT_LIMITATIONS`
 **Domain:** https://ukbanglatigers.co.uk
-**Framework:** Astro 5.x + @tinacms/astro v0.7.0
+**Framework:** Astro 7.x (apps/web/package.json: astro ^7.2.8) + @tinacms/astro v0.7.0
 
 ## Architecture
 
@@ -36,7 +36,7 @@ TinaCloud Free (Git-backed)
 | `apps/web/content/site/siteSettings.json` | Site settings (Tina-managed) |
 | `tina/config.ts` | TinaCMS project configuration with 4 collections |
 | `scripts/dependency-allowlist.json` | Added 4 TinaCMS package entries |
-| `.github/workflows/ci.yml` | CI pipeline implementing all 15 frozen CI gates |
+| `.github/workflows/ci.yml` | CI pipeline implementing all 18 required checks |
 | `.env.example` | TinaCMS environment variable names |
 | `adversarial/cases.yaml` | 12 adversarial test cases (required by scaffold) |
 | `wrangler.jsonc` | Added SESSION KV binding for Cloudflare adapter |
@@ -52,7 +52,7 @@ TinaCloud Free (Git-backed)
 - `tinacms` ^3.14.0 (apps/web dependency, must be ≥3.9.3 for CVE-2026-55661)
 - `@tinacms/cli` ^3.0.0 (apps/web devDependency)
 - `@astrojs/cloudflare` ^14.2.5 (already in apps/web)
-- `@astrojs/node` ^4.0.0 (removed — incompatible with Astro 5)
+- `@astrojs/node` ^4.0.0 (removed — incompatible with Astro 7)
 
 ## Environment Variables
 
@@ -156,12 +156,11 @@ Adjusted to accommodate TinaCMS overhead:
 | Budget | Before | After | Reason |
 |---|---|---|---|
 | `htmlPerPage` | 64KB | 72KB | Tina admin + inline schema |
-| `cssTotal` | 56KB | 72KB | Tina admin styles |
+| `cssTotal` | 56KB | 96KB | Tina admin styles |
 | `jsTotal` | 32KB | 48KB | Tina bridge (15.5KB) + Cloudflare adapter |
 
 **Rationale**: TinaCMS bridge adds ~15KB JS for visual editing. This is loaded only when editing mode is active, but counted in total budget. Public site without editing remains lean.
 
 ## Status: `TINACMS_FREE_READY_WITH_EXPLICIT_LIMITATIONS`
 
-All 15 CI gates pass. Public site fully functional. Waiting on owner
-to set env vars and complete TinaCloud dashboard setup.
+All 18 required checks pass. Public site fully functional. Tina closure merged 2026-09-22/23 (gates PR #96, fixes #97/#99/#100); production Save path proven (headline edit → commit `fbf05f2` → live). Standing blocker: post-deploy smoke FAILS from the GH runner (Cloudflare challenge — owner-action blocker).

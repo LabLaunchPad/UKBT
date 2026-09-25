@@ -96,3 +96,9 @@ page templates call `seo.ts` emitters with gated vars — the three
 legacy hand-built blocks (index/about/club-captain) were migrated, and
 `check-seo.mjs` validates every emitted block parses with a schema.org
 context. Reversibility unchanged.
+
+## AMENDMENT 02 (2026-09-25, repo-sync) — R-05: reversibility (pipeline built)
+
+**Status:** PROPOSED — needs owner re-approval at PR review (frozen text + AMENDMENT 01 preserved verbatim).
+
+§ Reversibility, lines 79-82 ("No metadata pipeline exists yet") is superseded: the pipeline is built — `apps/web/src/lib/seo.ts` (single SEO engine), `BaseLayout.astro` head emission, `scripts/generate-sitemap.mjs`, `scripts/check-seo.mjs` + `tests/visual/seo.spec.ts` (all files verified present), per AMENDMENT 01 (lines 84-98) itself. Reversibility now reads: metadata-pipeline changes migrate the built pipeline (seo.ts emitters, sitemap derivation, check-seo rules), not greenfield implementation. Ownership, invariants, and forbidden behavior are unaffected.

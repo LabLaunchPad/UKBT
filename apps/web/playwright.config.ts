@@ -1,3 +1,4 @@
+import { existsSync } from 'node:fs';
 import { defineConfig, devices } from '@playwright/test';
 
 /**
@@ -54,9 +55,13 @@ export default defineConfig({
         // apps/web/README.md). CI runs a real `playwright install
         // chromium` instead (.github/workflows/ci.yml) and must not use
         // this override, since /opt/pw-browsers doesn't exist there.
+        // The override applies only when the path actually exists —
+        // otherwise fall back to Playwright's bundled chromium.
         launchOptions: process.env.CI
           ? {}
-          : { executablePath: '/opt/pw-browsers/chromium' },
+          : existsSync('/opt/pw-browsers/chromium')
+            ? { executablePath: '/opt/pw-browsers/chromium' }
+            : {},
       },
     },
   ],

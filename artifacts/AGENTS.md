@@ -26,7 +26,7 @@ Append-only memory: evidence records, verification receipts, review output, adap
 - `visual/` (`DECISION-LEDGER.md`), `responsive/` (`RESPONSIVE-MATRIX.yaml`), `renders/` (`RENDER-FINGERPRINT.md`) — governed visual artifacts; old baselines are history, not current truth (ADELUX files live in `adelux/`, `design/`, `evidence/`, not `visual/`)
 - `bootstrap/`, `verification/`, `ui/`, `pages/`, `architecture/`, `design/`, `audit/` — stage evidence (original stage mapping in `README.md`)
 - `adelux/`, `audit/`, `brand/`, `extraction/`, `performance/`, `source/` — domain evidence stores
-- `HANDOFF.md` — frozen 2026-09-15 (#76) — historical, do not update (see Protected)
+- `HANDOFF.md` — living handoff doc, refreshed 2026-09-25 (frozen 2026-09-15 section kept verbatim below as history per its in-file flag + D-18 rewrite ruling)
 
 ## Dependencies
 

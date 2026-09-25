@@ -112,3 +112,10 @@ evidence-reuse rule).
 REVERSIBLE. Zero component contracts exist yet — this contract fixes the
 *shape* a future contract must have, which can itself be amended before
 any real contract is written against it.
+
+## AMENDMENT 2026-09-25 (repo-sync) — R-03: viewport ref + implementation reality
+
+**Status:** PROPOSED — needs owner re-approval at PR review (frozen text above preserved verbatim).
+
+1. **Viewport ref (§ Outputs, line 21: "frozen 6-viewport matrix"):** superseded. The canonical matrix is 7 viewports (1920×1080 added by `VISUAL-REGRESSION-CONTRACT.md` AMENDMENT 01). Component responsive rules reference the 7-viewport matrix.
+2. **Zero-contracts (§ Reversibility, lines 110-113):** superseded in part. Astro implementations exist (`apps/web/src/components/`: SquadGrid, SquadCard, Header, ClubIntro, among others) rendering gated content (e.g. `SquadCard.astro:87` `data-uppsala` filter hook; `SquadGrid.astro:54+`; `players.astro:61,70` and `uppsala-tigers.astro:94,107` carry unique `squad`/`team-officials` ids). Framework-neutral layer-6 contracts exist for button, card, link, breadcrumb (`packages/truth/src/contracts/`, audited path per § Validation method lines 76-79); whether they were backfilled to cover SquadGrid/SquadCard/Header/ClubIntro is UNKNOWN — stated, not assumed. Consequences: (a) § Forbidden behavior's "no Astro component before its framework-neutral contract" now describes live history — future components follow contract-first; existing implementations are recorded, not retroactively blessed; (b) reversibility now reads migrate-live-components, not greenfield shape design.

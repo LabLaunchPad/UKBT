@@ -7,7 +7,7 @@ description: >
   Follows Google Open Knowledge Format v0.2 conventions.
 bundle_type: project-knowledge
 created: 2026-08-26
-last_updated: 2026-09-15
+last_updated: 2026-09-25
 status: active
 maintainer: UKBT Engineering
 ---

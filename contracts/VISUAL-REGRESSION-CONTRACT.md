@@ -248,3 +248,12 @@ The pinned rendering environment, CI-vs-CI-only comparison, reference
 immutability, the anti-vacuity rules, and the five required evidence
 kinds all stand exactly as frozen. This amendment adds vocabulary and
 closes a transcription gap; it relaxes nothing.
+
+---
+
+## AMENDMENT 03 (2026-09-25, repo-sync) — R-09: clearance invariant + viewport refs
+
+**Status:** PROPOSED — needs owner re-approval at PR review (frozen text + AMENDMENTS 01-02 preserved verbatim).
+
+1. **Clearance invariant (§ Invariants, lines 87-91: references "remain `GOVERNED` by `PRODUCTION_CLEARANCE = NOT_CLEARED` until Track B resolves"):** superseded as a blanket. Track B UNLOCKED (EV-20260826-024/-025; RIGHTS-CONTRACT permission facts; `knowledge/06-TEMPLATE-BOUNDARY.yaml` `PRODUCTION_CLEARANCE: CONDITIONALLY_CLEARABLE`, mirrored in `knowledge/01-VERIFIED-FACTS.yaml`). Per-item truth/asset gating still applies; the blanket NOT_CLEARED no longer does.
+2. **Viewport refs (lines 9, 55 and the line-197 narrative):** pre-AMENDMENT-01 wording, now history. AMENDMENT 01's 7-viewport matrix (lines 141-160) governs. Flagged, not touched here: `contracts/README.md:35` still reads "6-viewport matrix" — that file is outside this task's scope; a follow-up amendment there should read 7-viewport. It does not govern; AMENDMENT 01 governs.
