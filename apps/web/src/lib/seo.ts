@@ -80,8 +80,6 @@ export const SEO_ROUTES: SeoRoute[] = [
   { path: '/franchises/uppsala-tigers', indexable: true },
   { path: '/tournaments', indexable: true },
   { path: '/news', indexable: true },
-  { path: '/community', indexable: true },
-  { path: '/coaching', indexable: true },
   { path: '/contact', indexable: true },
   { path: '/faq', indexable: true },
   { path: '/services', indexable: false },

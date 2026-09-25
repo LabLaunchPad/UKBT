@@ -1,0 +1,49 @@
+id: EV-20260926-001
+classification: STATED_BUT_UNVERIFIED
+claim: >
+  Per the owner's direct instruction (2026-09-26 chat): (1) the shared
+  FranchiseTeaser headline becomes "Uppsala Tigers is a franchise team
+  owned and managed by UK Bangla Tigers" (Homepage, Tournaments,
+  Community); (2) the /franchises/uppsala-tigers header becomes the
+  same sentence; (3) the Uppsala facts block becomes "Uppsala Tigers
+  is a franchise team, owned and managed by UK Bangla Tigers, to
+  participate in the inaugural ICC approved franchise tournament in
+  Stockholm, Sweden called Nordic Smash T20 to be held on the 15th
+  till 20th of June 2026" (owner's "20st" typo corrected to "20th";
+  future-tense "to be held" kept verbatim per owner confirmation).
+source: "Owner instruction in project chat, 2026-09-26 (first-party client-supplied, same class as EV-20260826-027 CLIENT_REQ_008 and EV-20260831-001/-002)."
+source_type: first_party_client_supplied
+retrieved_at: 2026-09-26
+verified_at: 2026-09-26
+valid_until: null
+justification_for_null: >
+  Records the instruction's contents as supplied, not a perishable
+  external claim. Independent corroboration of ICC approval, Stockholm
+  venue, and exact 15-20 June 2026 dates has NOT been established —
+  no evidence on record supports those three sub-claims beyond this
+  instruction (searched artifacts/evidence for "ICC approved",
+  "inaugural", "Stockholm", "June 2026" date specifics: no hits).
+scope: "FranchiseTeaser headline (/, /tournaments, /community) + /franchises/uppsala-tigers header and facts block."
+method: >
+  Owner's three numbered swaps quoted verbatim from the 2026-09-26
+  message (with screenshots of the teaser and Uppsala intro); wording
+  preserved except the "20st"->"20th" typo fix the owner approved.
+result: |
+  Publishable as client-stated copy under the STATED_BUT_UNVERIFIED
+  class via this record. The "owned and managed" sub-claim is
+  additionally corroborated by EV-20260831-005 (client document title
+  page: "Uppsala Tigers is owned and managed by UK Bangla Tigers",
+  same CIC number) and EV-20260826-028 (Companies House).
+related_files:
+  - apps/web/src/components/FranchiseTeaser.astro
+  - apps/web/src/pages/franchises/uppsala-tigers.astro
+  - apps/web/src/content/franchises-data.ts
+relates_to: [EV-20260831-005, EV-20260826-028, EV-20260826-026]
+notes: >
+  KNOWN TENSION (on record, not silent): this text says "to be held"
+  (future) for 15-20 June 2026, while tournaments-data.ts
+  (org.tournament.nordic_smash, EV-026) records Nordic Smash T20 as
+  Completed, June 2026, Sweden, and the prior facts block said
+  "Competed in the Nordic Smash T20 tournament". tournaments-data.ts
+  is deliberately untouched by this change; reconciling the event's
+  status/tense is an open follow-up, not part of this instruction.

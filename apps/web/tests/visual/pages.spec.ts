@@ -15,9 +15,8 @@ const routes = [
   { path: '/franchises/uppsala-tigers', name: 'Uppsala Tigers' },
   { path: '/tournaments', name: 'International Tournaments/Events' },
   { path: '/contact', name: 'Contact Us' },
-  // Template-mirrored routes (CLIENT_REQ_009 / ROUTE-CONTRACT Amendment 01).
-  { path: '/community', name: 'Community' },
-  { path: '/coaching', name: 'Coaching & Development' },
+  // Template-mirrored routes (CLIENT_REQ_009 / ROUTE-CONTRACT Amendment 01,
+  // as reduced by AMENDMENT 04 which removed /community and /coaching).
   { path: '/services', name: 'What We Do' },
   { path: '/membership', name: 'Membership' },
   { path: '/join', name: 'Join the Club' },
@@ -32,14 +31,7 @@ const routes = [
  * thing. This asserts the condition rather than trusting it was applied.
  */
 const NOINDEX_ROUTES = ['/services', '/membership', '/join'];
-const INDEXABLE_ROUTES = [
-  '/',
-  '/about',
-  '/community',
-  '/coaching',
-  '/faq',
-  '/news',
-];
+const INDEXABLE_ROUTES = ['/', '/about', '/faq', '/news'];
 
 for (const route of routes) {
   test(`axe-core scan reports zero violations on ${route.name}`, async ({

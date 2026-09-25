@@ -1,0 +1,43 @@
+id: EV-20260926-002
+classification: STATED_BUT_UNVERIFIED
+claim: >
+  Per the owner's direct instruction (2026-09-26 chat): the
+  /coaching/ and /community/ pages "are not needed" and must be
+  deleted. No replacement routes, no redirects, and no content
+  migration were ordered — removal only.
+source: "Owner instruction in project chat, 2026-09-26 (first-party client-supplied, same class as EV-20260826-027 CLIENT_REQ_008 and EV-20260831-001/-002)."
+source_type: first_party_client_supplied
+retrieved_at: 2026-09-26
+verified_at: 2026-09-26
+valid_until: null
+justification_for_null: >
+  Records the instruction's contents as supplied. It goes stale only
+  when superseded by a newer instruction reinstating either route.
+scope: "/coaching and /community routes, their nav/sitemap/SEO/test references, and ROUTE-CONTRACT AMENDMENT 04."
+method: >
+  Owner message quoted verbatim ("these pages are not needed, so we
+  need to delete these pages", with both production URLs). No
+  independent UKBT-evidence justification beyond the instruction
+  itself is claimed — same authority AMENDMENT 01/02 already accept
+  for client IA decisions.
+result: |
+  Authorises ROUTE-CONTRACT AMENDMENT 04 (18 -> 16 routes) and the
+  removal of both .astro files plus their nav (secondaryNav), SEO
+  registry (SEO_ROUTES), llms.txt, and Playwright route-list entries.
+  Deleted URLs fall through to the existing /404 route
+  (not_found_handling 404-page); no redirect file is created, per the
+  removal-only instruction.
+related_files:
+  - apps/web/src/pages/coaching.astro
+  - apps/web/src/pages/community.astro
+  - apps/web/src/content/navigation-data.ts
+  - apps/web/src/lib/seo.ts
+  - apps/web/public/llms.txt
+  - contracts/ROUTE-CONTRACT.md
+relates_to: [EV-20260826-027, EV-20260831-001, EV-20260831-002]
+notes: >
+  The FranchiseTeaser component rendered on /community is unaffected
+  as shared code — it continues to render on / and /tournaments.
+  Stale generated captures (artifacts/ui/screenshots community* /
+  coaching* PNGs) are removed with this change; they are regenerated
+  output, not evidence records.
