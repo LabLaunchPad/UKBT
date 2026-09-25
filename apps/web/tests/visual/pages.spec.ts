@@ -167,19 +167,21 @@ test('Uppsala Tigers roster photos are exactly the evidenced set (EV-20260831-00
   // Roster moved from /franchises (now a card-grid landing) to the
   // Uppsala Tigers detail page — contracts/ROUTE-CONTRACT.md AMENDMENT 02.
   // Until EV-20260831-008, no player photo existed for anyone and this
-  // test asserted zero roster images. 19 of the 20 squad members now
+  // test asserted zero roster images. All 20 squad members now
   // have a real, evidenced photo — this asserts the roster shows
   // exactly that set, neither fewer (a photo silently dropped) nor more
-  // (an unevidenced image slipping in). Since the Squad recomposition
+  // (an unevidenced image slipping in). Dhrubonil Roy wired to shared
+  // /media/players/dhrubonil-roy.webp per owner photo-parity direction
+  // 2026-09-25 (EV-20260831-008 set + 1). Since the Squad recomposition
   // the page renders SquadCard (.ukbt-squad-card), not RosterGrid.
   await page.goto('/franchises/uppsala-tigers');
   const srcs = await page
     .locator('#squad .ukbt-squad-card img')
     .evaluateAll((imgs) => imgs.map((img) => img.getAttribute('src')));
-  expect(srcs, 'roster photo count').toHaveLength(19);
+  expect(srcs, 'roster photo count').toHaveLength(20);
   for (const src of srcs) {
     expect(src, 'roster photo path').toMatch(
-      /^\/media\/uppsala-squad\/.+\.jpg$/,
+      /^\/media\/(uppsala-squad\/.+\.jpg|players\/dhrubonil-roy\.webp)$/,
     );
   }
   // Every squad photo names Uppsala Tigers (records carry no explicit
@@ -188,16 +190,21 @@ test('Uppsala Tigers roster photos are exactly the evidenced set (EV-20260831-00
   const alts = await page
     .locator('#squad .ukbt-squad-card img')
     .evaluateAll((imgs) => imgs.map((img) => img.getAttribute('alt') ?? ''));
-  expect(alts.length, 'squad alt count').toBe(19);
+  expect(alts.length, 'squad alt count').toBe(20);
   for (const alt of alts) {
     expect(alt, 'squad photo org').toMatch(/Uppsala Tigers/);
   }
-  // Dhrubonil Roy has no supplied photo — must stay text-only, not a
-  // placeholder image.
+  // Dhrubonil Roy now renders exactly 1 img with the shared photo.
   const royCard = page.locator('#squad .ukbt-squad-card', {
     hasText: 'Dhrubonil Roy',
   });
-  await expect(royCard.locator('img')).toHaveCount(0);
+  const royImg = royCard.locator('img');
+  await expect(royImg).toHaveCount(1);
+  await expect(royImg).toHaveAttribute(
+    'src',
+    '/media/players/dhrubonil-roy.webp',
+  );
+  await expect(royImg).toHaveAttribute('alt', /Uppsala Tigers/);
 });
 
 test('client-confirmed captain portrait is rendered on the Club Captain page', async ({
