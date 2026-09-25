@@ -12,32 +12,39 @@ interface Social {
 }
 interface Props {
   social: Social[];
+  /** Navy-finale mode: white-on-navy re-set, gold buttons, no top rule,
+     photo hoisted to the calling page. Homepage band 7 only. */
+  inverse?: boolean;
 }
-const { social } = Astro.props;
+const { social, inverse = false } = Astro.props;
 const primarySocial = social[0];
 ---
 
-<div class="ukbt-about-cta">
+<div class={inverse ? 'ukbt-about-cta ukbt-about-cta--inverse' : 'ukbt-about-cta'}>
   <div class="ukbt-about-cta__content">
     <h3 class="ukbt-about-cta__headline">Follow the Tigers</h3>
-    <p class="ukbt-about-cta__body">Every tournament, every result — straight from the club.</p>
+    <p class="ukbt-about-cta__body ukbt-about-cta__lede">Every tournament, every result — straight from the club.</p>
     <div class="ukbt-about-cta__actions">
       {primarySocial && (
         <Button
           label={`Follow on ${socialDisplayName(primarySocial.platform)}`}
           href={primarySocial.url}
           variant="primary"
-          tone="on-light"
+          tone={inverse ? 'on-dark' : 'on-light'}
           external
         />
       )}
-      <Button label="Contact Us" href="/contact/" variant="primary" tone="on-light" />
+      <Button label="Contact Us" href="/contact/" variant="primary" tone={inverse ? 'on-dark' : 'on-light'} />
+      {inverse && (
+        <a class="ukbt-about-cta__join" href="/join/">Join the Club</a>
+      )}
     </div>
   </div>
   <div class="ukbt-about-cta__social">
-    <span class="ukbt-about-cta__social-label">Also on</span>
-    <SocialLinks links={social} tone="on-light" label="UK Bangla Tigers on other platforms" />
+    <span class="ukbt-about-cta__social-label ukbt-about-cta__lede">Also on</span>
+    <SocialLinks links={social} tone={inverse ? 'on-dark' : 'on-light'} label="UK Bangla Tigers on other platforms" />
   </div>
+  {!inverse && (
   <div class="ukbt-about-cta__photo">
     <img
       src="/media/team-huddle.webp"
@@ -47,6 +54,7 @@ const primarySocial = social[0];
       loading="lazy"
     />
   </div>
+  )}
 </div>
 
 <style>
@@ -56,6 +64,25 @@ const primarySocial = social[0];
     gap: var(--ukbt-space-gap-5);
     border-top: 3px solid var(--ukbt-color-brand-accent);
     padding-top: var(--ukbt-space-6);
+  }
+  /* Navy-finale (inverse) mode — homepage band 7 only. The Section
+     repaints text to inverseForeground and the focus ring gold; body
+     and social-label step to neutral-300 (SectionHeader inverse-lede
+     precedent); the light-surface top rule is absorbed by the band
+     boundary so no rule sits on navy. */
+  .ukbt-about-cta--inverse {
+    border: 0;
+  }
+  .ukbt-about-cta--inverse .ukbt-about-cta__lede {
+    color: var(--ukbt-color-neutral-300);
+  }
+  /* Inherits the Section inverse foreground (Section.astro repaints the
+     container, nothing between sets a colour); identical computed value
+     to the explicit token at far fewer bytes (perf budget). */
+  .ukbt-about-cta__join {
+    align-self: center;
+    color: inherit;
+    text-underline-offset: var(--ukbt-space-1);
   }
   .ukbt-about-cta__content {
     display: flex;

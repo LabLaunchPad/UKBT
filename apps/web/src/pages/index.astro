@@ -143,10 +143,33 @@ const structuredData = homepageGraph({
       <FranchiseTeaser name={homepage.sisterFranchise} />
     </Section>
 
-    <Section surface="alt" paddingBottom="normal">
-      <AboutCTA social={homepage.social} />
+    {/*
+      Direction A band 7: the team photo sits above the navy finale band
+      (off-navy, full-bleed) so no text sits on photography (rails V3).
+      Same cleared asset + alt as AboutCTA's light-surface photo slot.
+    */}
+    <img
+      class="ukbt-home-finale-photo"
+      src="/media/team-huddle.webp"
+      width="1080"
+      height="720"
+      alt="UK Bangla Tigers players in a team huddle"
+      loading="lazy"
+    />
+
+    <Section surface="inverse" paddingBottom="normal">
+      <AboutCTA social={homepage.social} inverse />
     </Section>
   </main>
 
   <Footer social={homepage.social} nav={homepage.nav} secondaryNav={homepage.secondaryNav} />
 </BaseLayout>
+
+<style>
+  .ukbt-home-finale-photo {
+    display: block;
+    width: 100%;
+    max-height: 28rem;
+    object-fit: cover;
+  }
+</style>
