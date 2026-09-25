@@ -23,7 +23,7 @@ const primarySocial = social[0];
 <div class={inverse ? 'ukbt-about-cta ukbt-about-cta--inverse' : 'ukbt-about-cta'}>
   <div class="ukbt-about-cta__content">
     <h3 class="ukbt-about-cta__headline">Follow the Tigers</h3>
-    <p class="ukbt-about-cta__body">Every tournament, every result — straight from the club.</p>
+    <p class="ukbt-about-cta__body ukbt-about-cta__lede">Every tournament, every result — straight from the club.</p>
     <div class="ukbt-about-cta__actions">
       {primarySocial && (
         <Button
@@ -36,12 +36,12 @@ const primarySocial = social[0];
       )}
       <Button label="Contact Us" href="/contact/" variant="primary" tone={inverse ? 'on-dark' : 'on-light'} />
       {inverse && (
-        <a class="ukbt-about-cta__join-link" href="/join/">Join the Club</a>
+        <a class="ukbt-about-cta__join" href="/join/">Join the Club</a>
       )}
     </div>
   </div>
   <div class="ukbt-about-cta__social">
-    <span class="ukbt-about-cta__social-label">Also on</span>
+    <span class="ukbt-about-cta__social-label ukbt-about-cta__lede">Also on</span>
     <SocialLinks links={social} tone={inverse ? 'on-dark' : 'on-light'} label="UK Bangla Tigers on other platforms" />
   </div>
   {!inverse && (
@@ -71,15 +71,17 @@ const primarySocial = social[0];
      precedent); the light-surface top rule is absorbed by the band
      boundary so no rule sits on navy. */
   .ukbt-about-cta--inverse {
-    border-top: none;
+    border: 0;
   }
-  .ukbt-about-cta--inverse .ukbt-about-cta__body,
-  .ukbt-about-cta--inverse .ukbt-about-cta__social-label {
+  .ukbt-about-cta--inverse .ukbt-about-cta__lede {
     color: var(--ukbt-color-neutral-300);
   }
-  .ukbt-about-cta__join-link {
+  /* Inherits the Section inverse foreground (Section.astro repaints the
+     container, nothing between sets a colour); identical computed value
+     to the explicit token at far fewer bytes (perf budget). */
+  .ukbt-about-cta__join {
     align-self: center;
-    color: var(--ukbt-color-surface-inverse-foreground);
+    color: inherit;
     text-underline-offset: var(--ukbt-space-1);
   }
   .ukbt-about-cta__content {

@@ -15,7 +15,7 @@ const { mainEvent, otherEvents } = Astro.props;
 
 <div class="ukbt-tournaments">
   <div class="ukbt-tournaments__main">
-    <h2 class="ukbt-tournaments__title"><a href="/tournaments/#upcoming">{mainEvent.name}</a></h2>
+    <h2 class="ukbt-tournaments__title"><a class="ukbt-tournaments__item-name ukbt-tournaments__title-link" href="/tournaments/#upcoming">{mainEvent.name}</a></h2>
     <div class="ukbt-tournaments__meta">
       <span class="ukbt-tournaments__meta-when">{mainEvent.when}</span>
       <span class="ukbt-tournaments__sep" aria-hidden="true">&middot;</span>
@@ -71,15 +71,9 @@ const { mainEvent, otherEvents } = Astro.props;
   }
   /* Direction A gold-rule grammar (D4+D6): event names are native
      anchors to the existing /tournaments/#upcoming anchor. The main
-     event carries a persistent gold underline (non-text accent on
-     light); list names wipe one in on hover, token-timed. */
-  .ukbt-tournaments__title a {
-    color: inherit;
-    text-decoration: underline;
-    text-decoration-color: var(--ukbt-color-brand-accent);
-    text-decoration-thickness: 3px;
-    text-underline-offset: var(--ukbt-space-2);
-  }
+     event reuses the item-name grammar and overrides colour/weight/
+     offset to the persistent gold rule (non-text accent on light);
+     list names wipe one in on hover, token-timed. */
   .ukbt-tournaments__item-name {
     color: inherit;
     text-decoration: underline;
@@ -91,6 +85,11 @@ const { mainEvent, otherEvents } = Astro.props;
   }
   .ukbt-tournaments__item-name:hover {
     text-decoration-color: var(--ukbt-color-brand-accent);
+  }
+  .ukbt-tournaments__title-link {
+    text-decoration-color: var(--ukbt-color-brand-accent);
+    text-decoration-thickness: 3px;
+    text-underline-offset: var(--ukbt-space-2);
   }
   .ukbt-tournaments__meta {
     display: flex;
