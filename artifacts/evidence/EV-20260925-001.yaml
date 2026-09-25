@@ -1,0 +1,47 @@
+id: EV-20260925-001
+classification: OBSERVED
+claim: >
+  Mohammad Chowdhury renders twice by design: roster card
+  `public/media/players/mohammad-chowdhury.webp` (players-data.ts
+  photoSlug `mohammad-chowdhury`) + captain spotlight
+  `public/media/uppsala-squad/mohammad-chowdhury-captain.jpg`
+  (captain-data.ts captainPhoto; also the Uppsala franchise lead photo).
+  This record SUPERSEDES EV-20260912-001's stale line ("Mohammad
+  Chowdhury.jpg is not separately rendered") WITHOUT editing that file
+  (append-only registry: supersession writes a new record, never edits
+  the old one in place per contracts/evidence-contract.md).
+source: "Repo state at feat/repo-sync (MANIFEST.md:232-237 amendment + wired photo paths in code), 2026-09-25."
+source_type: repo_source_verified
+retrieved_at: 2026-09-25
+verified_at: 2026-09-25
+valid_until: null
+justification_for_null: >
+  Records a point-in-time render state, not a perishable external claim.
+  It goes stale only when superseded by a newer supply or render change;
+  a newer record supersedes it the same way this record supersedes
+  EV-20260912-001's stale line.
+scope: "Roster card grid (/players) + captain spotlight (/club-captain, /about FounderSpotlight, /franchises/uppsala-tigers lead)."
+method: >
+  MANIFEST.md:232-237 (repo-sync amendment) states the twice-by-design
+  render; players-data.ts:122 wires photoSlug `mohammad-chowdhury` to
+  the roster thumb; captain-data.ts:259 wires captainPhoto to
+  `mohammad-chowdhury-captain.jpg`; franchises-data.ts:103 wires the
+  same file as the Uppsala lead photo.
+result: |
+  Two distinct files, two distinct slots, zero duplication bugs:
+  public/media/players/mohammad-chowdhury.webp (roster card) and
+  public/media/uppsala-squad/mohammad-chowdhury-captain.jpg (captain
+  spotlight + Uppsala lead). The removed
+  public/media/uppsala-squad/mohammad-chowdhury.jpg (2026-09-10,
+  MANIFEST.md:114) stays removed; it is not either of these files.
+related_files:
+  - apps/web/src/assets/MANIFEST.md
+  - apps/web/src/content/players-data.ts
+  - apps/web/src/content/captain-data.ts
+  - apps/web/src/content/franchises-data.ts
+relates_to: [EV-20260912-001, EV-20260831-005]
+notes: >
+  EV-20260912-001's "not separately rendered" line was true of the
+  2026-09-12 photo set and is now STALE for the captain portrait — the
+  old file is untouched; this record carries the supersession.
+  Individual full profile (bio, stats) remains UNKNOWN.
