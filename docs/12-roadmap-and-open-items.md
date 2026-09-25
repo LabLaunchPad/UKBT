@@ -1110,6 +1110,15 @@ review APPROVE_WITH_MINORS, fix wave committed.
 8. **ClientRouter rewire (AL-042):** slideshow dots + squad filters
    re-armed on `astro:page-load` — spec
    `tests/visual/clientrouter-rewire.spec.ts` red→green.
+9. **Affiliation note removal + photo parity (owner 2026-09-25):** note
+   line removed from cards (filter kept via `data-uppsala` attribute);
+   Dhrubonil Roy only parity gap closed (Uppsala card now uses the
+   shared `/media/players/dhrubonil-roy.webp`); Amahl Nathaniel, Rajesh
+   Sharma, Ruman Ahmed, Tawfique Khan Tushar, Raminda Wijesooriya, Anop
+   Ravi, Elliot Green, Dhavalkumar Norotam stay monogram (no photos in
+   repo). Evidence: dist grep (note text 0/0, `data-uppsala` x20 on
+   `/players/`, Roy `<img>` both pages) + guard spec 2/2 green
+   (`50 of 58` / `8 of 58` intact) in `.superpowers/sdd/ukbt-affil-note-filters/task-3-report.md`.
 
 ## Open issue 2026-09-23 — Tina visual-edit content not reflected in local dev build
 
