@@ -22,8 +22,12 @@
 //   players-data.ts for where he now appears.
 //
 // `photo`/`photoAlt`: EV-20260831-008, the first roster photography this
-// project has. 19 of 20 squad members have one; Dhrubonil Roy doesn't
-// and stays text-only, same discipline as before anyone had a photo.
+// project has. All 20 squad members are pictured: 19 in Uppsala Tigers
+// kit photography (EV-20260831-008); Dhrubonil Roy via his owner-supplied
+// portrait from the 2026-09-12 photo drop (EV-20260912-001, staged at
+// `public/media/players/dhrubonil-roy.webp` and reused here — no
+// Uppsala-kit photo of him was supplied, so kit affiliation there rests
+// on the client's own naming, not on independent visual confirmation).
 // Affiliation with Uppsala Tigers is independently visible in-photo
 // (an "UPPSALA TIGERS" kit wordmark/crest) for everyone except Jaspreet
 // Singh and Roushan Singh, who are pictured in their national jerseys —
@@ -74,6 +78,11 @@ const registry = createRegistry([
     id: 'EV-0923-02',
     tier: 'T1',
     url: 'artifacts/evidence/EV-20260923-002.yaml',
+  },
+  {
+    id: 'EV-20260912-001',
+    tier: 'T1',
+    url: 'artifacts/evidence/EV-20260912-001.yaml',
   },
 ]);
 const exemptFields = new Set<string>();
@@ -323,8 +332,12 @@ const squad: { field: string; value: SquadMember; sources: string[] }[] = [
       country: 'Sweden',
       role: 'Bowler',
       tags: ['U-19'],
+      // Owner-supplied portrait from the 2026-09-12 photo drop
+      // (EV-20260912-001); reused from the /players roster — no
+      // Uppsala-kit photo of him was supplied.
+      photo: '/media/players/dhrubonil-roy.webp',
     },
-    sources: ['EV-0831-05', 'EV-0923-02'],
+    sources: ['EV-0831-05', 'EV-0923-02', 'EV-20260912-001'],
   },
   // "Nipo Khadem" deliberately excluded — CLIENT_REQ_008.
 ];
