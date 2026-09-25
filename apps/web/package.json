@@ -9,6 +9,7 @@
     "build": "pnpm --filter @ukbt/truth tokens:build && node ../../scripts/check-content-trust.mjs && astro build && node ../../scripts/stamp-csp.mjs && node ../../scripts/generate-sitemap.mjs && node ../../scripts/build-sw.mjs && node ../../scripts/build-smoke.mjs",
     "preview": "astro preview",
     "typecheck": "astro check",
+    "test:unit": "vitest run",
     "test:e2e": "playwright test"
   },
   "dependencies": {
@@ -29,6 +30,7 @@
     "@tinacms/cli": "^3.0.0",
     "@types/node": "^22.10.2",
     "typescript": "^5.7.2",
+    "vitest": "^5.0.0",
     "wrangler": "^4.126.0"
   }
 }
