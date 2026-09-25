@@ -1,0 +1,43 @@
+id: EV-20260926-005
+classification: STATED_BUT_UNVERIFIED
+claim: >
+  Per the owner's direct decision (2026-09-26 chat): re-approve the CSS
+  transfer budget 96→99KB to accommodate the player-application form on
+  /join/. The form compiles to a 4.46KB stylesheet (JoinForm.astro) and
+  takes the site total from a measured 95.4KB to a projected ~98.7KB.
+  Justification follows the established precedent: the budget is raised on
+  a measured clean-build figure, and the increase buys contract-required
+  accessibility affordances (focus-managed error summary, per-field
+  describedby hints, disabled upload explanation, required-state text)
+  rather than decoration.
+source: "Owner decision in project chat, 2026-09-26 (first-party client-supplied)."
+source_type: first_party_client_supplied
+retrieved_at: 2026-09-26
+verified_at: 2026-09-26
+valid_until: null
+justification_for_null: >
+  Records a budget re-approval decision, not a perishable external claim.
+  The measured figures are attested by fresh runs of
+  `node scripts/check-perf.mjs` and the pre-integration baseline on
+  origin/main @131f8d5.
+scope: "scripts/check-perf.mjs cssTotal budget only; no other budget changes."
+method: >
+  Task 2 (JoinForm.astro, commit d029436) reported the projection and
+  explicitly declined to loosen the gate; the controller independently
+  confirmed the pre-integration baseline passes at 95.4KB/96KB; the owner
+  chose re-approval over trimming in-chat 2026-09-26.
+result: |
+  Authorizes editing scripts/check-perf.mjs cssTotal 96→99KB with the dated
+  header comment, as a re-approval event. All other budgets unchanged.
+related_files:
+  - scripts/check-perf.mjs
+  - apps/web/src/components/JoinForm.astro
+relates_to: []
+notes: >
+  Precedent chain (script header): 56→72 Stacki, html/js Tina bumps,
+  72→80 Cloudflare adapter, 80→88 Tina islands, 88→96 island registration
+  (2026-09-19), now 96→99 join application form (2026-09-26). The 96→97
+  bump approved 2026-09-26 for the (since-discarded) homepage Direction A
+  branch is NOT reflected here — that branch was reverted by the owner.
+  PROPOSED as a re-approval event; requires owner sign-off in the PR before
+  merge.

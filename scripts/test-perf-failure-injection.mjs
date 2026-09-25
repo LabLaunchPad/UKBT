@@ -58,7 +58,10 @@ const cases = [
   { name: 'good-fixture-passes', setup: () => {}, expectPass: true },
   {
     name: 'css-over-budget',
-    setup: (w) => w('big.css', 'x'.repeat(97 * 1024)),
+    // Must track BUDGETS.cssTotal in check-perf.mjs (99KB as of
+    // 2026-09-26, EV-20260926-005): a fixture under the current budget
+    // would pass and the case would silently stop proving anything.
+    setup: (w) => w('big.css', 'x'.repeat(100 * 1024)),
     expectPass: false,
     expectRule: 'css-weight',
   },
