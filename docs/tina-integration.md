@@ -51,7 +51,7 @@ TinaCloud Free (Git-backed)
 - `@tinacms/bridge` ^0.3.1 (apps/web dependency)
 - `tinacms` ^3.14.0 (apps/web dependency, must be ≥3.9.3 for CVE-2026-55661)
 - `@tinacms/cli` ^3.0.0 (apps/web devDependency)
-- `@astrojs/cloudflare` ^12.6.2 (already in apps/web)
+- `@astrojs/cloudflare` ^14.2.5 (already in apps/web)
 - `@astrojs/node` ^4.0.0 (removed — incompatible with Astro 5)
 
 ## Environment Variables
@@ -136,7 +136,7 @@ pnpm check:governance-scaffold  # scaffold self-test
 
 - `PUBLIC_TINA_CLIENT_ID` is public
 - `TINA_TOKEN` is private — never committed
-- CSP updated: `frame-ancestors 'none' https://app.tina.io https://*.tinajs.io`
+- CSP ships: `frame-ancestors 'self' https://*.tina.io https://app.tina.io https://*.tinajs.io`
 - `isEditMode(request)` for conditional admin rendering
 - `/admin` bundle not served to public visitors
 - Secret scanning gate in CI

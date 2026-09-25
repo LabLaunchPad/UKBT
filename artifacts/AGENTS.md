@@ -18,7 +18,7 @@ Append-only memory: evidence records, verification receipts, review output, adap
 
 ## Structure
 
-- `evidence/` — `EV-…` records, populated and append-only (51 `EV-*.yaml` + 4 ADELUX verification docs + firewall/checklist notes = 58 tracked files at HEAD)
+- `evidence/` — `EV-…` records, populated and append-only (51 `EV-*.yaml` + 4 ADELUX verification docs + 2 firewall/checklist notes + 1 `.gitkeep` = 58 tracked files at HEAD)
 - `receipts/` — `FOUNDATION.md`, `HOMEPAGE.md`, `RELEASE.md`; each asserts real exit codes + the command that produced them, or it is not a receipt
 - `review/` — `HOMEPAGE-REDTEAM.md`, `replay.md`, `LEGACY-ABOUT-INVENTORY.md`, finding-level remediations (`F3-…`, `F4-F8-…`, `F6-…`, `MOBILE-…`)
 - `adaptive-learning/` — prompt-07 schema: `ERROR-CATALOG.md`, `PREVENTION-CHECKLIST.md`, `RECURRENCE-PROTOCOL.md`, `INDEX.yaml`; scan the index before non-trivial work, quote the catalog ID on recurrence

@@ -49,7 +49,7 @@ The official website of **UK Bangla Tigers Cricket Club (CIC, est. 2020)** — a
 ## Why this repo stands out
 
 - **Truth gate before pixels** — `@ukbt/truth` (Zod schemas + provenance types) validates every content module; the build fails if facts don't check out.
-- **16-gate release pipeline** — `pnpm deploy:verify` runs scaffold self-test → control plane → deps → lint → tokens → typecheck → unit → build → deploy-mapping → failure-injection → links → SEO → UI → motion → security → perf. A subset passing is never a release pass.
+- **18-gate release pipeline** — `pnpm deploy:verify` runs scaffold self-test → control plane → deps → lint → tokens → typecheck → unit → build → deploy-mapping → failure-injection → links → SEO → UI → motion → security → perf. A subset passing is never a release pass.
 - **Motion with a contract** — `contracts/MOTION-CONTRACT.md` enforces tokens-first animation, a two-tier reduced-motion model (instant states, soft-fade entrances), and zero third-party JS animation runtimes.
 - **Budgets as gates** — HTML/CSS/JS transfer weights, contrast, focus coverage, internal-link integrity and security headers are all machine-checked in CI.
 - **Adversarial memory** — past failures live in `artifacts/adaptive-learning/` (error catalog → prevention checklist → recurrence protocol), so mistakes get fixed once.
@@ -74,7 +74,7 @@ packages/truth/         # @ukbt/truth — schemas, provenance, truth gate, desig
 contracts/              # frozen, machine-checkable agreements (motion, routes, SEO, …)
 knowledge/              # compact decision substrate (read before project-level decisions)
 artifacts/              # evidence records, verification receipts, adaptive learning
-scripts/                # the 16 gate checks behind pnpm deploy:verify
+scripts/                # the 18 gate checks behind pnpm deploy:verify
 docs/                   # pipeline, roadmap, runbooks (Tina, visual truth, …)
 .opencode/              # 9 read-only motion-advisor agents + vendored animation skills
 ```
@@ -85,7 +85,7 @@ docs/                   # pipeline, roadmap, runbooks (Tina, visual truth, …)
 pnpm install          # frozen lockfile
 pnpm dev              # Astro dev server (apps/web)
 pnpm build            # tokens → Astro build → sitemap
-pnpm deploy:verify    # the full 16-gate release check
+pnpm deploy:verify    # the full 18-gate release check
 ```
 
 | Command | Purpose |
