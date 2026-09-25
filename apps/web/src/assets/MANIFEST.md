@@ -136,9 +136,10 @@ Client-authorised class above.
 | `public/media/uppsala-squad/md-ashraful-alam.jpg` | MD Ashraful Alam (Logistics Manager) | none — casual outdoor photo | **No** — no team clothing/branding in frame |
 | `public/media/uppsala-squad/javed-butt.jpg` | Javed Butt (Team Mentor) | none — casual outdoor photo | **No** — no team clothing/branding in frame |
 
-**Dhrubonil Roy** (the 20th squad member) has no supplied photo — remains
-text-only on both roster pages, same discipline as everyone else before
-a photo existed.
+**Dhrubonil Roy** (the 20th squad member) has no dedicated `uppsala-squad/`
+portrait — his Uppsala card reuses the supplied players portrait
+(`public/media/players/dhrubonil-roy.webp`, sourced to `Dhrubonil Roy.jpg`
+under EV-20260912-001), so he renders pictured on both roster pages.
 
 ## Leadership photography (About Phase 1, owner-authorised)
 
