@@ -186,7 +186,7 @@ jobs:
       # Gate scripts are pure Node (no workspace deps) — checkout plus the
       # built dist is all they need. Dist comes from the build job's
       # artifact, not a rebuild.
-      - uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6 (SHA-pinned 2026-09-18)
+      - uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0 # v5 (SHA-pinned 2026-09-26; node24 runtime)
         with:
           name: dist
           path: apps/web/dist
@@ -202,7 +202,7 @@ jobs:
       # Gate scripts are pure Node (no workspace deps) — checkout plus the
       # built dist is all they need. Dist comes from the build job's
       # artifact, not a rebuild.
-      - uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6 (SHA-pinned 2026-09-18)
+      - uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0 # v5 (SHA-pinned 2026-09-26; node24 runtime)
         with:
           name: dist
           path: apps/web/dist
@@ -218,7 +218,7 @@ jobs:
       # Gate scripts are pure Node (no workspace deps) — checkout plus the
       # built dist is all they need. Dist comes from the build job's
       # artifact, not a rebuild.
-      - uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6 (SHA-pinned 2026-09-18)
+      - uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0 # v5 (SHA-pinned 2026-09-26; node24 runtime)
         with:
           name: dist
           path: apps/web/dist
@@ -234,7 +234,7 @@ jobs:
       # Gate scripts are pure Node (no workspace deps) — checkout plus the
       # built dist is all they need. Dist comes from the build job's
       # artifact, not a rebuild.
-      - uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6 (SHA-pinned 2026-09-18)
+      - uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0 # v5 (SHA-pinned 2026-09-26; node24 runtime)
         with:
           name: dist
           path: apps/web/dist
@@ -250,7 +250,7 @@ jobs:
       # Gate scripts are pure Node (no workspace deps) — checkout plus the
       # built dist is all they need. Dist comes from the build job's
       # artifact, not a rebuild.
-      - uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6 (SHA-pinned 2026-09-18)
+      - uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0 # v5 (SHA-pinned 2026-09-26; node24 runtime)
         with:
           name: dist
           path: apps/web/dist
@@ -266,7 +266,7 @@ jobs:
       # Gate scripts are pure Node (no workspace deps) — checkout plus the
       # built dist is all they need. Dist comes from the build job's
       # artifact, not a rebuild.
-      - uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6 (SHA-pinned 2026-09-18)
+      - uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0 # v5 (SHA-pinned 2026-09-26; node24 runtime)
         with:
           name: dist
           path: apps/web/dist
@@ -282,7 +282,7 @@ jobs:
       # Gate scripts are pure Node (no workspace deps) — checkout plus the
       # built dist is all they need. Dist comes from the build job's
       # artifact, not a rebuild.
-      - uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6 (SHA-pinned 2026-09-18)
+      - uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0 # v5 (SHA-pinned 2026-09-26; node24 runtime)
         with:
           name: dist
           path: apps/web/dist
@@ -386,7 +386,7 @@ jobs:
       # build job's artifact (review 2026-09-18: without this, wrangler
       # deploy would fail closed with "Missing entry-point", but the gates
       # stayed green on a deploy path that could never succeed).
-      - uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6 (SHA-pinned 2026-09-18)
+      - uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0 # v5 (SHA-pinned 2026-09-26; node24 runtime)
         with:
           name: dist
           path: apps/web/dist
