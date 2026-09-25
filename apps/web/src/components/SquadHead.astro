@@ -36,7 +36,10 @@ const { eyebrow, heading, count, sub = false } = Astro.props;
     display: flex;
     flex-direction: column;
     gap: var(--ukbt-space-2);
-    max-width: 40rem;
+    /* No independent max-width: the block spans the full
+       .ukbt-container spine so its edges align with the filter bar
+       and grid. Content is short heading/count lines, so measure
+       stays sane via the container itself. */
     margin-bottom: var(--ukbt-space-6);
   }
   .ukbt-squad-head__heading {
