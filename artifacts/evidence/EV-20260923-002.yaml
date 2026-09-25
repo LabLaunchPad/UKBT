@@ -1,0 +1,122 @@
+id: EV-20260923-002
+classification: FIRST_PARTY_OWNER_APPROVAL
+claim: >
+  Owner-supplied roster taxonomy closing roster-cards-v1 Task 1: role +
+  country for all 58 roster players, values verbatim from the owner chat
+  list dated 2026-09-23 (entry #46 absent in the owner numbering). This
+  record SUPERSEDES EV-20260911-002's taxonomy ban (All-Rounder tag
+  restricted to Chowdhury + Shakib only) — the owner list names 17
+  All-rounders — and CORRECTS EV-20260923-001's rename gaps (Kenner
+  Lewis, Hamid Mehmood, Ellias Sunny, Abu Bakar, Sibet Ahmed;
+  Roushan Singh = Netherlands). Owner spellings kept verbatim, never
+  normalized: `Humayun kabir Jyoti` (lowercase k), `Srilanka` (#22, one
+  word) vs `Sri lanka` (#30, spaced), `Netherands` (#41), `Wayne Parnel`
+  (one l).
+source: "Owner chat list via agent session, 2026-09-23 (roster-cards-v1 Task 1 brief — SOLE authority, verbatim)."
+source_type: first_party_owner_approval
+approver: "Owner (via roster-cards-v1 Task 1 brief, 2026-09-23)"
+approver_role: owner
+approval_date: 2026-09-23
+approval_scope: roster-role-country-58
+amendable: true
+retrieved_at: 2026-09-23
+verified_at: 2026-09-23
+valid_until: null
+justification_for_null: >
+  Records a point-in-time owner supply, not a perishable external claim.
+  It goes stale only when superseded by a newer owner instruction; a
+  newer supply record supersedes it the same way this record supersedes
+  EV-20260911-002's taxonomy ban. Append-only registry: supersession
+  writes a new record, never edits this one in place
+  (contracts/evidence-contract.md).
+scope: "58 roster records (players-data.ts rawRoster): owner-verbatim name | role | country. Entry #46 absent per owner numbering."
+method: >
+  All 58 name/role/country triples transcribed verbatim from the Task 1
+  brief owner table into apps/web/src/content/players-data.ts (role +
+  country fields, 5 renames, photoSlug continuity for T2); this file is
+  the gate registry source cited by every roster record.
+result: |
+  Role counts: All-rounder 17, Bowler 22, Wicket-keeper 5, Batsman 14 (58 total).
+  Country counts: England 10, UAE 9, Bangladesh 6, Sweden 6, Portugal 3,
+  Afghanistan 3, Austria 2, South Africa 2, Canada 2, West Indies 2, USA 2,
+  India 2, Belgium 1, Netherlands 1, Italy 1, Oman 1, Srilanka 1,
+  Sri lanka 1, Netherands 1, Germany 1, Scotland 1 (58 total).
+  Renames applied (old -> new): Kennar Lewis->Kenner Lewis,
+  Hamid Mahmood->Hamid Mehmood, Elias Sunny->Ellias Sunny,
+  Abu Bakkar->Abu Bakar, Sibet Hussain->Sibet Ahmed;
+  Humayun Kabir Jyoti->Humayun kabir Jyoti (owner case kept verbatim).
+  photoSlug values derived from new names (kenner-lewis, hamid-mehmood,
+  ellias-sunny, abu-bakar, sibet-ahmed); humayun-kabir-jyoti kept as the
+  pre-existing explicit slug. All 58 owner entries matched to existing
+  roster records; zero unmatched, zero invented, zero dropped.
+records: |
+  1 Mohammad Chowdhury | All-rounder | England
+  2 Shakib Al Hasan | All-rounder | Bangladesh
+  3 Mark James | All-rounder | England
+  4 Karanbir Singh | All-rounder | Austria
+  5 Wayne Parnel | Bowler | South Africa
+  6 Junaid Siddique | Bowler | Canada
+  7 Owen Palmer | Wicket-keeper | England
+  8 Shaheryar Butt | Batsman | Belgium
+  9 Chad Potgieter | Batsman | South Africa
+  10 Roushan Singh | Wicket-keeper | Netherlands
+  11 Juan Henry | All-rounder | Portugal
+  12 Shabbir Rahman | Batsman | Bangladesh
+  13 Kenner Lewis | Batsman | West Indies
+  14 Jaspreet Singh | Bowler | Italy
+  15 Peter Robert | Batsman | England
+  16 Amahl Nathaniel | Batsman | West Indies
+  17 Armaan Randhawa | Batsman | Austria
+  18 Sufyan Mehmood | All-rounder | Oman
+  19 Arafat Bhuiyan | Bowler | England
+  20 Jawid Stanigze | All-rounder | Afghanistan
+  21 Rajesh Sharma | All-rounder | India
+  22 Chinthaka Rajapaksha | All-rounder | Srilanka
+  23 Ellias Sunny | Bowler | Bangladesh
+  24 Ruman Ahmed | Batsman | Bangladesh
+  25 Forhad Reza | All-rounder | Bangladesh
+  26 Tasaduq Hussain | Bowler | Sweden
+  27 Tawfique Khan Tushar | Batsman | Bangladesh
+  28 Lemar Momand | Bowler | Afghanistan
+  29 Humayun kabir Jyoti | Wicket-keeper | USA
+  30 Raminda Wijesooriya | Batsman | Sri lanka
+  31 Towker Khan | All-rounder | USA
+  32 Prashant Shukla | Bowler | India
+  33 Anop Ravi | Wicket-keeper | Canada
+  34 Qudratullah Mir Afzal | Bowler | Sweden
+  35 Elliot Green | Bowler | England
+  36 Hamid Mehmood | Bowler | Sweden
+  37 Anas Zaheer | Bowler | Sweden
+  38 Essa Farooq | Bowler | Sweden
+  39 Dhrubonil Roy | Bowler | Sweden
+  40 Dhavalkumar Norotam | All-rounder | Portugal
+  41 Musa Ahmad | Batsman | Netherands
+  42 Jeremy Martins | Bowler | Portugal
+  43 Abu Bakar | Bowler | UAE
+  44 Asif Taniwal | Batsman | Afghanistan
+  45 Ayyan Warraich | Bowler | Germany
+  47 CP Rizwan | All-rounder | UAE
+  48 Danish Sarhadi | Wicket-keeper | UAE
+  49 Ibrahim Maqsood | Bowler | UAE
+  50 Ibrar Ahmed | Bowler | UAE
+  51 Jack Jakir | Bowler | England
+  52 Junaid Shamsu | All-rounder | UAE
+  53 Krish Anand | Bowler | England
+  54 Muhsin Ali | Batsman | England
+  55 Saghir Ahmad | All-rounder | UAE
+  56 Sibet Ahmed | All-rounder | England
+  57 Syed Aziz | All-rounder | Scotland
+  58 Taimoor Ali | Batsman | UAE
+  59 Zohair Iqbal | Bowler | UAE
+related_files:
+  - apps/web/src/content/players-data.ts
+relates_to: [EV-20260911-002, EV-20260923-001, EV-20260831-005, EV-20260912-001]
+notes: >
+  Supersedes EV-20260911-002's taxonomy ban (All-Rounder no longer
+  restricted to two players) and corrects EV-20260923-001's rename gaps.
+  Display tags (UPPSALA_TAG/WK_TAG/U19_TAG/AR_TAG) intentionally left
+  untouched — they are legacy display markers, and any tag/role display
+  reconciliation is T3/T4 territory. New photoSlug values
+  (kenner-lewis, hamid-mehmood, ellias-sunny, abu-bakar, sibet-ahmed)
+  point at files T2 must rename into place. Individual full profiles
+  (bio, stats) remain UNKNOWN.

@@ -5,10 +5,12 @@
 // Carries its own ukbt-squad-* hooks, asserted by pages.spec.ts.
 //
 // Truth posture: every rendered line maps to a verified player field.
-// Badges may ONLY be Wicket-keeper / U-19 / All-Rounder (the only
-// verified position-ish tags — All-Rounder solely for the two
-// EV-20260911-002 players) — no Batter/Bowler taxonomy may be added
-// unless the data model proves it. The Uppsala affiliation renders as
+// The player role renders as a badge on the media (owner-verbatim `role`
+// from data, All-rounder displayed as All-Rounder per owner screenshot;
+// EV-20260923-002 supersedes EV-20260911-002's taxonomy ban —
+// All-rounder 17, Bowler 22, Wicket-keeper 5, Batsman 14); no
+// taxonomy is invented here. Badges stay Wicket-keeper / U-19 /
+// All-Rounder display markers. The Uppsala affiliation renders as
 // a demoted meta line, never the primary identity. Cards are never
 // links: full profiles beyond the Club Captain are UNKNOWN, so no
 // arrow/profile affordance is rendered.
@@ -17,9 +19,9 @@
 // transform of the verified name, not invented content) — same card
 // width and family, never a placeholder silhouette.
 //
-// Eager images, fixed dimensions, top-centre crop: chosen for
-// deterministic full-page screenshot capture — do not reintroduce
-// lazy loading here.
+// Lazy images, fixed dimensions, top-centre crop: `loading="lazy"`
+// keeps offscreen cards cheap; the width/height attributes plus
+// aspect-ratio hold the square slot so no layout shift occurs.
 import type { RosterPlayer } from '../content/players-data';
 
 interface Props {
@@ -62,6 +64,12 @@ const badges = [
 const meta = (p.tags ?? []).filter(
   (t) => !(t in BADGE_LABELS) && t !== 'Also plays for Uppsala Tigers',
 );
+// ponytail: role label lives on the media badge for players (deduped
+// against tag badges); officials keep the role-led text line.
+const roleLabel = p.role === 'All-rounder' ? 'All-Rounder' : p.role;
+const mediaBadges = isOfficial
+  ? badges
+  : [...new Set([roleLabel, ...badges])];
 const uppsala = (p.tags ?? []).includes('Also plays for Uppsala Tigers');
 
 // Monogram for the text-only variant: initials of the verified name.
@@ -85,15 +93,15 @@ const initials = p.name
           height="320"
           loading="lazy"
         />
-        {badges.length > 0 && (
-          <p class="ukbt-squad-card__badge">{badges.join(' · ')}</p>
+        {mediaBadges.length > 0 && (
+          <p class="ukbt-squad-card__badge">{mediaBadges.join(' · ')}</p>
         )}
       </div>
     ) : (
-      <div class="ukbt-squad-card__text" aria-hidden="true">
-        <span>{initials}</span>
-        {badges.length > 0 && (
-          <p class="ukbt-squad-card__badge">{badges.join(' · ')}</p>
+      <div class="ukbt-squad-card__text">
+        <span aria-hidden="true">{initials}</span>
+        {mediaBadges.length > 0 && (
+          <p class="ukbt-squad-card__badge">{mediaBadges.join(' · ')}</p>
         )}
       </div>
     )
@@ -103,10 +111,12 @@ const initials = p.name
     {
       isOfficial ? (
         <p class="ukbt-squad-card__role">{p.role}</p>
-      ) : p.country ? (
-        <p class="ukbt-squad-card__country">{p.country}</p>
       ) : (
-        <p class="ukbt-squad-card__country">Country unconfirmed</p>
+        p.country ? (
+          <p class="ukbt-squad-card__country">{p.country}</p>
+        ) : (
+          <p class="ukbt-squad-card__country">Country unconfirmed</p>
+        )
       )
     }
     {
@@ -204,6 +214,12 @@ const initials = p.name
     margin: 0;
     font-size: var(--ukbt-font-size-1);
     line-height: 1.3;
+    /* Slot cap: names never exceed two lines, so the role/country
+       slots below stay aligned across cards. */
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
   }
   /* 320px two-up cards are ~120px wide: step the name down one type
      level so multi-word names wrap in 2–3 lines, not 4–5. */
@@ -220,12 +236,19 @@ const initials = p.name
     margin: 0;
     color: var(--ukbt-color-neutral-700);
     font-size: var(--ukbt-font-size-0);
+    /* Persistent one-line slot: never collapses, so role/country rows
+       align across cards regardless of badges or name length. */
+    line-height: 1.4;
+    min-height: calc(1em * 1.4);
   }
   .ukbt-squad-card__role {
     margin: 0;
     color: var(--ukbt-color-brand-primary);
     font-size: var(--ukbt-font-size-0);
     font-weight: var(--ukbt-font-weight-bold);
+    /* Persistent one-line slot, as above. */
+    line-height: 1.4;
+    min-height: calc(1em * 1.4);
   }
   .ukbt-squad-card__affil,
   .ukbt-squad-card__meta {

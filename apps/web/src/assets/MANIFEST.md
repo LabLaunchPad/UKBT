@@ -252,7 +252,7 @@ were supplied with the files.
 | `public/media/players/humayun-kabir-jyoti.webp` | `Humayun Kabir Jyoti.heif` (3024x4032) | Humayun Kabir Jyoti |
 | `public/media/players/prashant-shukla.webp` | `Prashant Shukla.png` (1086x1448) | Prashant Shukla |
 | `public/media/players/qudratullah-mir-afzal.webp` | `Qudratullah Mir Afzal.png` (1086x1448) | Qudratullah Mir Afzal |
-| `public/media/players/hamid-mahmood.webp` | `Hamid Mahmood.png` (1114x1412) | Hamid Mahmood |
+| `public/media/players/hamid-mehmood.webp` | `Hamid Mahmood.png` (1114x1412) | Hamid Mehmood |
 | `public/media/players/anas-zaheer.webp` | `Anas Zaheer (U-19).heif` (3024x4032) | Anas Zaheer |
 | `public/media/players/essa-farooq.webp` | `Essa Farooq (U-19).png` (1199x1312) | Essa Farooq |
 | `public/media/players/mohammad-chowdhury.webp` | `Mohammad Chowdhury.jpg` (1320x1475) | Mohammad Chowdhury (roster card; athlete portrait stays the spotlight image) |
@@ -261,17 +261,17 @@ were supplied with the files.
 | `public/media/players/jeremy-martins.webp` | `Jeremy Martins.jpg` (1066x1600) | Jeremy Martins |
 | `public/media/players/towker-khan.webp` | `Towker Khan.jpg` (1200x1600) | Towker Khan |
 | `public/media/players/forhad-reza.webp` | `Forhad Reza.JPG` (215x290) | Forhad Reza |
-| `public/media/players/elias-sunny.webp` | `Elias Sunny.jpg` (1170x813) | Elias Sunny |
+| `public/media/players/ellias-sunny.webp` | `Elias Sunny.jpg` (1170x813) | Ellias Sunny |
 | `public/media/players/sufyan-mehmood.webp` | `Sufyan Mehmood.jpg` (1072x1600) | Sufyan Mehmood |
 | `public/media/players/arafat-bhuiyan.webp` | `Arafat Bhuiyan.jpg` (1016x1210) | Arafat Bhuiyan |
 | `public/media/players/shabbir-rahman.webp` | `Shabbir Rahman.jpg` (1077x1078) | Shabbir Rahman |
 | `public/media/players/junaid-siddique.webp` | `Junaid Siddique.jpg` (1032x1002) | Junaid Siddique |
 | `public/media/players/wayne-parnel.webp` | `Wayne Parnel.jpg` (923x731) | Wayne Parnel |
 | `public/media/players/juan-henry.webp` | `Juan Henry.jpg` (800x1200) | Juan Henry (new spelling wins over roster `Juan Henri`) |
-| `public/media/players/kennar-lewis.webp` | `Kennar Lewis.jpg` (894x960) | Kennar Lewis (new spelling wins over roster `Kenner Lewis`) |
+| `public/media/players/kenner-lewis.webp` | `Kennar Lewis.jpg` (894x960) | Kenner Lewis |
 | `public/media/players/peter-robert.webp` | `Peter Robert.jpg` (856x1074) | Peter Robert (new spelling wins over roster `Pater Robert Harness`) |
 | `public/media/players/mark-james.webp` | `Mark James.PNG` (651x946) | Mark James (new spelling wins over roster `Mark James Nunn`) |
-| `public/media/players/abu-bakkar.webp` | `Abu Bakkar.png` (1169x1346) | Abu Bakkar (new name from owner supply; no country stated) |
+| `public/media/players/abu-bakar.webp` | `Abu Bakkar.png` (1169x1346) | Abu Bakar (new name from owner supply; no country stated) |
 | `public/media/players/asif-taniwal.webp` | `Asif Taniwal.png` (941x1672) | Asif Taniwal (new name; no country stated) |
 | `public/media/players/ayyan-warraich.webp` | `Ayyan Warraich.png` (1086x1448) | Ayyan Warraich (new name; no country stated) |
 | `public/media/players/cp-rizwan.webp` | `CP Rizwan.png` (1120x1404) | CP Rizwan (new name; no country stated) |
@@ -283,7 +283,7 @@ were supplied with the files.
 | `public/media/players/krish-anand.webp` | `Krish Anand.png` (941x1672) | Krish Anand (new name; no country stated) |
 | `public/media/players/muhsin-ali.webp` | `Muhsin Ali.png` (1086x1448) | Muhsin Ali (new name; no country stated) |
 | `public/media/players/saghir-ahmad.webp` | `Saghir Ahmad.png` (1254x1254) | Saghir Ahmad (new name; no country stated) |
-| `public/media/players/sibet-hussain.webp` | `Sibet Hussain.png` (1164x1351) | Sibet Hussain (new name; no country stated) |
+| `public/media/players/sibet-ahmed.webp` | `Sibet Hussain.png` (1164x1351) | Sibet Ahmed (new name; no country stated) |
 | `public/media/players/syed-aziz.webp` | `Syed Aziz.png` (1313x1198) | Syed Aziz (new name; no country stated) |
 | `public/media/players/taimoor-ali.webp` | `Taimoor Ali.png` (1254x1254) | Taimoor Ali (new name; no country stated) |
 | `public/media/players/zohair-iqbal.webp` | `Zohair Iqbal.png` (1254x1254) | Zohair Iqbal (new name; no country stated) |
