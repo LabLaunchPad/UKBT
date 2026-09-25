@@ -300,49 +300,65 @@ const TEAM_SLIDES = [
 </style>
 
 <script>
+  // ClientRouter-proofed (AL-042): Astro runs this script once per
+  // document, but swaps the slideshow DOM on every navigation. init()
+  // wires the CURRENT root and runs on astro:page-load; document-level
+  // listeners register once and act on `current`; the timer dies on
+  // before-swap so navigations never stack intervals.
   // Auto-slideshow: 5 team slides, ~4s per slide, pause on hover/focus/hidden/reduced-motion.
   // No external deps; runs once per ClubIntro instance (homepage has one).
-  (function () {
-    const root = document.querySelector('[data-slideshow]');
-    if (!root) return;
-    const slides = Array.from(root.querySelectorAll('[data-slide]'));
-    const dots = Array.from(root.querySelectorAll('[data-dot]'));
-    const live = root.querySelector('.ukbt-about__live');
+  let current: Element | null = null;
+  let index = 0;
+  let timer: number | null = null;
+  const INTERVAL = 4000;
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function show(n: number) {
+    if (!current) return;
+    const slides = Array.from(current.querySelectorAll('[data-slide]'));
+    const dots = Array.from(current.querySelectorAll('[data-dot]'));
+    const live = current.querySelector('.ukbt-about__live');
     if (slides.length <= 1) return;
+    index = (n + slides.length) % slides.length;
+    slides.forEach((el, i) => {
+      const active = i === index;
+      el.classList.toggle('is-active', active);
+      el.setAttribute('aria-hidden', active ? 'false' : 'true');
+    });
+    dots.forEach((el, i) => {
+      const active = i === index;
+      el.classList.toggle('is-active', active);
+      el.setAttribute('aria-selected', active ? 'true' : 'false');
+      el.setAttribute('tabindex', active ? '0' : '-1');
+    });
+    if (live) live.textContent = `Team photo ${index + 1} of ${slides.length}`;
+  }
 
-    let index = 0;
-    let timer: number | null = null;
-    const INTERVAL = 4000;
-    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    function show(n: number) {
-      index = (n + slides.length) % slides.length;
-      slides.forEach((el, i) => {
-        const active = i === index;
-        el.classList.toggle('is-active', active);
-        el.setAttribute('aria-hidden', active ? 'false' : 'true');
-      });
-      dots.forEach((el, i) => {
-        const active = i === index;
-        el.classList.toggle('is-active', active);
-        el.setAttribute('aria-selected', active ? 'true' : 'false');
-        el.setAttribute('tabindex', active ? '0' : '-1');
-      });
-      if (live) live.textContent = `Team photo ${index + 1} of ${slides.length}`;
+  function start() {
+    if (reduceMotion) return;
+    stop();
+    timer = window.setInterval(() => show(index + 1), INTERVAL);
+  }
+  function stop() {
+    if (timer !== null) {
+      clearInterval(timer);
+      timer = null;
     }
+  }
 
-    function start() {
-      if (reduceMotion) return;
-      stop();
-      timer = window.setInterval(() => show(index + 1), INTERVAL);
+  function init() {
+    stop();
+    current = document.querySelector('[data-slideshow]');
+    if (!current) return;
+    const root = current;
+    if (root.hasAttribute('data-slideshow-wired')) {
+      show(0);
+      start();
+      return;
     }
-    function stop() {
-      if (timer !== null) {
-        clearInterval(timer);
-        timer = null;
-      }
-    }
-
+    if (root.querySelectorAll('[data-slide]').length <= 1) return;
+    root.setAttribute('data-slideshow-wired', 'true');
+    const dots = Array.from(root.querySelectorAll('[data-dot]'));
     dots.forEach((btn, i) => {
       btn.addEventListener('click', () => {
         show(i);
@@ -354,10 +370,6 @@ const TEAM_SLIDES = [
     root.addEventListener('mouseleave', start);
     root.addEventListener('focusin', stop);
     root.addEventListener('focusout', start);
-    document.addEventListener('visibilitychange', () => {
-      if (document.hidden) stop();
-      else start();
-    });
 
     // Keyboard: arrow keys when dots have focus
     root.addEventListener('keydown', (e: Event) => {
@@ -375,5 +387,18 @@ const TEAM_SLIDES = [
 
     show(0);
     start();
-  })();
+  }
+
+  const w = window as unknown as Record<string, boolean | undefined>;
+  if (!w['__ukbtSlideshowWired']) {
+    w['__ukbtSlideshowWired'] = true;
+    document.addEventListener('astro:page-load', init);
+    document.addEventListener('astro:before-swap', stop);
+    document.addEventListener('visibilitychange', () => {
+      if (!current) return;
+      if (document.hidden) stop();
+      else start();
+    });
+  }
+  init();
 </script>
