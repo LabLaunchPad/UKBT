@@ -10,8 +10,8 @@
 // EV-20260923-002 supersedes EV-20260911-002's taxonomy ban —
 // All-rounder 17, Bowler 22, Wicket-keeper 5, Batsman 14); no
 // taxonomy is invented here. Badges stay Wicket-keeper / U-19 /
-// All-Rounder display markers. The Uppsala affiliation renders as
-// a demoted meta line, never the primary identity. Cards are never
+// All-Rounder display markers. The Uppsala affiliation ships as a
+// data-uppsala attribute (filter hook only), never visible text. Cards are never
 // links: full profiles beyond the Club Captain are UNKNOWN, so no
 // arrow/profile affordance is rendered.
 //
@@ -43,7 +43,7 @@ const isOfficial = variant === 'official';
 // and All-Rounder for the two EV-20260911-002 players). The Uppsala
 // squad spells it 'Wicketkeeper' — same verified role, normalised to
 // the hyphenated display form so both squads read identically. The
-// Uppsala affiliation is rendered separately as demoted metadata,
+// Uppsala affiliation is exposed separately as a data attribute,
 // never badged.
 const BADGE_LABELS: Record<string, string> = {
   'Wicket-keeper': 'Wicket-keeper',
@@ -82,7 +82,7 @@ const initials = p.name
   .toUpperCase();
 ---
 
-<article class="ukbt-squad-card">
+<article class="ukbt-squad-card" data-uppsala={!isOfficial && uppsala ? 'true' : undefined}>
   {
     p.photo ? (
       <div class="ukbt-squad-card__media">
@@ -117,11 +117,6 @@ const initials = p.name
         ) : (
           <p class="ukbt-squad-card__country">Country unconfirmed</p>
         )
-      )
-    }
-    {
-      !isOfficial && uppsala && (
-        <p class="ukbt-squad-card__affil">Also plays for Uppsala Tigers</p>
       )
     }
     {
@@ -250,7 +245,6 @@ const initials = p.name
     line-height: 1.4;
     min-height: calc(1em * 1.4);
   }
-  .ukbt-squad-card__affil,
   .ukbt-squad-card__meta {
     margin: var(--ukbt-space-1) 0 0 0;
     color: var(--ukbt-color-neutral-700);

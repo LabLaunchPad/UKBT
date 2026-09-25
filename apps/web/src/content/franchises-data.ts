@@ -22,8 +22,9 @@
 //   players-data.ts for where he now appears.
 //
 // `photo`/`photoAlt`: EV-20260831-008, the first roster photography this
-// project has. 19 of 20 squad members have one; Dhrubonil Roy doesn't
-// and stays text-only, same discipline as before anyone had a photo.
+// project has. All 20 squad members have one; Dhrubonil Roy's portrait is
+// wired from the shared players asset (`/media/players/dhrubonil-roy.webp`,
+// EV-20260912-001) rather than a dedicated `uppsala-squad/` file.
 // Affiliation with Uppsala Tigers is independently visible in-photo
 // (an "UPPSALA TIGERS" kit wordmark/crest) for everyone except Jaspreet
 // Singh and Roushan Singh, who are pictured in their national jerseys —
@@ -323,6 +324,7 @@ const squad: { field: string; value: SquadMember; sources: string[] }[] = [
       country: 'Sweden',
       role: 'Bowler',
       tags: ['U-19'],
+      photo: '/media/players/dhrubonil-roy.webp',
     },
     sources: ['EV-0831-05', 'EV-0923-02'],
   },

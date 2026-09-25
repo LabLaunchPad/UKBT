@@ -51,7 +51,8 @@ interface Filter {
 const UPC_TAG = 'Also plays for Uppsala Tigers';
 // Single-letter filter keys keep the shipped HTML small; the script
 // below maps them back to DOM-derived card membership (photo presence,
-// badge text, affiliation line) so no per-card data attributes ship.
+// badge text, the data-uppsala attribute) so only one per-card data
+// attribute ships.
 const allFilters: Filter[] = [
   { key: 'a', label: 'All', count: players.length },
   {
@@ -126,8 +127,8 @@ const visibleFilters = allFilters.filter((f) => f.key === 'a' || f.count > 0);
 
 <script>
   // Scoped per grid instance. Membership is read from the rendered card
-  // (photo presence, badge text, affiliation line) — the only verified
-  // sources — so filtering needs no per-card data attributes.
+  // (photo presence, badge text, the data-uppsala attribute) — the only
+  // verified sources.
   // ClientRouter-proofed (AL-042): Astro runs this script once per
   // document, but swaps the grid DOM on every navigation. init() wires
   // the CURRENT roots and runs on astro:page-load.
@@ -140,8 +141,6 @@ const visibleFilters = allFilters.filter((f) => f.key === 'a' || f.count > 0);
     const cards = [...root.querySelectorAll('.ukbt-squad-card')];
     const badge = (c: Element) =>
       c.querySelector('.ukbt-squad-card__badge')?.textContent ?? '';
-    const affil = (c: Element) =>
-      c.querySelector('.ukbt-squad-card__affil') !== null;
     const matches = (c: Element, key: string): boolean => {
       if (key === 'a') return true;
       if (key === 'p') return c.querySelector('img') !== null;
@@ -149,7 +148,7 @@ const visibleFilters = allFilters.filter((f) => f.key === 'a' || f.count > 0);
       if (key === 'k') return badge(c).includes('Wicket-keeper');
       if (key === 'r') return badge(c).includes('All-Rounder');
       if (key === 'j') return badge(c).includes('U-19');
-      if (key === 't') return affil(c);
+      if (key === 't') return (c as HTMLElement).dataset.uppsala === 'true';
       return true;
     };
     const count = root.querySelector('[data-squad-count]');
@@ -259,11 +258,13 @@ const visibleFilters = allFilters.filter((f) => f.key === 'a' || f.count > 0);
     }
   }
   /* Grid items are the SquadCard articles directly (no wrapper divs —
-     keeps players/index.html under the html-weight budget). */
-  .ukbt-squad__grid > article {
+     keeps players/index.html under the html-weight budget). The cards
+     carry SquadCard's scope id, not this component's, so the article
+     selectors are global to match across the component boundary. */
+  .ukbt-squad__grid > :global(article) {
     min-width: 0;
   }
-  .ukbt-squad__grid > article[hidden] {
+  .ukbt-squad__grid > :global(article[hidden]) {
     display: none;
   }
 </style>
