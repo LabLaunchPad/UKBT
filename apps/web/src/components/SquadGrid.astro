@@ -128,9 +128,15 @@ const visibleFilters = allFilters.filter((f) => f.key === 'a' || f.count > 0);
   // Scoped per grid instance. Membership is read from the rendered card
   // (photo presence, badge text, affiliation line) — the only verified
   // sources — so filtering needs no per-card data attributes.
+  // ClientRouter-proofed (AL-042): Astro runs this script once per
+  // document, but swaps the grid DOM on every navigation. init() wires
+  // the CURRENT roots and runs on astro:page-load.
+  function init() {
   for (const root of document.querySelectorAll('[data-squad-grid]')) {
+    if (root.hasAttribute('data-squad-wired')) continue;
     const buttons = [...root.querySelectorAll('[data-filter]')];
     if (buttons.length === 0) continue;
+    root.setAttribute('data-squad-wired', 'true');
     const cards = [...root.querySelectorAll('.ukbt-squad-card')];
     const badge = (c: Element) =>
       c.querySelector('.ukbt-squad-card__badge')?.textContent ?? '';
@@ -175,6 +181,13 @@ const visibleFilters = allFilters.filter((f) => f.key === 'a' || f.count > 0);
     apply('a');
     root.setAttribute('data-squad-ready', 'true');
   }
+  }
+  const w = window as unknown as Record<string, boolean | undefined>;
+  if (!w['__ukbtSquadWired']) {
+    w['__ukbtSquadWired'] = true;
+    document.addEventListener('astro:page-load', init);
+  }
+  init();
 </script>
 
 <style>
