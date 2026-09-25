@@ -22,6 +22,7 @@ Renders gate-approved content. Every organization-specific claim arrives via typ
 - `src/content/*-data.ts` — 8 typed content modules (not Astro collections), Zod-shaped against `@ukbt/truth` (`about`, `captain`, `franchises`, `homepage`, `navigation`, `players`, `sponsors`, `tournaments`)
 - `src/layouts/BaseLayout.astro`, `src/components/` — shared layout/UI
 - `src/lib/tina/` (`loaders.ts`, `islands.ts`, `validators.ts`, `data.ts`) — Tina adapter; `content/*/*.json` — Tina editorial content
+- `src/lib/forms/` (`submit-form.ts`, `adapters/`) — form submission boundary, shaped by `contracts/FORM-CONTRACT.md`; `vitest.config.ts` — unit-test scope for this package
 - `src/styles/` (`base.css`, `fonts.css`); `src/styles/generated/` — generated tokens (see Protected)
 - `tests/visual/` — Playwright + axe specs; `public/sw-register.js` — deferred SW registration
 
@@ -46,16 +47,19 @@ Renders gate-approved content. Every organization-specific claim arrives via typ
 - Content flow: `src/content/*-data.ts` (Zod + `@ukbt/truth/gate`, fail-closed at build, PROD gated by `isPublishable`) → props → render. Parallel Tina path: `content/*/*.json` → `lib/tina/loaders` (Zod + allowed-urls) → `TinaIsland` → `/tina-island/*` re-render. Tina editorial fields are NOT truth-gated (gated by content-trust/allowed-urls/XSS choke instead).
 - Client JS (4 `<script>` roots, no framework, all ClientRouter-proofed behind `window.__ukbt*Wired` once-guards): `BaseLayout` logo-intro resets on `astro:before-swap` + `astro:after-swap`, motion reveal re-arms on `astro:page-load`; `Header` delegates drawer/dropdown/focus-trap at document level and resets state on `astro:after-swap`; `SquadGrid` filters and `ClubIntro` 4s slideshow init on `astro:page-load` (slideshow also stops on `astro:before-swap`).
 - CSS: tokens-only values; animate `transform`/`opacity` only; two-tier reduced-motion (instant states, soft-fade entrances).
+- Two test runners, two locations: unit tests are `src/**/*.test.ts` (Vitest, scoped by `vitest.config.ts`); Playwright specs belong in `tests/visual/` and nowhere else — a Playwright spec under `src/` is collected by `vitest run` and fails it.
 - Perf budgets (`<root>/scripts/check-perf.mjs`): HTML 72KB/page, CSS 96KB total, JS 48KB total. CSP: no `unsafe-inline` (hashes via `<root>/scripts/stamp-csp.mjs`).
 
 ## Validation
 
 ```bash
 pnpm deploy:verify    # full release gate from repo root — never claim a subset as a release pass
+pnpm --filter @ukbt/web test:unit    # this package's Vitest suite (src/**/*.test.ts)
+pnpm --filter @ukbt/web exec vitest run src/lib/forms/submit-form.test.ts    # single unit spec
 pnpm --filter @ukbt/web exec playwright test tests/visual/<file>.spec.ts
 ```
 
-Single-spec form above; full e2e is `pnpm test:e2e` (Chromium via `playwright install chromium` in CI).
+Root `pnpm test:unit` chains `packages/truth` and this package, so a unit-test failure in either fails the release chain. Playwright: single-spec form above; full e2e is `pnpm test:e2e` (Chromium via `playwright install chromium` in CI).
 
 ## Failure Modes
 

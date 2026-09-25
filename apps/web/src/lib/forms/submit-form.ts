@@ -23,12 +23,16 @@ export type FormResult =
 // delivery, never the UI or this signature. No provider/Cloudflare type is
 // imported anywhere in this module — that is the contract's forbidden
 // behavior.
-type FormAdapter = (payload: JoinApplication) => Promise<FormResult>;
+export type FormAdapter = (payload: JoinApplication) => Promise<FormResult>;
 
 let adapter: FormAdapter = mockAdapter;
 
 export function submitForm(payload: JoinApplication): Promise<FormResult> {
   return adapter(payload);
+}
+
+export function setFormAdapter(next: FormAdapter): void {
+  adapter = next;
 }
 
 export function resetFormAdapterForTests(): void {

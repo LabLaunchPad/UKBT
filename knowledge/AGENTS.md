@@ -51,7 +51,7 @@ Lets an agent act without remembering a conversation: the repository carries the
 ## Validation
 
 ```bash
-pnpm test:unit    # truth-gate unit tests, packages/truth only — decision logic stays green
+pnpm test:unit    # Vitest, packages/truth + apps/web — decision logic and the forms adapter boundary stay green
 ```
 
 No gate "passes" a knowledge edit — correctness is the evidence link. Re-read `04` promotion/registry rules before adding or closing any fact.
