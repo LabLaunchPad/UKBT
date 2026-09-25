@@ -4,7 +4,7 @@ Local rules for the contract layer. Root governance (`AGENTS.md`, `CLAUDE.md`) s
 
 ## Scope
 
-`<root>/contracts/` states *what is agreed, currently true, and permitted*. A contract is machine-checkable or it is not a contract (`README.md:4`). 19 `.md` files (17 `*-CONTRACT.md` + `evidence-contract.md` + `README.md`), plus `schemas/receipt.schema.json` and 2 `.yaml` templates. `docs/` explains *how* to work; `contracts/` states the agreement.
+`<root>/contracts/` states *what is agreed, currently true, and permitted*. A contract is machine-checkable or it is not a contract (`README.md:4`). 19 `.md` files + this file (17 `*-CONTRACT.md` + `evidence-contract.md` + `README.md`), plus `schemas/receipt.schema.json` and 2 `.yaml` templates. `docs/` explains *how* to work; `contracts/` states the agreement.
 
 ## Role
 

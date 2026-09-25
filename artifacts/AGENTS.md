@@ -4,7 +4,7 @@ Local rules for the evidence layer. Root governance (`AGENTS.md`, `CLAUDE.md`) s
 
 ## Scope
 
-`<root>/artifacts/` records what happened; `contracts/`, `CLAUDE.md`, `AGENTS.md`, `docs/` say what should (`README.md:3-5`). 20 subdirectories + top-level files (`README.md`, `HANDOFF.md`, `negative-cases-matrix.md`, `STAGE_7_READINESS_MATRIX.md`, `tina-audit-fixes-plan.md`, `ukbt-10-iteration-hardening-plan.md`). `README.md`'s 7-row table is STALE (lists 7 dirs; 20 exist) — the listing below was recounted from source.
+`<root>/artifacts/` records what happened; `contracts/`, `CLAUDE.md`, `AGENTS.md`, `docs/` say what should (`README.md:3-5`). 20 subdirectories + 7 top-level files (this file, `README.md`, `HANDOFF.md`, `negative-cases-matrix.md`, `STAGE_7_READINESS_MATRIX.md`, `tina-audit-fixes-plan.md`, `ukbt-10-iteration-hardening-plan.md`). `README.md`'s 7-row table is STALE (lists 7 dirs; 20 exist) — the listing below was recounted from source.
 
 ## Role
 
@@ -18,12 +18,12 @@ Append-only memory: evidence records, verification receipts, review output, adap
 
 ## Structure
 
-- `evidence/` — `EV-…` records, append-only (only `.gitkeep` tracked at HEAD — records arrive with sourcing work)
+- `evidence/` — `EV-…` records, populated and append-only (51 `EV-*.yaml` + 4 ADELUX verification docs + firewall/checklist notes = 58 tracked files at HEAD)
 - `receipts/` — `FOUNDATION.md`, `HOMEPAGE.md`, `RELEASE.md`; each asserts real exit codes + the command that produced them, or it is not a receipt
-- `review/` — `HOMEPAGE-REDTEAM.md`, `replay.md`, finding-level remediations (`F3-…`, `F4-F8-…`, `F6-…`, `MOBILE-…`)
+- `review/` — `HOMEPAGE-REDTEAM.md`, `replay.md`, `LEGACY-ABOUT-INVENTORY.md`, finding-level remediations (`F3-…`, `F4-F8-…`, `F6-…`, `MOBILE-…`)
 - `adaptive-learning/` — prompt-07 schema: `ERROR-CATALOG.md`, `PREVENTION-CHECKLIST.md`, `RECURRENCE-PROTOCOL.md`, `INDEX.yaml`; scan the index before non-trivial work, quote the catalog ID on recurrence
 - `content/` — client-blocked asks: `CLIENT-ASK-LIST.md`, `CLIENT-REQUIREMENTS-INVENTORY.md`, `UKBT-CONTENT-INVENTORY.md`
-- `visual/` (`ADELUX-*`, `DECISION-LEDGER.md`), `responsive/` (`RESPONSIVE-MATRIX.yaml`), `renders/` (`RENDER-FINGERPRINT.md`) — governed visual artifacts; old baselines are history, not current truth
+- `visual/` (`DECISION-LEDGER.md`), `responsive/` (`RESPONSIVE-MATRIX.yaml`), `renders/` (`RENDER-FINGERPRINT.md`) — governed visual artifacts; old baselines are history, not current truth (ADELUX files live in `adelux/`, `design/`, `evidence/`, not `visual/`)
 - `bootstrap/`, `verification/`, `ui/`, `pages/`, `architecture/`, `design/`, `audit/` — stage evidence (original stage mapping in `README.md`)
 - `adelux/`, `audit/`, `brand/`, `extraction/`, `performance/`, `source/` — domain evidence stores
 - `HANDOFF.md` — frozen 2026-09-15 (#76) — historical, do not update (see Protected)

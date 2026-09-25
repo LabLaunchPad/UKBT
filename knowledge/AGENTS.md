@@ -20,7 +20,7 @@ Lets an agent act without remembering a conversation: the repository carries the
 
 - `00-KNOWLEDGE-CONTRACT.md` — how this directory works; maintenance rule: a file changes only when evidence changes, citing the evidence ID
 - `01-VERIFIED-FACTS.yaml` — only established claims, each evidence-linked or marked unestablished; an unevidenced entry is a defect
-- `02-DECISION-RULES.yaml` — autonomous rules (DR-001..DR-015); `03-ARCHITECTURE-INVARIANTS.yaml` — boundaries for free agent decision
+- `02-DECISION-RULES.yaml` — autonomous rules (DR-001..DR-023); `03-ARCHITECTURE-INVARIANTS.yaml` — boundaries for free agent decision
 - `04-EVIDENCE-POLICY.yaml` — classes, freshness, promotion, registry (`artifacts/evidence/`, `EV-YYYYMMDD-NNN`, append-only)
 - `05-UNKNOWN-BLOCKER-POLICY.yaml` — against over/under-blocking; `06-TEMPLATE-BOUNDARY.yaml` — Adelux provenance + rights (not reopened to write contracts; `RIGHTS-CONTRACT.md` restates it)
 - `07-CONTENT-TRUTH-POLICY.yaml` — permitted/prohibited sources; `08-VALIDATION-POLICY.yaml` — validation states

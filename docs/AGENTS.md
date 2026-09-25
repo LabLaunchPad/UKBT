@@ -4,7 +4,7 @@ Local rules for the docs layer. Root governance (`AGENTS.md`, `CLAUDE.md`) still
 
 ## Scope
 
-`<root>/docs/` explains *how* to work. 18 top-level `.md` files + 4 subdirs (`audit/`, `security/`, `superpowers/`, `tina-audit/`). Explanatory by default; exactly one file is canonical status.
+`<root>/docs/` explains *how* to work. 18 top-level `.md` files + this file + 4 subdirs (`audit/`, `security/`, `superpowers/`, `tina-audit/`). Explanatory by default; exactly one file is canonical status.
 
 ## Role
 
