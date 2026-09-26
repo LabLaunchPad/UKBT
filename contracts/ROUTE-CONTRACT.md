@@ -248,9 +248,9 @@ Removes `/community` and `/coaching` from the AMENDMENT 01 set. Authorised set i
 
 ## AMENDMENT 05 — `/privacy` applicant notice stub (16 → 17 `.astro` routes)
 
-**Date:** 2026-09-26 · **Authority:** owner decision 2026-09-26 to build the player application form — `docs/superpowers/specs/2026-09-26-join-form-design.md` ("Status: PROPOSAL approved by owner 2026-09-26"), the same first-party owner decision class AMENDMENTS 01/02/04 accept · **Status:** PROPOSED — needs owner re-approval at PR review (frozen text + AMENDMENTS 01-04 preserved verbatim)
+**Date:** 2026-09-26 · **Authority:** owner decision 2026-09-26 to build the player application form — `docs/superpowers/specs/2026-09-26-join-form-design.md` ("Status: PROPOSAL approved by owner 2026-09-26"), the same first-party owner decision class AMENDMENTS 01/02/04 accept · **Status:** AMENDED — evidence record `artifacts/evidence/EV-20260926-006.yaml` filed 2026-09-26 (frozen text + AMENDMENTS 01-04 preserved verbatim)
 
-> Rule 4 (`contracts/README.md`) wants a new evidence record naming the observation behind an amendment. No `EV-20260926-*` record exists for this route addition; the authority cited is the owner-approved spec plus the same-day owner decision already recorded in `EV-20260926-005` (CSS re-approval taken *for this form*). The record itself is owed before merge and is named in the PR body, not invented here.
+> Rule 4 (`contracts/README.md`): the evidence record naming the observation behind this amendment is `artifacts/evidence/EV-20260926-006.yaml` (owner instruction for the form + privacy stub, filed 2026-09-26).
 
 ### What changed
 
