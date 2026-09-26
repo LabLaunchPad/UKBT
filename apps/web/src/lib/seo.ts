@@ -85,6 +85,9 @@ export const SEO_ROUTES: SeoRoute[] = [
   { path: '/services', indexable: false },
   { path: '/membership', indexable: false },
   { path: '/join', indexable: false },
+  // Applicant notice stub (noindex shell, honest placeholder until online
+  // applications open).
+  { path: '/privacy', indexable: false },
   // Offline shell (PWA-lite): not public content.
   { path: '/offline', indexable: false },
 ];
