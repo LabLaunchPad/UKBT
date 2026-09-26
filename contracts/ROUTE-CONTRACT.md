@@ -243,3 +243,30 @@ Route removal is not route derivation — the frozen text governs how routes get
 ### Route set authorised (delta)
 
 Removes `/community` and `/coaching` from the AMENDMENT 01 set. Authorised set is now 16 `.astro` routes: `/`, `/about`, `/club-captain`, `/players`, `/franchises`, `/franchises/uppsala-tigers`, `/tournaments`, `/news`, `/news/[slug]`, `/contact`, `/faq`, `/services`, `/membership`, `/join`, `/offline`, `/404` — plus the `tina-island/[name]` endpoint (AMENDMENT 02/03) and `/smoke.json` static endpoint (AMENDMENT 03 follow-up).
+
+---
+
+## AMENDMENT 05 — `/privacy` applicant notice stub (16 → 17 `.astro` routes)
+
+**Date:** 2026-09-26 · **Authority:** owner decision 2026-09-26 to build the player application form — `docs/superpowers/specs/2026-09-26-join-form-design.md` ("Status: PROPOSAL approved by owner 2026-09-26"), the same first-party owner decision class AMENDMENTS 01/02/04 accept · **Status:** PROPOSED — needs owner re-approval at PR review (frozen text + AMENDMENTS 01-04 preserved verbatim)
+
+> Rule 4 (`contracts/README.md`) wants a new evidence record naming the observation behind an amendment. No `EV-20260926-*` record exists for this route addition; the authority cited is the owner-approved spec plus the same-day owner decision already recorded in `EV-20260926-005` (CSS re-approval taken *for this form*). The record itself is owed before merge and is named in the PR body, not invented here.
+
+### What changed
+
+`/privacy` (`apps/web/src/pages/privacy.astro`) is added: an **applicant privacy notice stub**, linked from the consent hint on the `/join/` application form. `/join/` itself is unchanged as a route — only its rendered content changed (the `PendingContent` shell became the form), still `noindex` per AMENDMENT 01 condition 2.
+
+### Why this is consistent with the frozen text
+
+The frozen text governs route *derivation*, and this route is not derived from Adelux's page list — it is a consequence of a first-party owner instruction about UKBT's own form, the same evidence class AMENDMENT 01 (`CLIENT_REQ_009`), 02 and 04 accept. The form's consent hint needs a destination that is honest about applicant data; a UKBT-evidenced destination is required precisely because the template-derived one would not be. `INV-014` is intact: no reference page, name or count is borrowed.
+
+### Conditions attached
+
+1. **The notice is a stub, not a policy.** It states what the form asks for, which channels are real, and that the working notice — carrying the lawful basis, retention period, data-protection contact and complaints route — ships with online applications. It does **not** claim a full policy already exists.
+2. **`noindex`.** Following the convention AMENDMENT 01 condition 2 set for shell pages (and `/offline` follows), a stub is not public content; indexing an incomplete notice would invite readers to treat it as the club's policy. It becomes indexable only when the working notice replaces the stub text.
+3. **No invented legal terms.** No retention period, DPO, registrant, postal address or lawful basis is asserted. Contact channels are rendered from `contact`/`homepage.social` in `src/content/homepage-data.ts`, never retyped. `UNKNOWN stays UNKNOWN` — a gap is named as a gap.
+4. **The rule survives this amendment.** A future route still needs its own stated UKBT evidence. "The form links to it" is not sufficient justification on its own.
+
+### Route set authorised (delta)
+
+Adds `/privacy` to the AMENDMENT 04 set. Authorised set is now 17 `.astro` routes: the 16 listed in AMENDMENT 04 plus `/privacy` — alongside the `tina-island/[name]` endpoint (AMENDMENT 02/03) and the `/smoke.json` static endpoint (AMENDMENT 03 follow-up).
