@@ -184,7 +184,7 @@ const notOpenNote =
   <fieldset class="ukbt-join__group">
     <legend class="ukbt-eyebrow">Before you send</legend>
     <div class="ukbt-join__row">
-      <p class="ukbt-join__field ukbt-join__field--wide">
+      <p class="ukbt-join__field ukbt-join__field--wide ukbt-join__field--check">
         <input
           class="ukbt-join__checkbox"
           id="join-consent"
@@ -202,7 +202,7 @@ const notOpenNote =
           stored.
         </span>
       </p>
-      <p class="ukbt-join__field ukbt-join__field--wide">
+      <p class="ukbt-join__field ukbt-join__field--wide ukbt-join__field--check">
         <input
           class="ukbt-join__checkbox"
           id="join-age-attestation"
@@ -244,7 +244,7 @@ const notOpenNote =
       {
         homepage.social.map((s) => (
           <li>
-            <a class="ukbt-join__channel" href={s.url} rel="me noopener">{s.platform}</a>
+            <a class="ukbt-join__channel ukbt-join__channel--social" href={s.url} rel="me noopener">{s.platform}</a>
           </li>
         ))
       }
@@ -450,11 +450,25 @@ const notOpenNote =
     color: var(--ukbt-color-neutral-700);
   }
 
-  /* Consent + attestation. Layout comes from the existing `.ukbt-join__row`
-     / `.ukbt-join__field--wide` pair (box, then label, then hint, stacked and
-     full width), so these three rules are the whole addition. The 32px box
-     is `--ukbt-space-8`; a label's entire text toggles its box, so the
+  /* Consent + attestation rows. The base `.ukbt-join__field` stacks
+     (correct for text controls), but a box stacked over its label reads
+     as two unrelated elements — so these two fields opt into a wrapping
+     row: box and label side by side, hint on its own line below. The 32px
+     box is `--ukbt-space-8`; a label's entire text toggles its box, so the
      effective target is the whole row — well over the 24px axe floor. */
+  .ukbt-join__field--check {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    column-gap: var(--ukbt-space-3);
+  }
+  .ukbt-join__field--check .ukbt-join__check-label {
+    flex: 1;
+    min-width: 0;
+  }
+  .ukbt-join__field--check .ukbt-join__hint {
+    flex-basis: 100%;
+  }
   .ukbt-join__checkbox {
     width: var(--ukbt-space-8);
     height: var(--ukbt-space-8);
@@ -554,9 +568,15 @@ const notOpenNote =
     font-family: var(--ukbt-font-family-heading);
     font-weight: var(--ukbt-font-weight-bold);
     font-size: var(--ukbt-font-size-1);
-    text-transform: capitalize;
     color: var(--ukbt-color-brand-primary);
     overflow-wrap: anywhere;
+  }
+  /* No `text-transform` on the base rule: the email address and phone
+     number must render byte-exact (`capitalize` rewrites
+     info@ukbanglatigers.co.uk as Info@Ukbanglatigers.Co.Uk). Only the
+     social names take the capitalised treatment, via the modifier. */
+  .ukbt-join__channel--social {
+    text-transform: capitalize;
   }
   .ukbt-join__channel:hover {
     text-decoration: underline;
