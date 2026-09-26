@@ -362,7 +362,7 @@ Slices A+B of the approved SEO plan are implemented and merged:
   page noindexed + described; `tournaments`/`faq` titles aligned to
   banners; `coaching` description rewritten after the new gate caught a
   real `about`/`coaching` description duplicate (same gated tagline).
-- `public/robots.txt`, dist-derived `sitemap.xml` (12 URLs, no manual
+- `public/robots.txt`, dist-derived `sitemap.xml` (10 URLs, no manual
   list), `scripts/check-seo.mjs` (`SEO_STATUS`), `tests/visual/seo.spec.ts`,
   `seo-gate` CI job, `deploy:verify` extended.
 - `SEO-CONTRACT.md` Amendment 01 records the implementation.

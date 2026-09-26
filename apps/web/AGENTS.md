@@ -48,7 +48,7 @@ Renders gate-approved content. Every organization-specific claim arrives via typ
 - Client JS (4 `<script>` roots, no framework, all ClientRouter-proofed behind `window.__ukbt*Wired` once-guards): `BaseLayout` logo-intro resets on `astro:before-swap` + `astro:after-swap`, motion reveal re-arms on `astro:page-load`; `Header` delegates drawer/dropdown/focus-trap at document level and resets state on `astro:after-swap`; `SquadGrid` filters and `ClubIntro` 4s slideshow init on `astro:page-load` (slideshow also stops on `astro:before-swap`).
 - CSS: tokens-only values; animate `transform`/`opacity` only; two-tier reduced-motion (instant states, soft-fade entrances).
 - Two test runners, two locations: unit tests are `src/**/*.test.ts` (Vitest, scoped by `vitest.config.ts`); Playwright specs belong in `tests/visual/` and nowhere else — a Playwright spec under `src/` is collected by `vitest run` and fails it.
-- Perf budgets (`<root>/scripts/check-perf.mjs`): HTML 72KB/page, CSS 96KB total, JS 48KB total. CSP: no `unsafe-inline` (hashes via `<root>/scripts/stamp-csp.mjs`).
+- Perf budgets (`<root>/scripts/check-perf.mjs`): HTML 72KB/page, CSS 130KB total, JS 48KB total. CSP: no `unsafe-inline` (hashes via `<root>/scripts/stamp-csp.mjs`).
 
 ## Validation
 
