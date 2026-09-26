@@ -17,6 +17,7 @@
 // source, `validationMessage` is the only message source. No regexes, no
 // hand-written error copy.
 import Button from './Button.astro';
+import { socialDisplayName } from './SocialLinks.astro';
 import { contact, homepage } from '../content/homepage-data';
 
 // The live-region message names the channels explicitly rather than
@@ -164,6 +165,38 @@ const notOpenNote =
   </fieldset>
 
   {
+    // Pre-submit honesty notice. Rendered BEFORE the consent group on
+    // purpose: the warning must precede any consent action, so nobody
+    // ticks "I accept how the club uses my details" before learning
+    // nothing is sent. Visible BEFORE the click as well, so the rule
+    // holds even for someone who never presses submit. Cream + a gold
+    // rule: the SectionHeader grammar, reading as a notice rather than
+    // a section.
+  }
+  <aside class="ukbt-join__notice" aria-labelledby="join-notice-heading">
+    <p class="ukbt-eyebrow" id="join-notice-heading">Before you apply</p>
+    <p>
+      <strong>Online applications are not open yet.</strong> Nothing typed here is sent or
+      stored, and there is no confirmation to wait for. The club's working channels today are:
+    </p>
+    <ul class="ukbt-join__channels">
+      <li>
+        <a class="ukbt-join__channel" href={`mailto:${contact.email}`}>{contact.email}</a>
+      </li>
+      <li>
+        <a class="ukbt-join__channel" href={contact.phoneHref}>{contact.phoneDisplay}</a>
+      </li>
+      {
+        homepage.social.map((s) => (
+          <li>
+            <a class="ukbt-join__channel" href={s.url} rel="me noopener">{socialDisplayName(s.platform)}</a>
+          </li>
+        ))
+      }
+    </ul>
+  </aside>
+
+  {
     // Consent + attestation (spec §"Copy + data protection" — required, and
     // the reason exact date of birth is defensible: the club develops young
     // players, so we need to know who is behind an application).
@@ -222,34 +255,6 @@ const notOpenNote =
       </p>
     </div>
   </fieldset>
-
-  {
-    // Pre-submit honesty notice. Visible BEFORE the click, so the rule
-    // holds even for someone who never presses submit. Cream + a gold rule:
-    // the SectionHeader grammar, reading as a notice rather than a section.
-  }
-  <aside class="ukbt-join__notice" aria-labelledby="join-notice-heading">
-    <p class="ukbt-eyebrow" id="join-notice-heading">Before you apply</p>
-    <p>
-      <strong>Online applications are not open yet.</strong> Nothing typed here is sent or
-      stored, and there is no confirmation to wait for. The club's working channels today are:
-    </p>
-    <ul class="ukbt-join__channels">
-      <li>
-        <a class="ukbt-join__channel" href={`mailto:${contact.email}`}>{contact.email}</a>
-      </li>
-      <li>
-        <a class="ukbt-join__channel" href={contact.phoneHref}>{contact.phoneDisplay}</a>
-      </li>
-      {
-        homepage.social.map((s) => (
-          <li>
-            <a class="ukbt-join__channel ukbt-join__channel--social" href={s.url} rel="me noopener">{s.platform}</a>
-          </li>
-        ))
-      }
-    </ul>
-  </aside>
 
   <div class="ukbt-join__actions">
     <Button label="Send application" tone="on-light" disabled />
@@ -468,6 +473,10 @@ const notOpenNote =
   }
   .ukbt-join__field--check .ukbt-join__hint {
     flex-basis: 100%;
+    /* Hint text starts where the label text starts (32px box + one column
+       gap), not at the row edge under the box — the explanation belongs to
+       the label, not the checkbox. flex-shrink absorbs the indent. */
+    margin-inline-start: calc(var(--ukbt-space-8) + var(--ukbt-space-3));
   }
   .ukbt-join__checkbox {
     width: var(--ukbt-space-8);
@@ -561,6 +570,10 @@ const notOpenNote =
     flex-wrap: wrap;
     gap: var(--ukbt-space-2) var(--ukbt-space-4);
   }
+  /* No `text-transform` here: the email and phone render byte-exact, and
+     social names arrive display-ready from `socialDisplayName` (the
+     SocialLinks single source of truth — `capitalize` would misspell
+     TikTok as Tiktok). */
   .ukbt-join__channel {
     display: inline-flex;
     align-items: center;
@@ -570,13 +583,6 @@ const notOpenNote =
     font-size: var(--ukbt-font-size-1);
     color: var(--ukbt-color-brand-primary);
     overflow-wrap: anywhere;
-  }
-  /* No `text-transform` on the base rule: the email address and phone
-     number must render byte-exact (`capitalize` rewrites
-     info@ukbanglatigers.co.uk as Info@Ukbanglatigers.Co.Uk). Only the
-     social names take the capitalised treatment, via the modifier. */
-  .ukbt-join__channel--social {
-    text-transform: capitalize;
   }
   .ukbt-join__channel:hover {
     text-decoration: underline;

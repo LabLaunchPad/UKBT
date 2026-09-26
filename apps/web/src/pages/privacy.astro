@@ -21,15 +21,16 @@
 // club's policy. It flips to indexable only when the working notice
 // replaces this text.
 //
-// Zero scoped CSS by design: the CSS budget has ~272 bytes of headroom
-// (EV-20260926-005), so this page composes the existing Section /
-// SectionHeader / base-type grammar rather than adding rules.
+// One small scoped rule below (the list reset): the base type grammar
+// styles paragraphs but leaves browser-default bullets, which read as
+// stray marks on these short channel lists. Tokens-only, no new tokens.
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/Header.astro';
 import PageBanner from '../components/PageBanner.astro';
 import Section from '../components/Section.astro';
 import SectionHeader from '../components/SectionHeader.astro';
 import Footer from '../components/Footer.astro';
+import { socialDisplayName } from '../components/SocialLinks.astro';
 import { contact, homepage } from '../content/homepage-data';
 ---
 
@@ -60,7 +61,7 @@ import { contact, homepage } from '../content/homepage-data';
     <Section surface="alt">
       <SectionHeader eyebrow="The Form" heading="Details the Form Asks For" />
       <p>When online applications open, the form asks for:</p>
-      <ul>
+      <ul class="ukbt-privacy-list">
         <li>Full name</li>
         <li>Date of birth</li>
         <li>Nationality</li>
@@ -69,7 +70,7 @@ import { contact, homepage } from '../content/homepage-data';
         <li>Email address</li>
         <li>A link to your main cricket statistics profile (optional)</li>
         <li>Links to your cricket videos (optional)</li>
-        <li>A photograph (optional)</li>
+        <li>A photograph (optional; uploads open with online applications)</li>
       </ul>
       <p>
         That is the whole list — the form asks for nothing else. An exact date of birth is
@@ -96,7 +97,7 @@ import { contact, homepage } from '../content/homepage-data';
         If you have a question about your details, or want to ask what the club holds about you
         today, use a channel that is already working:
       </p>
-      <ul>
+      <ul class="ukbt-privacy-list">
         <li>
           Email: <a href={`mailto:${contact.email}`}>{contact.email}</a>
         </li>
@@ -106,7 +107,7 @@ import { contact, homepage } from '../content/homepage-data';
         {
           homepage.social.map((s) => (
             <li>
-              <a href={s.url} rel="me noopener">{s.platform}</a>
+              <a href={s.url} rel="me noopener">{socialDisplayName(s.platform)}</a>
             </li>
           ))
         }
@@ -115,3 +116,17 @@ import { contact, homepage } from '../content/homepage-data';
   </main>
   <Footer social={homepage.social} nav={homepage.nav} secondaryNav={homepage.secondaryNav} />
 </BaseLayout>
+
+<style>
+  /* Intended-list reset: no browser bullets, no UA indent, paragraph-rhythm
+     bottom margin (the same token base type uses) and an even token gap —
+     so each channel reads as a designed item, not a default list. */
+  .ukbt-privacy-list {
+    list-style: none;
+    margin: 0 0 var(--ukbt-font-body-paragraph-margin-bottom) 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--ukbt-space-2);
+  }
+</style>
