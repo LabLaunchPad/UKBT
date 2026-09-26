@@ -1033,6 +1033,28 @@ here, deliberately:
    failure.
 10. **Node engine pinning in CI** — NODE_VERSION '22' floats; pin to the
     full version in `.nvmrc` (now 22.23.2) and align the workflow.
+11. **Smoke 403 vantage (BACKLOG, owner dashboard, 2026-09-26):** GH-runner
+    egress is Cloudflare-challenged (`403 mitigated=challenge`, run
+    `36233616374`: 19/19 CI green, only `smoke-verify` red) while
+    production is 200 and `/smoke.json` tracks HEAD (`0f7b17a`,
+    verified live). Action: Security → Events ray
+    `a3f6b6da2a2d433c` → rule name → (a) SBFM path-skip for
+    `/smoke.json` (recommended), (b) BFM off/upgrade, or (c) WAF
+    exception. Verify on next `main` push; record choice in closure §5.
+12. **TinaCloud Save+revert E2E (BACKLOG, owner browser, 2026-09-26):**
+    repo-side all PASS (App installed, ruleset `23692482` + bypass,
+    real Save once proven `fbf05f2`); automation simulation forbidden.
+    Action: edit one EDITORIAL field in `/admin/` → Save → confirm bot
+    commit → Revert → confirm revert commit; confirm seats/membership
+    (HD-001/002/003) + build vars. Report the two SHAs for the
+    `VERIFIED_E2E` record. Source: `docs/audit/tinacloud-final-commissioning.md`.
+13. **Phase 2 form endpoint (BACKLOG, staged, 2026-09-26):** owner
+    decisions locked — endpoint first (uploads stay gated, no R2),
+    delivery = email to club inbox, nothing persisted. Stages: C0 spec
+    delta (success UI, server Zod, sending path, full notice, rate
+    limit, `noindex` decision) → C1 endpoint (new POST route needs a
+    ROUTE-CONTRACT amendment + EV first) → C2 notice + flip → C3 R2
+    uploads (separate program). No code before C0 approval.
 
 ## TinaCMS visual-editing closure 2026-09-22/23 — merged, smoke RED (external)
 
