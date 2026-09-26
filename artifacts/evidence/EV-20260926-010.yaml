@@ -1,0 +1,64 @@
+id: EV-20260926-010
+classification: VERIFIED
+claim: >
+  Dependency currency audit 2026-09-26: tinacms 3.14.0, zod 4.6.5, and
+  @playwright/test 1.63.0 were already at latest (no action). Four packages
+  lagged and were bumped with all 18 gates green: astro 7.2.8 -> 7.3.5,
+  @astrojs/cloudflare 14.2.5 -> 14.3.3, @biomejs/biome 2.5.13 -> 2.5.14,
+  wrangler 4.126.0 -> 4.141.0 (PR #126, merge b42d8e0). style-dictionary
+  4.4.0 -> 5.5.3 (PR #127, merge 195bd26): pre-migration static check
+  proved all 3 token references resolve to leaf tokens (152 tokens total),
+  no custom reference syntax, Node floor satisfied; v5 output differs from
+  v4 in exactly one line, fixing corrupt output
+  (--ukbt-radius-ref-card-asymmetric was `0 20px 0px 20pxpx`, invalid CSS
+  browsers dropped; v5 emits the approved `0px 20px 0px 20px`), restoring
+  the intended radius on AboutStory + FounderSpotlight cards with visual CI
+  green. Platform finding: Cloudflare Worker Previews (changelog
+  2026-09-22, CLI floor >= 4.135.0, satisfied by 4.141.0) offer automatic
+  per-PR preview URLs; evaluation spec proposed, no pipeline change made.
+source: "pnpm-lock.yaml at merges b42d8e0/195bd26; npm registry (astro
+  7.3.1, @biomejs/biome 2.5.14, @playwright/test 1.63.0, style-dictionary
+  5.5.3, tinacms/whats-new 3.14.0); astro.build/blog/astro-730/;
+  withastro/astro releases; tinacms/tinacms releases + CHANGELOG;
+  zod.dev/blog/zod-4-6; cloudflare/workers-sdk releases;
+  developers.cloudflare.com/changelog/post/2026-09-22-worker-previews/;
+  styledictionary.com/versions/v5/migration/; PR #126/#127 CI runs
+  (Playwright 5m25s on #127)."
+source_type: first_party_repo_state
+retrieved_at: 2026-09-26
+verified_at: 2026-09-26
+valid_until: null
+justification_for_null: >
+  Point-in-time currency statement. "Latest" decays; re-audit before
+  relying on it. The merges (b42d8e0, 195bd26) and their CI runs are the
+  durable evidence.
+scope: "Root + apps/web + packages/truth dependency ranges vs upstream
+  releases as of 2026-09-26."
+method: >
+  Resolved each stack pin against Context7 docs, npm registry metadata,
+  vendor changelogs/blogs, and the GitHub releases pages (version claims
+  corroborated by >= 2 sources); installed versions read from
+  pnpm-lock.yaml, not from ranges. style-dictionary v5 risk checked
+  statically (leaf-reference script over approved tokens) and by
+  byte-diffing tokens.css before/after (one-line fix, described above).
+  TinaCMS/Zod/Playwright asserted current with zero file changes.
+result: |
+  All stack gaps closed on main (b42d8e0, 195bd26). Non-gaps (tinacms,
+  zod, playwright) need no action. Follow-ups live in docs/12 items
+  11-13 and the Worker Previews + Phase 2 C0 spec docs; no further
+  dependency work is open.
+related_files:
+  - package.json
+  - apps/web/package.json
+  - packages/truth/package.json
+  - pnpm-lock.yaml
+  - packages/truth/src/tokens/approved/radius.json
+  - apps/web/src/components/AboutStory.astro
+  - apps/web/src/components/FounderSpotlight.astro
+  - docs/superpowers/specs/2026-09-26-worker-previews-design.md
+  - docs/superpowers/specs/2026-09-26-join-form-phase2-design.md
+relates_to: []
+notes: >
+  Research-first, repo-second: upstream claims were checked before any
+  bump, and every bump proved itself through the full 18-gate pipeline,
+  not through version-number reasoning.

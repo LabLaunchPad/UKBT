@@ -1040,7 +1040,11 @@ here, deliberately:
     verified live). Action: Security → Events ray
     `a3f6b6da2a2d433c` → rule name → (a) SBFM path-skip for
     `/smoke.json` (recommended), (b) BFM off/upgrade, or (c) WAF
-    exception. Verify on next `main` push; record choice in closure §5.
+    exception.     Verify on next `main` push; record choice in closure §5.
+    Complementary (not a substitute): Worker Previews evaluation spec
+    `docs/superpowers/specs/2026-09-26-worker-previews-design.md`
+    (PROPOSAL — per-PR human-openable URLs; needs two contract
+    amendments + owner approval, no pipeline change made).
 12. **TinaCloud Save+revert E2E (BACKLOG, owner browser, 2026-09-26):**
     repo-side all PASS (App installed, ruleset `23692482` + bypass,
     real Save once proven `fbf05f2`); automation simulation forbidden.
@@ -1054,7 +1058,11 @@ here, deliberately:
     delta (success UI, server Zod, sending path, full notice, rate
     limit, `noindex` decision) → C1 endpoint (new POST route needs a
     ROUTE-CONTRACT amendment + EV first) → C2 notice + flip → C3 R2
-    uploads (separate program). No code before C0 approval.
+    uploads (separate program). No code before C0 approval. C0 spec:
+    `docs/superpowers/specs/2026-09-26-join-form-phase2-design.md`
+    (PROPOSAL — recommends Cloudflare Email Sending, `/api/apply/`
+    needs a ROUTE amendment first). Currency grounding:
+    `artifacts/evidence/EV-20260926-010.yaml`.
 
 ## TinaCMS visual-editing closure 2026-09-22/23 — merged, smoke RED (external)
 
