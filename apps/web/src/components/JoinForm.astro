@@ -1,0 +1,636 @@
+---
+// JoinForm.astro — player application form, v1 (UI only, honesty-gated).
+//
+// contracts/FORM-CONTRACT.md (FROZEN): this component carries NO delivery
+// logic. The only exit is `submitForm(payload): Promise<Result>`
+// (`src/lib/forms/submit-form.ts`); no provider, edge or Cloudflare type is
+// imported here, and no form logic lives in the page that hosts it.
+//
+// The honesty rule (binding —
+// docs/superpowers/specs/2026-09-26-join-form-design.md): v1 has no
+// endpoint, so a submit can never be reported as delivered. There is NO
+// success state in this file — none in the markup, none in the script, not
+// even as a comment. A visible pre-submit notice says applications are not
+// open before the click; the live region says it again afterwards.
+//
+// Validation is the browser's own: `required` + `type` are the only rule
+// source, `validationMessage` is the only message source. No regexes, no
+// hand-written error copy.
+import Button from './Button.astro';
+import { socialDisplayName } from './SocialLinks.astro';
+import { contact, homepage } from '../content/homepage-data';
+
+// The live-region message names the channels explicitly rather than
+// pointing at a list further up: a screen-reader user who just submitted
+// hears only the status text, and "see the list above" is a dead end.
+const channelNames = [
+  contact.email,
+  contact.phoneDisplay,
+  ...homepage.social.map((s) => s.platform),
+];
+const notOpenNote =
+  'Online applications are not open yet, so nothing was sent and nothing ' +
+  `you typed was stored. To reach the club today use a working channel: ${channelNames.join(', ')}.`;
+---
+
+<form class="ukbt-join" novalidate data-join-form>
+  {
+    // Error summary. Empty + hidden until a submit fails; receives focus so
+    // the failure is announced rather than silently swallowed. Lives at the
+    // TOP of the form — the GOV.UK/WCAG error-identification pattern: read
+    // the problems once, then jump to each field from the list.
+  }
+  <div class="ukbt-join__errors" tabindex="-1" data-join-errors hidden>
+    <p class="ukbt-join__errors-title">This form could not be sent yet. Please check:</p>
+    <ul data-join-error-list></ul>
+  </div>
+
+  <fieldset class="ukbt-join__group">
+    <legend class="ukbt-eyebrow">Your details</legend>
+    <div class="ukbt-join__row">
+      <p class="ukbt-join__field ukbt-join__field--wide">
+        <label class="ukbt-join__label" for="join-full-name">
+          Full name <span class="ukbt-join__state">(required)</span>
+        </label>
+        <input
+          class="ukbt-join__control"
+          id="join-full-name"
+          name="fullName"
+          type="text"
+          autocomplete="name"
+          required
+        />
+      </p>
+      <p class="ukbt-join__field">
+        <label class="ukbt-join__label" for="join-date-of-birth">
+          Date of birth <span class="ukbt-join__state">(required)</span>
+        </label>
+        <input
+          class="ukbt-join__control"
+          id="join-date-of-birth"
+          name="dateOfBirth"
+          type="date"
+          autocomplete="bday"
+          required
+        />
+      </p>
+      <p class="ukbt-join__field">
+        <label class="ukbt-join__label" for="join-nationality">
+          Nationality <span class="ukbt-join__state">(required)</span>
+        </label>
+        <input class="ukbt-join__control" id="join-nationality" name="nationality" type="text" required />
+      </p>
+      <p class="ukbt-join__field">
+        <label class="ukbt-join__label" for="join-country-of-residency">
+          Country of residency <span class="ukbt-join__state">(required)</span>
+        </label>
+        <input
+          class="ukbt-join__control"
+          id="join-country-of-residency"
+          name="countryOfResidency"
+          type="text"
+          autocomplete="country-name"
+          required
+        />
+      </p>
+      <p class="ukbt-join__field">
+        <label class="ukbt-join__label" for="join-phone">
+          Phone number <span class="ukbt-join__state">(required)</span>
+        </label>
+        <input
+          class="ukbt-join__control"
+          id="join-phone"
+          name="phone"
+          type="tel"
+          autocomplete="tel"
+          aria-describedby="join-phone-hint"
+          required
+        />
+        <span class="ukbt-join__hint" id="join-phone-hint">Include your country code, e.g. +44</span>
+      </p>
+      <p class="ukbt-join__field ukbt-join__field--wide">
+        <label class="ukbt-join__label" for="join-email">
+          Email <span class="ukbt-join__state">(required)</span>
+        </label>
+        <input
+          class="ukbt-join__control"
+          id="join-email"
+          name="email"
+          type="email"
+          autocomplete="email"
+          required
+        />
+      </p>
+    </div>
+  </fieldset>
+
+  <fieldset class="ukbt-join__group">
+    <legend class="ukbt-eyebrow">Your cricket</legend>
+    <div class="ukbt-join__row">
+      <p class="ukbt-join__field">
+        <label class="ukbt-join__label" for="join-statistics-url">
+          Main statistics link <span class="ukbt-join__state">(optional)</span>
+        </label>
+        <input class="ukbt-join__control" id="join-statistics-url" name="statisticsUrl" type="url" />
+      </p>
+      <p class="ukbt-join__field">
+        <label class="ukbt-join__label" for="join-video-links">
+          Video links <span class="ukbt-join__state">(optional)</span>
+        </label>
+        <textarea
+          class="ukbt-join__control ukbt-join__control--multiline"
+          id="join-video-links"
+          name="videoUrls"
+          rows="4"
+          aria-describedby="join-video-hint"></textarea>
+        <span class="ukbt-join__hint" id="join-video-hint">One URL per line</span>
+      </p>
+      <p class="ukbt-join__field ukbt-join__field--wide">
+        <label class="ukbt-join__label" for="join-picture">Upload picture</label>
+        <input
+          class="ukbt-join__control"
+          id="join-picture"
+          name="picture"
+          type="file"
+          accept="image/*"
+          disabled
+          aria-describedby="join-picture-hint"
+        />
+        <span class="ukbt-join__hint" id="join-picture-hint">
+          Photo uploads open with online applications. This control stays switched off until
+          then — please don't send pictures by this page.
+        </span>
+      </p>
+    </div>
+  </fieldset>
+
+  {
+    // Pre-submit honesty notice. Rendered BEFORE the consent group on
+    // purpose: the warning must precede any consent action, so nobody
+    // ticks "I accept how the club uses my details" before learning
+    // nothing is sent. Visible BEFORE the click as well, so the rule
+    // holds even for someone who never presses submit. Cream + a gold
+    // rule: the SectionHeader grammar, reading as a notice rather than
+    // a section.
+  }
+  <aside class="ukbt-join__notice" aria-labelledby="join-notice-heading">
+    <p class="ukbt-eyebrow" id="join-notice-heading">Before you apply</p>
+    <p>
+      <strong>Online applications are not open yet.</strong> Nothing typed here is sent or
+      stored, and there is no confirmation to wait for. The club's working channels today are:
+    </p>
+    <ul class="ukbt-join__channels">
+      <li>
+        <a class="ukbt-join__channel" href={`mailto:${contact.email}`}>{contact.email}</a>
+      </li>
+      <li>
+        <a class="ukbt-join__channel" href={contact.phoneHref}>{contact.phoneDisplay}</a>
+      </li>
+      {
+        homepage.social.map((s) => (
+          <li>
+            <a class="ukbt-join__channel" href={s.url} rel="me noopener">{socialDisplayName(s.platform)}</a>
+          </li>
+        ))
+      }
+    </ul>
+  </aside>
+
+  {
+    // Consent + attestation (spec §"Copy + data protection" — required, and
+    // the reason exact date of birth is defensible: the club develops young
+    // players, so we need to know who is behind an application).
+    //
+    // Real required checkboxes, not decorative text: an unattributed
+    // paragraph is not a consent, and it would be skipped by anyone who
+    // assumed consent is implied. They are named, so a later adapter can
+    // carry them, and they join the SAME error-summary pass as every other
+    // control (the script selects `input[name]`, so a checkbox is already
+    // in scope — nothing in the script needed to change for them).
+    //
+    // Copy is deliberately thin about data handling. v1 sends nothing, so
+    // there is no live policy to describe, no retention promise to make and
+    // no lawful basis to assert — only what the applicant is agreeing to
+    // and the fact that nothing leaves the browser today. The `/privacy/`
+    // href is Task 3's page; `check-internal-links.mjs` owns that link.
+  }
+  <fieldset class="ukbt-join__group">
+    <legend class="ukbt-eyebrow">Before you send</legend>
+    <div class="ukbt-join__row">
+      <p class="ukbt-join__field ukbt-join__field--wide ukbt-join__field--check">
+        <input
+          class="ukbt-join__checkbox"
+          id="join-consent"
+          name="consent"
+          type="checkbox"
+          aria-describedby="join-consent-hint"
+          required
+        />
+        <label class="ukbt-join__check-label" for="join-consent">
+          I accept how the club uses my details <span class="ukbt-join__state">(required)</span>
+        </label>
+        <span class="ukbt-join__hint" id="join-consent-hint">
+          Read the <a href="/privacy/">privacy notice</a> for how the club handles applicant
+          details. While online applications are closed, nothing typed on this form is sent or
+          stored.
+        </span>
+      </p>
+      <p class="ukbt-join__field ukbt-join__field--wide ukbt-join__field--check">
+        <input
+          class="ukbt-join__checkbox"
+          id="join-age-attestation"
+          name="ageAttestation"
+          type="checkbox"
+          aria-describedby="join-age-hint"
+          required
+        />
+        <label class="ukbt-join__check-label" for="join-age-attestation">
+          I am 18 or over, or a parent or guardian is applying with me
+          <span class="ukbt-join__state">(required)</span>
+        </label>
+        <span class="ukbt-join__hint" id="join-age-hint">
+          If you are under 18, please have a parent or guardian complete this application with
+          you.
+        </span>
+      </p>
+    </div>
+  </fieldset>
+
+  <div class="ukbt-join__actions">
+    <Button label="Send application" tone="on-light" disabled />
+  </div>
+
+  <div
+    class="ukbt-join__result"
+    role="status"
+    aria-live="polite"
+    data-join-result
+    data-not-open-note={notOpenNote}
+  >
+  </div>
+</form>
+
+<script>
+  // ClientRouter-proofed (AL-042), same shape as SquadGrid/ClubIntro: Astro
+  // runs this script once per document but swaps the form DOM on every
+  // navigation, so init() wires the CURRENT form(s) and re-runs on
+  // astro:page-load behind a once-per-document window guard. No element
+  // reference is cached at load.
+  //
+  // The submit button ships disabled in the markup and is enabled here.
+  // Reason: the form is `novalidate`, so with no JS the browser would fall
+  // back to a native GET and put full name, date of birth, nationality and
+  // phone into the query string (history, referrer, access logs). A dead
+  // button beside a visible "not open yet" notice is the honest no-JS
+  // state; silently mailing a child's date of birth into a URL is not.
+  import { submitForm } from '../lib/forms/submit-form';
+  import type { JoinApplication } from '../lib/forms/submit-form';
+
+  type Field = HTMLInputElement | HTMLTextAreaElement;
+
+  function init() {
+    for (const form of document.querySelectorAll<HTMLFormElement>('[data-join-form]')) {
+      if (form.hasAttribute('data-join-wired')) continue;
+      form.setAttribute('data-join-wired', 'true');
+
+      const errors = form.querySelector<HTMLElement>('[data-join-errors]');
+      const errorList = form.querySelector<HTMLElement>('[data-join-error-list]');
+      const result = form.querySelector<HTMLElement>('[data-join-result]');
+      const submitButton = form.querySelector<HTMLButtonElement>('button');
+      if (!errors || !errorList || !result) continue;
+      submitButton?.removeAttribute('disabled');
+
+      // Fresh reads per submit: ClientRouter replaces the DOM under us.
+      const fields = (): Field[] => [
+        ...form.querySelectorAll<Field>('input[name], textarea[name]'),
+      ];
+      const raw = (name: string): string =>
+        (form.elements.namedItem(name) as Field | null)?.value ?? '';
+
+      // aria-invalid is owned solely by the loop below (it re-evaluates
+      // every field each pass, so a field fixed since the last submit drops
+      // its marker); this only clears the summary itself.
+      const clearSummary = () => {
+        errorList.replaceChildren();
+        errors.hidden = true;
+      };
+
+      form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+
+        // Rule source: `required` + `type` on the markup. Message source:
+        // the browser's own `validationMessage`. Nothing is re-implemented.
+        // One pass, so a field fixed since the last submit loses its marker
+        // without needing a separate "clear" step. The selector is
+        // `input[name], textarea[name]`, so the required consent and
+        // age-attestation checkboxes are in this pass already — they gate
+        // submit and list in the summary exactly like the text fields.
+        const failing: Field[] = [];
+        for (const field of fields()) {
+          if (field.validity.valid) field.removeAttribute('aria-invalid');
+          else {
+            field.setAttribute('aria-invalid', 'true');
+            failing.push(field);
+          }
+        }
+
+        if (failing.length > 0) {
+          errorList.replaceChildren();
+          for (const field of failing) {
+            const item = document.createElement('li');
+            const jump = document.createElement('a');
+            jump.href = `#${field.id}`;
+            // D-05: a native fragment jump moves the viewport but does not
+            // reliably move AT focus — focus the target explicitly so the
+            // landing is announced rather than merely scrolled to.
+            jump.addEventListener('click', () => field.focus());
+            jump.textContent =
+              form.querySelector(`label[for="${field.id}"]`)?.textContent?.trim() ??
+              field.name;
+            const message = document.createElement('span');
+            message.className = 'ukbt-join__error-text';
+            message.textContent = field.validationMessage;
+            item.append(jump, ' ', message);
+            errorList.append(item);
+          }
+          errors.hidden = false;
+          errors.focus();
+          result.replaceChildren();
+          return;
+        }
+
+        // Clean pass: drop the previous failure state before submitting.
+        clearSummary();
+
+        // Video links: one per line, trimmed, empties dropped. Every other
+        // field passes through as typed — no normalisation, no reformatting.
+        const videoUrls = raw('videoUrls')
+          .split(/\r?\n/)
+          .map((line) => line.trim())
+          .filter((line) => line.length > 0);
+        const statisticsUrl = raw('statisticsUrl');
+        const payload: JoinApplication = {
+          fullName: raw('fullName'),
+          dateOfBirth: raw('dateOfBirth'),
+          nationality: raw('nationality'),
+          countryOfResidency: raw('countryOfResidency'),
+          phone: raw('phone'),
+          email: raw('email'),
+          videoUrls,
+          ...(statisticsUrl.trim() === '' ? {} : { statisticsUrl }),
+        };
+
+        const outcome = await submitForm(payload);
+        if (outcome.status === 'error') {
+          result.setAttribute('data-join-state', 'error');
+          result.textContent = `Your application could not be sent. ${outcome.message}`;
+          return;
+        }
+        // `unavailable` today. Any other status falls to the same honest
+        // message on purpose: this component has no success state to fall
+        // back to, because a submit can never be truthfully reported as
+        // delivered while the adapter discards the payload.
+        result.removeAttribute('data-join-state');
+        result.textContent = result.dataset.notOpenNote ?? '';
+      });
+    }
+  }
+
+  const w = window as unknown as Record<string, boolean | undefined>;
+  if (!w['__ukbtJoinFormWired']) {
+    w['__ukbtJoinFormWired'] = true;
+    document.addEventListener('astro:page-load', init);
+  }
+  init();
+</script>
+
+<style>
+  .ukbt-join {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ukbt-space-6);
+  }
+
+  /* Fieldset/legend reset — a bare group, not a boxed panel. `min-inline-size`
+     is the long-standing Firefox fieldset flex/grid min-content bug; without
+     it the group refuses to shrink inside a grid track. */
+  .ukbt-join__group {
+    border: 0;
+    padding: 0;
+    margin: 0;
+    min-inline-size: 0;
+  }
+  .ukbt-join__group legend {
+    margin-bottom: var(--ukbt-space-3);
+  }
+
+  .ukbt-join__row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--ukbt-space-4);
+  }
+  .ukbt-join__field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ukbt-space-2);
+    margin: 0;
+    min-width: 0;
+  }
+  .ukbt-join__field--wide {
+    grid-column: 1 / -1;
+  }
+
+  .ukbt-join__label {
+    font-family: var(--ukbt-font-family-heading);
+    font-size: var(--ukbt-font-size-0);
+    font-weight: var(--ukbt-font-weight-bold);
+    letter-spacing: 0.04em;
+    color: var(--ukbt-color-brand-primary);
+  }
+  /* Required/optional is stated in the label TEXT; one shared treatment for
+     both words, because colour must not imply a severity difference the
+     text doesn't make (ACCESSIBILITY-CONTRACT: never colour alone). */
+  .ukbt-join__state {
+    font-weight: var(--ukbt-font-weight-medium);
+    color: var(--ukbt-color-neutral-500);
+  }
+  .ukbt-join__hint {
+    font-size: var(--ukbt-font-size-0);
+    color: var(--ukbt-color-neutral-700);
+  }
+
+  /* Consent + attestation rows. The base `.ukbt-join__field` stacks
+     (correct for text controls), but a box stacked over its label reads
+     as two unrelated elements — so these two fields opt into a wrapping
+     row: box and label side by side, hint on its own line below. The 32px
+     box is `--ukbt-space-8`; a label's entire text toggles its box, so the
+     effective target is the whole row — well over the 24px axe floor. */
+  .ukbt-join__field--check {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    column-gap: var(--ukbt-space-3);
+  }
+  .ukbt-join__field--check .ukbt-join__check-label {
+    flex: 1;
+    min-width: 0;
+  }
+  .ukbt-join__field--check .ukbt-join__hint {
+    flex-basis: 100%;
+    /* Hint text starts where the label text starts (32px box + one column
+       gap), not at the row edge under the box — the explanation belongs to
+       the label, not the checkbox. flex-shrink absorbs the indent. */
+    margin-inline-start: calc(var(--ukbt-space-8) + var(--ukbt-space-3));
+  }
+  .ukbt-join__checkbox {
+    width: var(--ukbt-space-8);
+    height: var(--ukbt-space-8);
+    margin: 0;
+  }
+  /* Error state as a shape change, not only a colour change, so an
+     unchecked-and-invalid box is distinguishable without colour. */
+  .ukbt-join__checkbox[aria-invalid='true'] {
+    outline: var(--ukbt-border-width-md) solid var(--ukbt-color-feedback-danger);
+    outline-offset: 2px;
+  }
+  /* Consent text is prose, not a field name: body size, and deliberately
+     NOT the uppercase-bold `.ukbt-join__label` treatment. */
+  .ukbt-join__check-label {
+    font-size: var(--ukbt-font-size-1);
+  }
+
+  /* Controls: 44px min-height from the geometry token (above the 24px axe
+     floor and comfortable for touch), `--ukbt-radius-ref-sm` because these
+     are small controls, `--ukbt-border-default` because they are inputs. */
+  .ukbt-join__control {
+    font: inherit;
+    font-family: var(--ukbt-font-family-base);
+    font-size: var(--ukbt-font-size-1);
+    color: var(--ukbt-color-surface-foreground);
+    background: var(--ukbt-color-neutral-0);
+    border: var(--ukbt-border-width-sm) solid var(--ukbt-border-default);
+    border-radius: var(--ukbt-radius-ref-sm);
+    padding: var(--ukbt-space-3);
+    min-height: var(--ukbt-geometry-control-height);
+    width: 100%;
+  }
+  .ukbt-join__control--multiline {
+    min-height: calc(var(--ukbt-space-8) * 3);
+    resize: vertical;
+  }
+  /* No `transition` on any of these: state changes are instant, which is
+     the reduced-motion-safe outcome by construction (MOTION-CONTRACT). */
+  .ukbt-join__control[aria-invalid='true'] {
+    border-color: var(--ukbt-color-feedback-danger);
+  }
+  .ukbt-join__control:disabled {
+    background: var(--ukbt-color-neutral-100);
+    color: var(--ukbt-color-neutral-500);
+    cursor: not-allowed;
+  }
+
+  /* Error summary. Danger rule + tinted panel, same grammar as
+     SectionHeader's accent rule, recoloured. */
+  .ukbt-join__errors {
+    border-left: var(--ukbt-border-width-md) solid var(--ukbt-color-feedback-danger);
+    background: var(--ukbt-color-neutral-50);
+    border-radius: var(--ukbt-radius-ref-xs);
+    padding: var(--ukbt-space-3) var(--ukbt-space-4);
+  }
+  /* D-03: programmatic `.focus()` on a `div` may not match the global
+     `:focus-visible` heuristics, so the summary carries its own `:focus`
+     ring — the landing point always shows a ring, not only when the
+     browser deems the focus "visible". Same token pair as the global
+     ring in styles/base.css. */
+  .ukbt-join__errors:focus {
+    outline: 2px solid var(--ukbt-color-focus-ring, var(--ukbt-color-surface-foreground));
+    outline-offset: 2px;
+  }
+  .ukbt-join__errors-title {
+    margin: 0 0 var(--ukbt-space-2) 0;
+    font-family: var(--ukbt-font-family-heading);
+    font-weight: var(--ukbt-font-weight-bold);
+    color: var(--ukbt-color-feedback-danger);
+  }
+  .ukbt-join__errors ul {
+    padding-inline-start: var(--ukbt-space-4);
+  }
+  .ukbt-join__errors li + li {
+    margin-top: var(--ukbt-space-1);
+  }
+  .ukbt-join__errors a {
+    color: var(--ukbt-color-brand-primary);
+  }
+  .ukbt-join__error-text {
+    display: block;
+    color: var(--ukbt-color-feedback-danger);
+  }
+
+  /* Pre-submit notice: cream surface + gold rule — the SectionHeader
+     dialect, in a notice's weight. Navy text throughout (gold is a
+     1.9:1 accent on cream and is used for the rule only, never text). */
+  .ukbt-join__notice {
+    background: var(--ukbt-color-surface-alt);
+    border-top: var(--ukbt-border-width-md) solid var(--ukbt-color-brand-accent);
+    border-radius: var(--ukbt-radius-ref-sm);
+    padding: var(--ukbt-space-4);
+  }
+  .ukbt-join__channels {
+    list-style: none;
+    margin: var(--ukbt-space-4) 0 0 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ukbt-space-2) var(--ukbt-space-4);
+  }
+  /* No `text-transform` here: the email and phone render byte-exact, and
+     social names arrive display-ready from `socialDisplayName` (the
+     SocialLinks single source of truth — `capitalize` would misspell
+     TikTok as Tiktok). */
+  .ukbt-join__channel {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--ukbt-geometry-control-height);
+    font-family: var(--ukbt-font-family-heading);
+    font-weight: var(--ukbt-font-weight-bold);
+    font-size: var(--ukbt-font-size-1);
+    color: var(--ukbt-color-brand-primary);
+    overflow-wrap: anywhere;
+  }
+  .ukbt-join__channel:hover {
+    text-decoration: underline;
+  }
+
+  .ukbt-join__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--ukbt-space-3);
+  }
+
+  /* Live region. Kept in the accessibility tree at all times and given no
+     box while empty (`display:none` would drop it out of the tree, and a
+     polite live region that only gains content while hidden is announced
+     unreliably). */
+  .ukbt-join__result:empty {
+    padding: 0;
+    border: 0;
+    background: none;
+  }
+  .ukbt-join__result {
+    border-left: var(--ukbt-border-width-md) solid var(--ukbt-color-feedback-warning);
+    background: var(--ukbt-color-neutral-50);
+    border-radius: var(--ukbt-radius-ref-xs);
+    padding: var(--ukbt-space-3) var(--ukbt-space-4);
+    color: var(--ukbt-color-neutral-900);
+  }
+  .ukbt-join__result[data-join-state='error'] {
+    border-left-color: var(--ukbt-color-feedback-danger);
+  }
+
+  @media screen and (max-width: 767px) {
+    .ukbt-join__row {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

@@ -1,26 +1,32 @@
 ---
-// Mirrors the reference's `booking.html` (Banner → Booking Process →
-// Booking → Contact CTA → Testimonial). Route added under
-// CLIENT_REQ_009 / ROUTE-CONTRACT Amendment 01.
+// Player application. Route added under CLIENT_REQ_009 / ROUTE-CONTRACT
+// Amendment 01, which mirrors the reference's `booking.html` (Banner →
+// booking process → booking → contact CTA). UKBT has no booking product;
+// the nearest real concept is applying to play, so that is what the route
+// is framed as. `noindex` per that amendment's condition 2 — unchanged by
+// the form landing, since an indexed page would be a public claim the club
+// is taking applications.
 //
-// SHELL. `noindex` per that amendment's condition 2. The reference books
-// padel courts by the hour; UKBT has no booking product. The nearest
-// real UKBT concept is enquiring about joining, so the shell is framed
-// that way — but no trial date, selection process or contact route is on
-// record, and FORM-CONTRACT's submitForm adapter has no backend, so no
-// form is rendered that would silently discard an enquiry.
+// The form UI ships ahead of the submission endpoint, by owner decision
+// 2026-09-26 (docs/superpowers/specs/2026-09-26-join-form-design.md).
+// FORM-CONTRACT (FROZEN) puts all delivery behind `submitForm(payload)`,
+// whose v1 adapter answers `unavailable` and discards the payload — so the
+// UI is real and reviewable today while nothing can be truthfully reported
+// as delivered. The honesty rule follows from that: JoinForm has no
+// success state anywhere, and a visible pre-submit notice says online
+// applications are not open before anyone clicks Send.
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/Header.astro';
 import PageBanner from '../components/PageBanner.astro';
 import Section from '../components/Section.astro';
 import SectionHeader from '../components/SectionHeader.astro';
-import PendingContent from '../components/PendingContent.astro';
+import JoinForm from '../components/JoinForm.astro';
 import AboutCTA from '../components/AboutCTA.astro';
 import Footer from '../components/Footer.astro';
 import { homepage } from '../content/homepage-data';
 ---
 
-<BaseLayout title="Join the Club — UK Bangla Tigers" description="Get in touch about joining UK Bangla Tigers."
+<BaseLayout title="Join the Club — UK Bangla Tigers" description="Apply to play for UK Bangla Tigers."
   noindex={true}>
   <Header nav={homepage.nav} cta={homepage.primaryCta} />
   <main id="main-content" tabindex="-1">
@@ -28,11 +34,7 @@ import { homepage } from '../content/homepage-data';
 
     <Section>
       <SectionHeader eyebrow="Joining" heading="How to Join" />
-      <PendingContent
-        what="The joining process is not published yet."
-        detail="No trial, selection or registration route is recorded in the club material supplied so far. The club's social channels are the working route in the meantime."
-        minHeight="12rem"
-      />
+      <JoinForm />
     </Section>
 
     <Section surface="alt" paddingBottom="normal">

@@ -54,7 +54,7 @@ current_state:  # regenerated 2026-09-25 — CI implemented, merge-blocking; hon
     - {check: control_plane, command: "node scripts/check-control-plane.mjs"}
     - {check: lint, command: "pnpm lint (Biome)"}
     - {check: typecheck, command: "pnpm typecheck (tsc --noEmit)"}
-    - {check: unit, command: "pnpm test:unit (Vitest, packages/truth)"}
+    - {check: unit, command: "pnpm test:unit (Vitest, packages/truth + apps/web)"}
     - {check: build, command: "pnpm build (astro build)"}
     - {check: deploy_mapping, command: "node scripts/check-deploy-mapping.mjs"}
     - {check: content_schema_and_truth_gate, command: "Zod ContentRecordSchema.parse + evaluate() per content-data module"}

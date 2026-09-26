@@ -12,9 +12,17 @@
 // registration ships those components' scoped styles in the island chunk;
 // +5.6KB measured clean-build (93.6KB, reproduces CI exactly),
 // re-approved with 2.4KB headroom) — see
-// docs/12-roadmap-and-open-items.md §2.13. Any further numeric change is
-// a re-approval event, not a drive-by edit. Warnings flag optimization
-// candidates.
+// docs/12-roadmap-and-open-items.md §2.13. 96→99, 2026-09-26: the
+// player-application form (apps/web/src/components/JoinForm.astro)
+// compiles to a 4.46KB stylesheet, taking the measured 95.4KB total to
+// ~98.7KB; re-approved to keep the contract-required accessibility
+// affordances (focus-managed error summary, per-field describedby hints,
+// disabled-upload explanation, required-state text) — see
+// artifacts/evidence/EV-20260926-005. 99→130, 2026-09-26: owner-directed
+// headroom for the form and near-term design work rather than repeated
+// incremental bumps — see artifacts/evidence/EV-20260926-007. Any further
+// numeric change is a re-approval event, not a drive-by edit. Warnings
+// flag optimization candidates.
 // Output ends with:
 //   PERF_STATUS = PASS | FAIL
 import { existsSync, globSync, readFileSync, statSync } from 'node:fs';
@@ -35,7 +43,7 @@ const distDir = existsSync(distDirClient) ? distDirClient : distDirLegacy;
 const KB = 1024;
 const BUDGETS = {
   htmlPerPage: 72 * KB,
-  cssTotal: 96 * KB,
+  cssTotal: 130 * KB,
   jsTotal: 48 * KB,
   singleRaster: 350 * KB,
   singleRasterWarn: 300 * KB,
@@ -119,7 +127,7 @@ for (const f of distHtml('**/*.css')) {
 for (const f of distHtml('**/*.js')) {
   js += statSync(join(distDir, f)).size;
 }
-if (css > BUDGETS.cssTotal) fail('css-weight', `${kb(css)} > 96KB`);
+if (css > BUDGETS.cssTotal) fail('css-weight', `${kb(css)} > 130KB`);
 if (js > BUDGETS.jsTotal) fail('js-weight', `${kb(js)} > 48KB`);
 
 // LCP rule: the homepage hero image must keep fetchpriority="high".

@@ -21,7 +21,7 @@
     "lint": "biome check .",
     "lint:fix": "biome check --write .",
     "test": "pnpm -r test",
-    "test:unit": "pnpm --filter ./packages/truth test",
+    "test:unit": "pnpm --filter ./packages/truth test && pnpm --filter ./apps/web test:unit",
     "test:e2e": "pnpm --filter ./apps/web test:e2e",
     "tokens:build": "pnpm --filter ./packages/truth tokens:build",
     "check:deps": "node scripts/check-dependency-allowlist.mjs",

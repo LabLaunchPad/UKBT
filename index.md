@@ -216,7 +216,7 @@ THIRD-PARTY-NOTICES.md → vendored-work attribution (MIT, iart.ai)
 Stage/gate sequence defined in `docs/10-fresh-repo-pipeline.md`:
 
 ```
-scaffold-self-test → check:control-plane → check:deps → lint → tokens:build → typecheck → test:unit → build → check:deploy-mapping → test:failure-injection → check:links → check:seo → check:ui → check:motion → check:security → check:perf
+scaffold-self-test → check:control-plane → check:deps → lint → tokens:build → typecheck → test:unit → build → check:deploy-mapping → check:release-path → check:content-trust → test:failure-injection → check:links → check:seo → check:ui → check:motion → check:security → check:perf
 ```
 
 Release is PASS only when `deploy:verify` passes fresh with no open blocker.

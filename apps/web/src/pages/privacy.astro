@@ -1,0 +1,132 @@
+---
+// Applicant privacy notice — STUB. Route authorised by ROUTE-CONTRACT
+// Amendment 05 (owner decision 2026-09-26: build the player application
+// form, docs/superpowers/specs/2026-09-26-join-form-design.md).
+//
+// Why a stub and not a policy: the form's only outbound path is
+// `submitForm(payload)`, whose v1 adapter answers `unavailable` and
+// discards the payload (FORM-CONTRACT, FROZEN). No applicant data is
+// transmitted, so there is no live handling to describe, no retention
+// promise that can be kept and no lawful basis to assert. Those terms
+// belong to the club and are UNKNOWN until online applications open — the
+// working notice ships then. Inventing a retention period, a data-
+// protection contact or a complaints route here would be a fabricated
+// legal claim, so this page states only what the form asks for and which
+// channels are real (CLAUDE.md: UNKNOWN stays UNKNOWN).
+//
+// `noindex` follows the repo's convention for shell pages
+// (ROUTE-CONTRACT Amendment 01 condition 2; `/services`, `/membership`,
+// `/join`, `/offline` all ship it): a stub is not public content, and
+// indexing an incomplete notice would invite readers to treat it as the
+// club's policy. It flips to indexable only when the working notice
+// replaces this text.
+//
+// One small scoped rule below (the list reset): the base type grammar
+// styles paragraphs but leaves browser-default bullets, which read as
+// stray marks on these short channel lists. Tokens-only, no new tokens.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import PageBanner from '../components/PageBanner.astro';
+import Section from '../components/Section.astro';
+import SectionHeader from '../components/SectionHeader.astro';
+import Footer from '../components/Footer.astro';
+import { socialDisplayName } from '../components/SocialLinks.astro';
+import { contact, homepage } from '../content/homepage-data';
+---
+
+<BaseLayout
+  title="Privacy Notice — UK Bangla Tigers"
+  description="What the UK Bangla Tigers application form asks for, and what is not settled yet."
+  noindex={true}
+>
+  <Header nav={homepage.nav} cta={homepage.primaryCta} />
+  <main id="main-content" tabindex="-1">
+    <PageBanner
+      title="Privacy Notice"
+      crumbs={[{ label: 'Home', href: '/' }, { label: 'Privacy Notice' }]}
+    />
+
+    <Section>
+      <SectionHeader eyebrow="Privacy" heading="What This Notice Is" />
+      <p>
+        This page is a placeholder, not a privacy policy. It is published ahead of online
+        applications so the application form has something honest to point at. While online
+        applications are closed, the form on the
+        <a href="/join/">Join the Club</a> page sends nothing and stores nothing: what you type
+        is checked in your own browser and then discarded. The working notice — the one an
+        applicant can rely on — is published when online applications open.
+      </p>
+    </Section>
+
+    <Section surface="alt">
+      <SectionHeader eyebrow="The Form" heading="Details the Form Asks For" />
+      <p>When online applications open, the form asks for:</p>
+      <ul class="ukbt-privacy-list">
+        <li>Full name</li>
+        <li>Date of birth</li>
+        <li>Nationality</li>
+        <li>Country of residency</li>
+        <li>Phone number</li>
+        <li>Email address</li>
+        <li>A link to your main cricket statistics profile (optional)</li>
+        <li>Links to your cricket videos (optional)</li>
+        <li>A photograph (optional; uploads open with online applications)</li>
+      </ul>
+      <p>
+        That is the whole list — the form asks for nothing else. An exact date of birth is
+        asked for, rather than an age band, because the club develops young players as well as
+        playing adult cricket. Photo upload stays switched off until applications open, so no
+        picture can be sent through the form today.
+      </p>
+    </Section>
+
+    <Section>
+      <SectionHeader eyebrow="Unknown" heading="What Is Not Settled Yet" />
+      <p>
+        This notice does not state a retention period, a lawful basis, a data-protection contact
+        or a complaints route. None of those is decided yet, and none is invented here. They are
+        the club's to set, and they are written out in full in the working notice that ships with
+        online applications. Until then, read this page as a plain description of what the form
+        asks for, and nothing more.
+      </p>
+    </Section>
+
+    <Section surface="alt" paddingBottom="normal">
+      <SectionHeader eyebrow="Contact" heading="Reaching the Club" />
+      <p>
+        If you have a question about your details, or want to ask what the club holds about you
+        today, use a channel that is already working:
+      </p>
+      <ul class="ukbt-privacy-list">
+        <li>
+          Email: <a href={`mailto:${contact.email}`}>{contact.email}</a>
+        </li>
+        <li>
+          Phone: <a href={contact.phoneHref}>{contact.phoneDisplay}</a>
+        </li>
+        {
+          homepage.social.map((s) => (
+            <li>
+              <a href={s.url} rel="me noopener">{socialDisplayName(s.platform)}</a>
+            </li>
+          ))
+        }
+      </ul>
+    </Section>
+  </main>
+  <Footer social={homepage.social} nav={homepage.nav} secondaryNav={homepage.secondaryNav} />
+</BaseLayout>
+
+<style>
+  /* Intended-list reset: no browser bullets, no UA indent, paragraph-rhythm
+     bottom margin (the same token base type uses) and an even token gap —
+     so each channel reads as a designed item, not a default list. */
+  .ukbt-privacy-list {
+    list-style: none;
+    margin: 0 0 var(--ukbt-font-body-paragraph-margin-bottom) 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--ukbt-space-2);
+  }
+</style>

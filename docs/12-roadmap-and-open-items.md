@@ -354,7 +354,7 @@ Slices A+B of the approved SEO plan are implemented and merged:
   slash, all other routes strip it), OG defaults (absolute 1200×630
   social card + alt), gated emitters (`homepageGraph`, `aboutGraph`
   with org-by-`@id`, `captainGraph` with Person + BreadcrumbList),
-  `SEO_ROUTES` registry (12 indexable, 4 noindex).
+  `SEO_ROUTES` registry (10 indexable, 5 noindex — counted from `SEO_ROUTES` in `src/lib/seo.ts`).
 - `BaseLayout.astro`: auto-canonical from `Astro.url` (indexable only,
   never on noindex/404), `index, follow, max-image-preview:large`
   robots, full OG/Twitter set, JSON-LD graph arrays.
@@ -362,7 +362,7 @@ Slices A+B of the approved SEO plan are implemented and merged:
   page noindexed + described; `tournaments`/`faq` titles aligned to
   banners; `coaching` description rewritten after the new gate caught a
   real `about`/`coaching` description duplicate (same gated tagline).
-- `public/robots.txt`, dist-derived `sitemap.xml` (12 URLs, no manual
+- `public/robots.txt`, dist-derived `sitemap.xml` (10 URLs, no manual
   list), `scripts/check-seo.mjs` (`SEO_STATUS`), `tests/visual/seo.spec.ts`,
   `seo-gate` CI job, `deploy:verify` extended.
 - `SEO-CONTRACT.md` Amendment 01 records the implementation.

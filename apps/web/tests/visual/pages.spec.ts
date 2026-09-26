@@ -22,6 +22,7 @@ const routes = [
   { path: '/join', name: 'Join the Club' },
   { path: '/faq', name: 'FAQ' },
   { path: '/news', name: 'Club News' },
+  { path: '/privacy', name: 'Privacy Notice' },
 ];
 
 /**
@@ -30,7 +31,7 @@ const routes = [
  * indexed. An indexed page is a public claim that the club sells the
  * thing. This asserts the condition rather than trusting it was applied.
  */
-const NOINDEX_ROUTES = ['/services', '/membership', '/join'];
+const NOINDEX_ROUTES = ['/services', '/membership', '/join', '/privacy'];
 const INDEXABLE_ROUTES = ['/', '/about', '/faq', '/news'];
 
 for (const route of routes) {
@@ -298,12 +299,16 @@ for (const route of ALL_INDEXABLE_ROUTES) {
 /**
  * Shell sections must say plainly that they are waiting for content.
  * Rendering an empty skeleton, or lorem text, would both fail the point
- * of CLIENT_REQ_009's "shells where UKBT content will go".
+ * of CLIENT_REQ_009's "shells where UKBT content will go". `/join` is
+ * not in this loop: it renders `<JoinForm />` now (the form replaced
+ * the shell — see join-form.spec.ts), and `/privacy` is a content stub,
+ * not a PendingContent shell. `/news` stays: it still renders its
+ * pending block (NewsTeaser with no posts).
  */
 test('every shell section declares CONTENT_STATUS = UNKNOWN and explains itself', async ({
   page,
 }) => {
-  for (const route of ['/services', '/membership', '/join', '/news']) {
+  for (const route of ['/services', '/membership', '/news']) {
     await page.goto(route);
     const pending = page.locator('[data-content-status="UNKNOWN"]');
     const n = await pending.count();

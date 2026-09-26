@@ -1,0 +1,39 @@
+id: EV-20260926-006
+classification: STATED_BUT_UNVERIFIED
+claim: >
+  Per the owner's direct instruction (2026-09-26 chat): build the
+  player-application form on /join/ with a privacy-notice stub at
+  /privacy/. This record authorises the /privacy route addition recorded
+  as AMENDMENT 05 (PROPOSED) in contracts/ROUTE-CONTRACT.md, promoting it
+  to AMENDED. The stub is published ahead of online applications opening;
+  the full notice with lawful basis, retention, and contact detail ships
+  with the Phase 2 endpoint.
+source: "Owner instruction in project chat, 2026-09-26 (first-party client-supplied, same class as EV-20260926-001/-002/-003)."
+source_type: first_party_client_supplied
+retrieved_at: 2026-09-26
+verified_at: 2026-09-26
+valid_until: null
+justification_for_null: >
+  Records the instruction's contents as supplied, not a perishable
+  external claim. The design spec (docs/superpowers/specs/2026-09-26-join-form-design.md)
+  and implementation plan (docs/superpowers/plans/2026-09-26-join-form.md)
+  were both explicitly approved by the owner in the same chat session.
+scope: "/privacy route (apps/web/src/pages/privacy.astro) + ROUTE-CONTRACT.md AMENDMENT 05."
+method: >
+  Owner approved the join-form design ("Approved — spec it") and the
+  implementation plan ("1. Subagent-driven") in-chat 2026-09-26, both of
+  which include the privacy-notice stub as a named deliverable. The stub
+  carries no invented legal text: it states what will be collected, names
+  no retention period, invents no DPO or contact, and says plainly that
+  the full notice ships with online applications.
+result: |
+  Promotes ROUTE-CONTRACT.md AMENDMENT 05 from PROPOSED to AMENDED.
+  Requires the amendment text to cite this record ID.
+related_files:
+  - apps/web/src/pages/privacy.astro
+  - contracts/ROUTE-CONTRACT.md
+relates_to: [EV-20260926-003, EV-20260926-005]
+notes: >
+  The binding privacy obligation (UK GDPR children's-data handling for
+  applicant DOB/photo) arrives with the Phase 2 endpoint, not with this
+  stub — recorded in the design doc, not deferred silently.

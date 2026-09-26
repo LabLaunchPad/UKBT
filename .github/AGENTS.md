@@ -29,7 +29,7 @@ Workflows are infrastructure, not scripts: they decide what "mergeable" and "dep
 | `failure-injection` | always | All 7 injection suites, no install needed |
 | `lint` | always | Biome, needs install |
 | `typecheck` | always | `tokens:build` + `tinacms build --skip-search-index` first, then `tsc` |
-| `unit-tests` | always | `pnpm test:unit` (truth gate + content schema) |
+| `unit-tests` | always | `pnpm test:unit` (truth gate + content schema; apps/web unit tests, incl. the `submitForm` adapter boundary) |
 | `build` | always | `pnpm run build`; uploads `<root>/apps/web/dist` artifact once (3-day retention) |
 | `deploy-mapping` | always | Needs `build`; downloads `dist`, no rebuild |
 | `link-integrity` | always | Needs `build`; same artifact pattern |
