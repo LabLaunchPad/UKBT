@@ -1063,6 +1063,17 @@ here, deliberately:
     (PROPOSAL — recommends Cloudflare Email Sending, `/api/apply/`
     needs a ROUTE amendment first). Currency grounding:
     `artifacts/evidence/EV-20260926-010.yaml`.
+14. **Email-sending enablement + secrets (BACKLOG, owner-side, 2026-09-26):**
+    prerequisite for Phase 2 C1 — enable Cloudflare Email Sending,
+    provision sending secrets (never in repo), confirm inbox receipt
+    path. Engineering cannot evidence this; report back when live and
+    C1 code can begin (after item 15).
+15. **Proposal-spec approvals gate (BACKLOG, owner decisions, 2026-09-26):**
+    no code lands under either PROPOSAL spec until approved — (a) Worker
+    Previews: approve/reject the DEPLOYMENT + CI amendments, decide
+    Access protection; (b) Phase 2 C0: approve the spec, confirm
+    Cloudflare Email Sending, then the ROUTE amendment + C1 code are
+    unblocked (pending item 14).
 
 ## TinaCMS visual-editing closure 2026-09-22/23 — merged, smoke RED (external)
 
