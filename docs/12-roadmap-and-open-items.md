@@ -1035,12 +1035,12 @@ here, deliberately:
     full version in `.nvmrc` (now 22.23.2) and align the workflow.
 11. **Smoke 403 vantage (BACKLOG, owner dashboard, 2026-09-26):** GH-runner
     egress is Cloudflare-challenged (`403 mitigated=challenge`, run
-    `36233616374`: 19/19 CI green, only `smoke-verify` red) while
-    production is 200 and `/smoke.json` tracks HEAD (`0f7b17a`,
-    verified live). Action: Security → Events ray
+    `36271314774` on `dd31fbf`: 18 required green, only post-deploy
+    smoke red) while production is 200 and `/smoke.json` tracks HEAD
+    (`dd31fbf`, verified live 2026-09-26). Action: Security → Events ray
     `a3f6b6da2a2d433c` → rule name → (a) SBFM path-skip for
     `/smoke.json` (recommended), (b) BFM off/upgrade, or (c) WAF
-    exception.     Verify on next `main` push; record choice in closure §5.
+    exception. Record choice in closure §5 once decided.
     Complementary (not a substitute): Worker Previews evaluation spec
     `docs/superpowers/specs/2026-09-26-worker-previews-design.md`
     (PROPOSAL — per-PR human-openable URLs; needs two contract
@@ -1108,6 +1108,9 @@ issue-register, blocker-closure certificate, `20260923-final-closeout.md`):
    (allowlist Actions egress / tune bot policy / bless alternate
     vantage). Smoke gate stays enforced; nothing weakened.
     Registry owner contact remains `UNKNOWN`.
+    Recurred on `dd31fbf` (run `36271314774`, 2026-09-26, PR #130
+    merge): same 403 challenge, 18 required green; production 200
+    with `/smoke.json` tracking `dd31fbf` live.
 6. **Smoke identity endpoint (repo-sync Task 7, `feat/repo-sync`):**
     build-attested `/smoke.json`
     (`apps/web/src/pages/smoke.json.ts`, prerendered static
@@ -1235,5 +1238,6 @@ passthrough). Production Save path itself is proven (closure §2 above).
    allowlist path fix + delay-longhand exemption citing
    MOTION-CONTRACT invariant 1.
 5. **Standing blocker unchanged:** post-deploy smoke FAILs on `main`
-   (run `36233616374`: 19/19 CI jobs green, only `smoke-verify` red —
-   live 403 `mitigated=challenge`). Owner action per closure §5 above.
+    (run `36271314774` on `dd31fbf`: 18 required green, only
+    post-deploy smoke red — live 403 `mitigated=challenge`;
+    production 200, `/smoke.json` tracks `dd31fbf`). Owner action per closure §5 above.
