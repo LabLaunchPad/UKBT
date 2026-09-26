@@ -354,7 +354,7 @@ Slices A+B of the approved SEO plan are implemented and merged:
   slash, all other routes strip it), OG defaults (absolute 1200×630
   social card + alt), gated emitters (`homepageGraph`, `aboutGraph`
   with org-by-`@id`, `captainGraph` with Person + BreadcrumbList),
-  `SEO_ROUTES` registry (12 indexable, 4 noindex).
+  `SEO_ROUTES` registry (10 indexable, 5 noindex — counted from `SEO_ROUTES` in `src/lib/seo.ts`).
 - `BaseLayout.astro`: auto-canonical from `Astro.url` (indexable only,
   never on noindex/404), `index, follow, max-image-preview:large`
   robots, full OG/Twitter set, JSON-LD graph arrays.

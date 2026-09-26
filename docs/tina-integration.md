@@ -161,6 +161,8 @@ Adjusted to accommodate TinaCMS overhead:
 
 **Rationale**: TinaCMS bridge adds ~15KB JS for visual editing. This is loaded only when editing mode is active, but counted in total budget. Public site without editing remains lean.
 
+> **Note (2026-09-26):** the table above is the Tina-era history — subsequent budget re-approvals (island registration 88→96, join form 96→99→130 per EV-20260926-005/007) have moved the live `cssTotal` budget to 130KB. `scripts/check-perf.mjs` is the live source.
+
 ## Status: `TINACMS_FREE_READY_WITH_EXPLICIT_LIMITATIONS`
 
 All 18 required checks pass. Public site fully functional. Tina closure merged 2026-09-22/23 (gates PR #96, fixes #97/#99/#100); production Save path proven (headline edit → commit `fbf05f2` → live). Standing blocker: post-deploy smoke FAILS from the GH runner (Cloudflare challenge — owner-action blocker).

@@ -136,3 +136,5 @@
 | `jsTotal` | 32KB | 48KB | Tina bridge (15.5KB) + Cloudflare adapter |
 
 **Rationale**: TinaCMS bridge adds ~15KB JS for visual editing. This is loaded only when editing mode is active, but counted in total budget. Public site without editing remains lean.
+
+> **Note (2026-09-26):** the table above is the Tina-era history — subsequent budget re-approvals (island registration 88→96, join form 96→99→130 per EV-20260926-005/007) have moved the live `cssTotal` budget to 130KB. `scripts/check-perf.mjs` is the live source.
