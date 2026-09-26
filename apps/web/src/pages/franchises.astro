@@ -152,7 +152,7 @@ const bannerBackground = {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--ukbt-color-surface);
+    background: var(--ukbt-color-surface-alt);
     padding: var(--ukbt-space-6) var(--ukbt-space-4);
   }
   .ukbt-franchise-card__crest-panel img {
@@ -195,10 +195,18 @@ const bannerBackground = {
     font-size: var(--ukbt-font-size-0);
     font-weight: var(--ukbt-font-weight-bold);
   }
+  @media (max-width: 1025px) {
+    .ukbt-franchise-grid:has(> :only-child) .ukbt-franchise-card__link {
+      gap: var(--ukbt-space-4);
+    }
+    .ukbt-franchise-card__crest-panel img {
+      height: 6rem;
+    }
+  }
   @media (max-width: 767px) {
     .ukbt-franchise-grid:has(> :only-child) .ukbt-franchise-card__link {
       grid-template-columns: 1fr;
-      gap: 0;
+      gap: var(--ukbt-space-4);
     }
     .ukbt-franchise-card__crest-panel img {
       height: 5.5rem;

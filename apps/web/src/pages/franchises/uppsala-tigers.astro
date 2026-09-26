@@ -25,7 +25,6 @@ import Footer from '../../components/Footer.astro';
 import { homepage } from '../../content/homepage-data';
 import {
   ourFranchises,
-  uppsalaFacts,
   uppsalaOfficials,
   uppsalaSquad,
 } from '../../content/franchises-data';
@@ -66,19 +65,20 @@ if (!uppsala) {
             transition:name="ukbt-franchise-crest"
           />
         </div>
-        <div>
+        {/*
+          Owner directive 2026-09-26: the Nordic Smash T20 title + paragraph
+          (uppsalaFacts) is deleted from this intro — render, import, and
+          CSS below all removed whole (no empty ul shell). The data export
+          itself stays untouched (minimal blast radius; EV-20260926-001
+          tension note lives with it). Forward motion without new claims:
+          anchor to the existing #squad grid.
+        */}
+        <div class="ukbt-franchise-intro__text">
           <SubHeading label="Sister Franchise" />
-          <h2>Uppsala Tigers is a franchise team owned and managed by UK Bangla Tigers</h2>
-          <ul class="ukbt-franchise-intro__facts">
-            {
-              uppsalaFacts.map((f) => (
-                <li>
-                  <h3>{f.title}</h3>
-                  <p>{f.body}</p>
-                </li>
-              ))
-            }
-          </ul>
+          <h2 class="ukbt-franchise-intro__title">Uppsala Tigers is a franchise team owned and managed by UK Bangla Tigers</h2>
+          <a class="ukbt-franchise-intro__squad-link" href="#squad">
+            Meet the squad <span aria-hidden="true">&darr;</span>
+          </a>
         </div>
       </div>
     </Section>
@@ -115,15 +115,39 @@ if (!uppsala) {
 </BaseLayout>
 
 <style>
-  h2 {
-    margin: var(--ukbt-space-gap-2) 0 var(--ukbt-space-gap-5) 0;
-  }
-  /* .community-grid: grid-template-columns 1fr 1fr, gap 100px */
+  /*
+   * Intro type truth: semantic h2, visual scale from the H3 TOKEN set
+   * (36/28/22px + responsive steps) in brand-navy — the 64px H2 hero scale
+   * drowned the crest-adjacent headline. One source: design tokens only.
+   */
   .ukbt-franchise-intro {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--ukbt-space-gap-100);
+    grid-template-columns: 5fr 7fr;
+    gap: var(--ukbt-space-gap-5);
     align-items: center;
+  }
+  .ukbt-franchise-intro__text {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ukbt-space-2);
+  }
+  .ukbt-franchise-intro__title {
+    margin: 0;
+    font-family: var(--ukbt-font-family-heading);
+    font-size: var(--ukbt-font-heading-h3-size);
+    font-weight: var(--ukbt-font-heading-h3-weight);
+    line-height: var(--ukbt-font-heading-h3-line-height);
+    color: var(--ukbt-color-brand-primary);
+  }
+  .ukbt-franchise-intro__squad-link {
+    display: inline-block;
+    margin-top: var(--ukbt-space-1);
+    color: var(--ukbt-color-brand-primary);
+    font-size: var(--ukbt-font-size-0);
+    font-weight: var(--ukbt-font-weight-bold);
+  }
+  .ukbt-franchise-intro__squad-link:hover {
+    text-decoration: underline;
   }
   .ukbt-franchise-intro__crest-panel {
     display: flex;
@@ -137,23 +161,7 @@ if (!uppsala) {
     display: block;
     height: 14rem;
     width: auto;
-  }
-  .ukbt-franchise-intro__facts {
-    list-style: none;
-    margin: var(--ukbt-space-4) 0 0 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    gap: var(--ukbt-space-4);
-  }
-  .ukbt-franchise-intro__facts h3 {
-    margin: 0;
-    font-size: var(--ukbt-font-size-1);
-  }
-  .ukbt-franchise-intro__facts p {
-    margin: 0;
-    color: var(--ukbt-color-neutral-700);
-    font-size: var(--ukbt-font-size-0);
+    max-width: 100%;
   }
 
   /* Reference `.community-grid` collapses to a single column at <=1025px. */
@@ -162,6 +170,19 @@ if (!uppsala) {
       grid-template-columns: 1fr;
       gap: var(--ukbt-space-gap-5);
     }
+    .ukbt-franchise-intro__title {
+      font-size: var(--ukbt-font-heading-h3-size-md);
+    }
+    .ukbt-franchise-intro__crest-panel img {
+      height: 10rem;
+    }
   }
-
+  @media screen and (max-width: 767px) {
+    .ukbt-franchise-intro__title {
+      font-size: var(--ukbt-font-heading-h3-size-sm);
+    }
+    .ukbt-franchise-intro__crest-panel img {
+      height: 8rem;
+    }
+  }
 </style>
