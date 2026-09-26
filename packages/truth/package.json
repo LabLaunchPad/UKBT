@@ -20,6 +20,6 @@
   "devDependencies": {
     "typescript": "^5.7.2",
     "vitest": "^5.0.0",
-    "style-dictionary": "^4.3.3"
+    "style-dictionary": "^5.5.3"
   }
 }
