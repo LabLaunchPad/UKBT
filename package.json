@@ -42,10 +42,10 @@
     "deploy:verify": "pnpm run check:governance-scaffold && pnpm run check:control-plane && pnpm run check:deps && pnpm lint && pnpm run tokens:build && pnpm typecheck && pnpm test:unit && pnpm run build && pnpm run check:deploy-mapping && pnpm run check:release-path && pnpm run check:content-trust && pnpm run test:failure-injection && pnpm run check:links && pnpm run check:seo && pnpm run check:ui && pnpm run check:motion && pnpm run check:security && pnpm run check:perf"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.5.13",
+    "@biomejs/biome": "^2.5.14",
     "@tinacms/cli": "^3.0.0",
     "tinacms": "^3.14.0",
     "typescript": "^5.7.2",
-    "wrangler": "^4.126.0"
+    "wrangler": "^4.141.0"
   }
 }
