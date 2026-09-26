@@ -10,6 +10,10 @@ export type JoinApplication = {
   email: string;
   statisticsUrl?: string;
   videoUrls?: string[];
+  /** Required consent + age-attestation ticks. Carried so a later adapter
+      can persist the fact of consent, not just the application fields. */
+  consent: boolean;
+  ageAttestation: boolean;
 };
 
 /** Discriminated union — consumers narrow on `status`. */

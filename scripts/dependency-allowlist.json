@@ -34,9 +34,9 @@
     {
       "name": "@astrojs/cloudflare",
       "scope": "apps/web",
-      "type": "devDependency",
+      "type": "dependency",
       "source": "npm",
-      "purpose": "Official first-party Cloudflare Pages/Functions adapter, present but not activated until a real form exists (contracts/FORM-CONTRACT.md, contracts/DEPLOYMENT-CONTRACT.md).",
+      "purpose": "Official first-party Cloudflare adapter — ACTIVE (emits dist/client/ + dist/server/entry.mjs; mirrored by wrangler.jsonc, enforced by check-deploy-mapping).",
       "license": "MIT",
       "contractStatus": "REQUIRED",
       "validation": "npm view @astrojs/cloudflare license (verified 2026-08-26); peer dependency compatibility with astro@^5 confirmed at install time (12.5.0 peers with astro ^5.0.0)"

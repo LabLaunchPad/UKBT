@@ -18,7 +18,7 @@ Renders gate-approved content. Every organization-specific claim arrives via typ
 
 ## Structure
 
-- `src/pages/` — 16 `.astro` routes: `index`, `about`, `club-captain`, `contact`, `faq`, `franchises`, `franchises/uppsala-tigers`, `join`, `membership`, `news`, `news/[slug]`, `offline`, `players`, `services`, `tournaments`, `404` — plus `tina-island/[name].ts` (see below; NOT pure static)
+- `src/pages/` — 17 `.astro` routes: `index`, `about`, `club-captain`, `contact`, `faq`, `franchises`, `franchises/uppsala-tigers`, `join`, `membership`, `news`, `news/[slug]`, `offline`, `players`, `privacy`, `services`, `tournaments`, `404` — plus `tina-island/[name].ts` (see below; NOT pure static) and the `/smoke.json` static endpoint
 - `src/content/*-data.ts` — 8 typed content modules (not Astro collections), Zod-shaped against `@ukbt/truth` (`about`, `captain`, `franchises`, `homepage`, `navigation`, `players`, `sponsors`, `tournaments`)
 - `src/layouts/BaseLayout.astro`, `src/components/` — shared layout/UI
 - `src/lib/tina/` (`loaders.ts`, `islands.ts`, `validators.ts`, `data.ts`) — Tina adapter; `content/*/*.json` — Tina editorial content

@@ -150,7 +150,6 @@ const notOpenNote =
         <input
           class="ukbt-join__control"
           id="join-picture"
-          name="picture"
           type="file"
           accept="image/*"
           disabled
@@ -296,7 +295,9 @@ const notOpenNote =
       const errors = form.querySelector<HTMLElement>('[data-join-errors]');
       const errorList = form.querySelector<HTMLElement>('[data-join-error-list]');
       const result = form.querySelector<HTMLElement>('[data-join-result]');
-      const submitButton = form.querySelector<HTMLButtonElement>('button');
+      const submitButton = form.querySelector<HTMLButtonElement>(
+        '.ukbt-join__actions button',
+      );
       if (!errors || !errorList || !result) continue;
       submitButton?.removeAttribute('disabled');
 
@@ -341,12 +342,26 @@ const notOpenNote =
             const jump = document.createElement('a');
             jump.href = `#${field.id}`;
             // D-05: a native fragment jump moves the viewport but does not
-            // reliably move AT focus — focus the target explicitly so the
+            // reliably move AT focus — drive the move in script so the
             // landing is announced rather than merely scrolled to.
-            jump.addEventListener('click', () => field.focus());
-            jump.textContent =
-              form.querySelector(`label[for="${field.id}"]`)?.textContent?.trim() ??
-              field.name;
+            // preventDefault first: without it the browser ALSO performs
+            // its native jump, producing a double navigation.
+            jump.addEventListener('click', (event) => {
+              event.preventDefault();
+              field.scrollIntoView({ block: 'nearest' });
+              field.focus({ preventScroll: true });
+            });
+            // Jump name: the label text minus its `(required)` state span —
+            // the state is announced by the control itself, and reading it
+            // inside the link name is noise.
+            const labelEl = form.querySelector(`label[for="${field.id}"]`);
+            let jumpName = field.name;
+            if (labelEl) {
+              const labelClone = labelEl.cloneNode(true) as HTMLElement;
+              labelClone.querySelector('.ukbt-join__state')?.remove();
+              jumpName = labelClone.textContent?.trim() || field.name;
+            }
+            jump.textContent = jumpName;
             const message = document.createElement('span');
             message.className = 'ukbt-join__error-text';
             message.textContent = field.validationMessage;
@@ -368,7 +383,9 @@ const notOpenNote =
           .split(/\r?\n/)
           .map((line) => line.trim())
           .filter((line) => line.length > 0);
-        const statisticsUrl = raw('statisticsUrl');
+        const statisticsUrl = raw('statisticsUrl').trim();
+        const checked = (name: string): boolean =>
+          (form.elements.namedItem(name) as HTMLInputElement | null)?.checked ?? false;
         const payload: JoinApplication = {
           fullName: raw('fullName'),
           dateOfBirth: raw('dateOfBirth'),
@@ -377,7 +394,9 @@ const notOpenNote =
           phone: raw('phone'),
           email: raw('email'),
           videoUrls,
-          ...(statisticsUrl.trim() === '' ? {} : { statisticsUrl }),
+          ...(statisticsUrl === '' ? {} : { statisticsUrl }),
+          consent: checked('consent'),
+          ageAttestation: checked('ageAttestation'),
         };
 
         const outcome = await submitForm(payload);

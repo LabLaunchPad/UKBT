@@ -13,6 +13,8 @@ const app = {
   countryOfResidency: 'United Kingdom',
   phone: '+447700900000',
   email: 'a@example.com',
+  consent: true,
+  ageAttestation: true,
 };
 
 describe('submitForm with the mock adapter', () => {

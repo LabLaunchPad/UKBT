@@ -1,8 +1,8 @@
 name: CI
 
 # Implements the production-stage gate set required by contracts/CI-CONTRACT.md
-# over the real routes and content (18 routes + 12+ organization facts as of
-# 2026-09-25 — see the history note at the bottom of this file for how the
+# over the real routes and content (17 `.astro` routes + 2 endpoints as of
+# 2026-09-26 — see the history note at the bottom of this file for how the
 # original FOUNDATION-stage framing was corrected).
 #
 # Every job here is REQUIRED (merge-blocking) unless explicitly marked
