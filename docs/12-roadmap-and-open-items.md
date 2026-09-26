@@ -481,8 +481,8 @@ amended contract; `SITE` set). The one bounded code-only gap was
 performance: measured baselines are lean (CSS 43KB, JS 16KB, HTML
 ≤47KB) except images (homepage 589KB, players 878KB, Uppsala roster
 page 1.39MB; worst single file `uppsala-tigers-crest.jpg` 327KB).
-`scripts/check-perf.mjs` (`PERF_STATUS`) enforces: HTML ≤64KB/page,
-CSS ≤56KB, JS ≤32KB, single raster ≤350KB (WARN >300KB), page images
+`scripts/check-perf.mjs` (`PERF_STATUS`) enforces: HTML ≤72KB/page,
+CSS ≤130KB, JS ≤48KB, single raster ≤350KB (WARN >300KB), page images
 ≤1600KB (WARN >1200KB), hero keeps `fetchpriority="high"`. Budgets
 carry ~25% headroom — they catch regressions, not today's content.
 Current WARNs (honest): uppsala crest recompression candidate,

@@ -177,3 +177,18 @@ Not irreversible in the sense that would require re-planning to change.
 **Status:** PROPOSED — needs owner re-approval at PR review (frozen text above preserved verbatim).
 
 Layer-table row 8 (line 60: `| 8 UKBT content/truth | packages/truth/content/ | Not created |`) is superseded as a path: content lives at `apps/web/src/content/*-data.ts` (8 modules — about, captain, franchises, homepage, navigation, players, sponsors, tournaments — verified by listing), schema + gate in `packages/truth` (`ContentRecordSchema` at `packages/truth/src/schema/provenance.ts:59`; gate in `packages/truth/src/gate/`). INV-013 co-location holds at the gate/schema level, not the file-path level. `apps/web/src/content/` is recorded here as the sanctioned exception with its validation binding: every module calls `ContentRecordSchema.parse(...)` before `evaluate()` (e.g. `players-data.ts:26-32`, `franchises-data.ts:37-43`).
+
+## AMENDMENT 2026-09-26 — third test location (Vitest unit specs under `apps/web/src/`)
+
+**Status:** PROPOSED — needs owner re-approval at PR review (frozen text above preserved verbatim). **Authority:** `artifacts/evidence/EV-20260926-009.yaml`.
+
+The "Test locations" rule (lines 70-75: "No test lives outside these two
+trees") is superseded narrowly: `apps/web/src/**/*.test.ts` — Vitest unit
+specs co-located with the code they test, include-scoped by
+`apps/web/vitest.config.ts` so Playwright specs are never collected by
+`vitest run` — is a sanctioned third location. It exists for one spec
+today (`apps/web/src/lib/forms/submit-form.test.ts`, the FORM-CONTRACT
+validation-method spec, shipped in merged PR #122 and enforced in CI via
+root `test:unit` + the `unit-tests` job). Playwright specs stay in
+`apps/web/tests/visual/` only; this amendment authorises the location, it
+does not move any boundary.

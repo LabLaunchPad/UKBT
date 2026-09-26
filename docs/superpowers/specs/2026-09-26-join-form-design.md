@@ -67,7 +67,8 @@ JoinForm.astro  ──calls──▶  submitForm(payload): Promise<FormResult>
 
 A submit in v1 must **never** show a success/confirmation state. `unavailable`
 renders an honest notice: online applications are not open yet, plus the club's
-real working channels (WhatsApp / Facebook / email from `contact-data`). No
+real working channels (WhatsApp / Facebook / email from the `contact` export in
+`homepage-data`). No
 "thanks, we'll be in touch" while data is discarded — that is the exact
 anti-pattern the repo already refused to ship.
 

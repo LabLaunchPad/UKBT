@@ -4920,6 +4920,1204 @@
           "sectionCount": 3
         }
       }
+    },
+    "/join": {
+      "viewports": {
+        "desktop-xl-1920x1080": {
+          "docScrollWidth": 1920,
+          "clientWidth": 1920,
+          "horizontalOverflow": false,
+          "container": {
+            "w": 1240,
+            "h": 142,
+            "padTop": 40,
+            "padBottom": 40,
+            "padLeft": 48,
+            "radius": "0px"
+          },
+          "banner": {
+            "w": 1240,
+            "h": 544,
+            "padTop": 64,
+            "padBottom": 64,
+            "padLeft": 48,
+            "radius": "0px"
+          },
+          "navbar": {
+            "w": 1920,
+            "h": 142,
+            "padTop": 0,
+            "padBottom": 0,
+            "padLeft": 0,
+            "radius": "0px"
+          },
+          "footer": {
+            "w": 1920,
+            "h": 601,
+            "padTop": 0,
+            "padBottom": 0,
+            "padLeft": 0,
+            "radius": "0px"
+          },
+          "sections": [
+            {
+              "padTop": 120,
+              "padBottom": 120
+            },
+            {
+              "padTop": 120,
+              "padBottom": 120
+            }
+          ],
+          "type": {
+            "h1": {
+              "size": 90,
+              "weight": "700",
+              "lh": "99px",
+              "family": "Montserrat"
+            },
+            "h2": {
+              "size": 64,
+              "weight": "700",
+              "lh": "76.8px",
+              "family": "Montserrat"
+            },
+            "h3": {
+              "size": 36,
+              "weight": "700",
+              "lh": "46.8px",
+              "family": "Montserrat"
+            },
+            "h4": {
+              "size": 24,
+              "weight": "700",
+              "lh": "31.2px",
+              "family": "Montserrat"
+            },
+            "p": {
+              "size": 18,
+              "weight": "400",
+              "lh": "27px",
+              "family": "Lato"
+            }
+          },
+          "_probeCleanup": true,
+          "sectionCount": 2
+        },
+        "desktop-1440x900": {
+          "docScrollWidth": 1440,
+          "clientWidth": 1440,
+          "horizontalOverflow": false,
+          "container": {
+            "w": 1240,
+            "h": 142,
+            "padTop": 40,
+            "padBottom": 40,
+            "padLeft": 48,
+            "radius": "0px"
+          },
+          "banner": {
+            "w": 1240,
+            "h": 544,
+            "padTop": 64,
+            "padBottom": 64,
+            "padLeft": 48,
+            "radius": "0px"
+          },
+          "navbar": {
+            "w": 1440,
+            "h": 142,
+            "padTop": 0,
+            "padBottom": 0,
+            "padLeft": 0,
+            "radius": "0px"
+          },
+          "footer": {
+            "w": 1440,
+            "h": 601,
+            "padTop": 0,
+            "padBottom": 0,
+            "padLeft": 0,
+            "radius": "0px"
+          },
+          "sections": [
+            {
+              "padTop": 120,
+              "padBottom": 120
+            },
+            {
+              "padTop": 120,
+              "padBottom": 120
+            }
+          ],
+          "type": {
+            "h1": {
+              "size": 90,
+              "weight": "700",
+              "lh": "99px",
+              "family": "Montserrat"
+            },
+            "h2": {
+              "size": 64,
+              "weight": "700",
+              "lh": "76.8px",
+              "family": "Montserrat"
+            },
+            "h3": {
+              "size": 36,
+              "weight": "700",
+              "lh": "46.8px",
+              "family": "Montserrat"
+            },
+            "h4": {
+              "size": 24,
+              "weight": "700",
+              "lh": "31.2px",
+              "family": "Montserrat"
+            },
+            "p": {
+              "size": 18,
+              "weight": "400",
+              "lh": "27px",
+              "family": "Lato"
+            }
+          },
+          "_probeCleanup": true,
+          "sectionCount": 2
+        },
+        "desktop-1280x800": {
+          "docScrollWidth": 1280,
+          "clientWidth": 1280,
+          "horizontalOverflow": false,
+          "container": {
+            "w": 1240,
+            "h": 142,
+            "padTop": 40,
+            "padBottom": 40,
+            "padLeft": 48,
+            "radius": "0px"
+          },
+          "banner": {
+            "w": 1220,
+            "h": 544,
+            "padTop": 64,
+            "padBottom": 64,
+            "padLeft": 48,
+            "radius": "0px"
+          },
+          "navbar": {
+            "w": 1280,
+            "h": 142,
+            "padTop": 0,
+            "padBottom": 0,
+            "padLeft": 0,
+            "radius": "0px"
+          },
+          "footer": {
+            "w": 1280,
+            "h": 601,
+            "padTop": 0,
+            "padBottom": 0,
+            "padLeft": 0,
+            "radius": "0px"
+          },
+          "sections": [
+            {
+              "padTop": 120,
+              "padBottom": 120
+            },
+            {
+              "padTop": 120,
+              "padBottom": 120
+            }
+          ],
+          "type": {
+            "h1": {
+              "size": 90,
+              "weight": "700",
+              "lh": "99px",
+              "family": "Montserrat"
+            },
+            "h2": {
+              "size": 64,
+              "weight": "700",
+              "lh": "76.8px",
+              "family": "Montserrat"
+            },
+            "h3": {
+              "size": 36,
+              "weight": "700",
+              "lh": "46.8px",
+              "family": "Montserrat"
+            },
+            "h4": {
+              "size": 24,
+              "weight": "700",
+              "lh": "31.2px",
+              "family": "Montserrat"
+            },
+            "p": {
+              "size": 18,
+              "weight": "400",
+              "lh": "27px",
+              "family": "Lato"
+            }
+          },
+          "_probeCleanup": true,
+          "sectionCount": 2
+        },
+        "tablet-landscape-1024x768": {
+          "docScrollWidth": 1024,
+          "clientWidth": 1024,
+          "horizontalOverflow": false,
+          "container": {
+            "w": 1024,
+            "h": 140,
+            "padTop": 40,
+            "padBottom": 40,
+            "padLeft": 32,
+            "radius": "0px"
+          },
+          "banner": {
+            "w": 984,
+            "h": 432,
+            "padTop": 48,
+            "padBottom": 48,
+            "padLeft": 32,
+            "radius": "0px"
+          },
+          "navbar": {
+            "w": 1024,
+            "h": 140,
+            "padTop": 0,
+            "padBottom": 0,
+            "padLeft": 0,
+            "radius": "0px"
+          },
+          "footer": {
+            "w": 1024,
+            "h": 847,
+            "padTop": 0,
+            "padBottom": 0,
+            "padLeft": 0,
+            "radius": "0px"
+          },
+          "sections": [
+            {
+              "padTop": 120,
+              "padBottom": 120
+            },
+            {
+              "padTop": 120,
+              "padBottom": 120
+            }
+          ],
+          "type": {
+            "h1": {
+              "size": 70,
+              "weight": "700",
+              "lh": "77px",
+              "family": "Montserrat"
+            },
+            "h2": {
+              "size": 48,
+              "weight": "700",
+              "lh": "57.6px",
+              "family": "Montserrat"
+            },
+            "h3": {
+              "size": 28,
+              "weight": "700",
+              "lh": "36.4px",
+              "family": "Montserrat"
+            },
+            "h4": {
+              "size": 21,
+              "weight": "700",
+              "lh": "27.3px",
+              "family": "Montserrat"
+            },
+            "p": {
+              "size": 18,
+              "weight": "400",
+              "lh": "27px",
+              "family": "Lato"
+            }
+          },
+          "_probeCleanup": true,
+          "sectionCount": 2
+        },
+        "tablet-portrait-768x1024": {
+          "docScrollWidth": 768,
+          "clientWidth": 768,
+          "horizontalOverflow": false,
+          "container": {
+            "w": 768,
+            "h": 140,
+            "padTop": 40,
+            "padBottom": 40,
+            "padLeft": 32,
+            "radius": "0px"
+          },
+          "banner": {
+            "w": 728,
+            "h": 432,
+            "padTop": 48,
+            "padBottom": 48,
+            "padLeft": 32,
+            "radius": "0px"
+          },
+          "navbar": {
+            "w": 768,
+            "h": 140,
+            "padTop": 0,
+            "padBottom": 0,
+            "padLeft": 0,
+            "radius": "0px"
+          },
+          "footer": {
+            "w": 768,
+            "h": 867,
+            "padTop": 0,
+            "padBottom": 0,
+            "padLeft": 0,
+            "radius": "0px"
+          },
+          "sections": [
+            {
+              "padTop": 120,
+              "padBottom": 120
+            },
+            {
+              "padTop": 120,
+              "padBottom": 120
+            }
+          ],
+          "type": {
+            "h1": {
+              "size": 70,
+              "weight": "700",
+              "lh": "77px",
+              "family": "Montserrat"
+            },
+            "h2": {
+              "size": 48,
+              "weight": "700",
+              "lh": "57.6px",
+              "family": "Montserrat"
+            },
+            "h3": {
+              "size": 28,
+              "weight": "700",
+              "lh": "36.4px",
+              "family": "Montserrat"
+            },
+            "h4": {
+              "size": 21,
+              "weight": "700",
+              "lh": "27.3px",
+              "family": "Montserrat"
+            },
+            "p": {
+              "size": 18,
+              "weight": "400",
+              "lh": "27px",
+              "family": "Lato"
+            }
+          },
+          "_probeCleanup": true,
+          "sectionCount": 2
+        },
+        "mobile-large-430x932": {
+          "docScrollWidth": 430,
+          "clientWidth": 430,
+          "horizontalOverflow": false,
+          "container": {
+            "w": 430,
+            "h": 88,
+            "padTop": 20,
+            "padBottom": 20,
+            "padLeft": 32,
+            "radius": "0px"
+          },
+          "banner": {
+            "w": 410,
+            "h": 340,
+            "padTop": 40,
+            "padBottom": 40,
+            "padLeft": 32,
+            "radius": "0px"
+          },
+          "navbar": {
+            "w": 430,
+            "h": 88,
+            "padTop": 0,
+            "padBottom": 0,
+            "padLeft": 0,
+            "radius": "0px"
+          },
+          "footer": {
+            "w": 430,
+            "h": 1256,
+            "padTop": 0,
+            "padBottom": 0,
+            "padLeft": 0,
+            "radius": "0px"
+          },
+          "sections": [
+            {
+              "padTop": 80,
+              "padBottom": 80
+            },
+            {
+              "padTop": 80,
+              "padBottom": 80
+            }
+          ],
+          "type": {
+            "h1": {
+              "size": 50,
+              "weight": "700",
+              "lh": "55px",
+              "family": "Montserrat"
+            },
+            "h2": {
+              "size": 36,
+              "weight": "700",
+              "lh": "43.2px",
+              "family": "Montserrat"
+            },
+            "h3": {
+              "size": 22,
+              "weight": "700",
+              "lh": "28.6px",
+              "family": "Montserrat"
+            },
+            "h4": {
+              "size": 18,
+              "weight": "700",
+              "lh": "23.4px",
+              "family": "Montserrat"
+            },
+            "p": {
+              "size": 16,
+              "weight": "400",
+              "lh": "24px",
+              "family": "Lato"
+            }
+          },
+          "_probeCleanup": true,
+          "sectionCount": 2
+        },
+        "mobile-standard-390x844": {
+          "docScrollWidth": 390,
+          "clientWidth": 390,
+          "horizontalOverflow": false,
+          "container": {
+            "w": 390,
+            "h": 88,
+            "padTop": 20,
+            "padBottom": 20,
+            "padLeft": 32,
+            "radius": "0px"
+          },
+          "banner": {
+            "w": 370,
+            "h": 340,
+            "padTop": 40,
+            "padBottom": 40,
+            "padLeft": 32,
+            "radius": "0px"
+          },
+          "navbar": {
+            "w": 390,
+            "h": 88,
+            "padTop": 0,
+            "padBottom": 0,
+            "padLeft": 0,
+            "radius": "0px"
+          },
+          "footer": {
+            "w": 390,
+            "h": 1314,
+            "padTop": 0,
+            "padBottom": 0,
+            "padLeft": 0,
+            "radius": "0px"
+          },
+          "sections": [
+            {
+              "padTop": 80,
+              "padBottom": 80
+            },
+            {
+              "padTop": 80,
+              "padBottom": 80
+            }
+          ],
+          "type": {
+            "h1": {
+              "size": 50,
+              "weight": "700",
+              "lh": "55px",
+              "family": "Montserrat"
+            },
+            "h2": {
+              "size": 36,
+              "weight": "700",
+              "lh": "43.2px",
+              "family": "Montserrat"
+            },
+            "h3": {
+              "size": 22,
+              "weight": "700",
+              "lh": "28.6px",
+              "family": "Montserrat"
+            },
+            "h4": {
+              "size": 18,
+              "weight": "700",
+              "lh": "23.4px",
+              "family": "Montserrat"
+            },
+            "p": {
+              "size": 16,
+              "weight": "400",
+              "lh": "24px",
+              "family": "Lato"
+            }
+          },
+          "_probeCleanup": true,
+          "sectionCount": 2
+        }
+      }
+    },
+    "/privacy": {
+      "viewports": {
+        "desktop-xl-1920x1080": {
+          "docScrollWidth": 1920,
+          "clientWidth": 1920,
+          "horizontalOverflow": false,
+          "container": {
+            "w": 1240,
+            "h": 142,
+            "padTop": 40,
+            "padBottom": 40,
+            "padLeft": 48,
+            "radius": "0px"
+          },
+          "banner": {
+            "w": 1240,
+            "h": 544,
+            "padTop": 64,
+            "padBottom": 64,
+            "padLeft": 48,
+            "radius": "0px"
+          },
+          "navbar": {
+            "w": 1920,
+            "h": 142,
+            "padTop": 0,
+            "padBottom": 0,
+            "padLeft": 0,
+            "radius": "0px"
+          },
+          "footer": {
+            "w": 1920,
+            "h": 601,
+            "padTop": 0,
+            "padBottom": 0,
+            "padLeft": 0,
+            "radius": "0px"
+          },
+          "sections": [
+            {
+              "padTop": 120,
+              "padBottom": 120
+            },
+            {
+              "padTop": 120,
+              "padBottom": 120
+            },
+            {
+              "padTop": 120,
+              "padBottom": 120
+            },
+            {
+              "padTop": 120,
+              "padBottom": 120
+            }
+          ],
+          "type": {
+            "h1": {
+              "size": 90,
+              "weight": "700",
+              "lh": "99px",
+              "family": "Montserrat"
+            },
+            "h2": {
+              "size": 64,
+              "weight": "700",
+              "lh": "76.8px",
+              "family": "Montserrat"
+            },
+            "h3": {
+              "size": 36,
+              "weight": "700",
+              "lh": "46.8px",
+              "family": "Montserrat"
+            },
+            "h4": {
+              "size": 24,
+              "weight": "700",
+              "lh": "31.2px",
+              "family": "Montserrat"
+            },
+            "p": {
+              "size": 18,
+              "weight": "400",
+              "lh": "27px",
+              "family": "Lato"
+            }
+          },
+          "_probeCleanup": true,
+          "sectionCount": 4
+        },
+        "desktop-1440x900": {
+          "docScrollWidth": 1440,
+          "clientWidth": 1440,
+          "horizontalOverflow": false,
+          "container": {
+            "w": 1240,
+            "h": 142,
+            "padTop": 40,
+            "padBottom": 40,
+            "padLeft": 48,
+            "radius": "0px"
+          },
+          "banner": {
+            "w": 1240,
+            "h": 544,
+            "padTop": 64,
+            "padBottom": 64,
+            "padLeft": 48,
+            "radius": "0px"
+          },
+          "navbar": {
+            "w": 1440,
+            "h": 142,
+            "padTop": 0,
+            "padBottom": 0,
+            "padLeft": 0,
+            "radius": "0px"
+          },
+          "footer": {
+            "w": 1440,
+            "h": 601,
+            "padTop": 0,
+            "padBottom": 0,
+            "padLeft": 0,
+            "radius": "0px"
+          },
+          "sections": [
+            {
+              "padTop": 120,
+              "padBottom": 120
+            },
+            {
+              "padTop": 120,
+              "padBottom": 120
+            },
+            {
+              "padTop": 120,
+              "padBottom": 120
+            },
+            {
+              "padTop": 120,
+              "padBottom": 120
+            }
+          ],
+          "type": {
+            "h1": {
+              "size": 90,
+              "weight": "700",
+              "lh": "99px",
+              "family": "Montserrat"
+            },
+            "h2": {
+              "size": 64,
+              "weight": "700",
+              "lh": "76.8px",
+              "family": "Montserrat"
+            },
+            "h3": {
+              "size": 36,
+              "weight": "700",
+              "lh": "46.8px",
+              "family": "Montserrat"
+            },
+            "h4": {
+              "size": 24,
+              "weight": "700",
+              "lh": "31.2px",
+              "family": "Montserrat"
+            },
+            "p": {
+              "size": 18,
+              "weight": "400",
+              "lh": "27px",
+              "family": "Lato"
+            }
+          },
+          "_probeCleanup": true,
+          "sectionCount": 4
+        },
+        "desktop-1280x800": {
+          "docScrollWidth": 1280,
+          "clientWidth": 1280,
+          "horizontalOverflow": false,
+          "container": {
+            "w": 1240,
+            "h": 142,
+            "padTop": 40,
+            "padBottom": 40,
+            "padLeft": 48,
+            "radius": "0px"
+          },
+          "banner": {
+            "w": 1220,
+            "h": 544,
+            "padTop": 64,
+            "padBottom": 64,
+            "padLeft": 48,
+            "radius": "0px"
+          },
+          "navbar": {
+            "w": 1280,
+            "h": 142,
+            "padTop": 0,
+            "padBottom": 0,
+            "padLeft": 0,
+            "radius": "0px"
+          },
+          "footer": {
+            "w": 1280,
+            "h": 601,
+            "padTop": 0,
+            "padBottom": 0,
+            "padLeft": 0,
+            "radius": "0px"
+          },
+          "sections": [
+            {
+              "padTop": 120,
+              "padBottom": 120
+            },
+            {
+              "padTop": 120,
+              "padBottom": 120
+            },
+            {
+              "padTop": 120,
+              "padBottom": 120
+            },
+            {
+              "padTop": 120,
+              "padBottom": 120
+            }
+          ],
+          "type": {
+            "h1": {
+              "size": 90,
+              "weight": "700",
+              "lh": "99px",
+              "family": "Montserrat"
+            },
+            "h2": {
+              "size": 64,
+              "weight": "700",
+              "lh": "76.8px",
+              "family": "Montserrat"
+            },
+            "h3": {
+              "size": 36,
+              "weight": "700",
+              "lh": "46.8px",
+              "family": "Montserrat"
+            },
+            "h4": {
+              "size": 24,
+              "weight": "700",
+              "lh": "31.2px",
+              "family": "Montserrat"
+            },
+            "p": {
+              "size": 18,
+              "weight": "400",
+              "lh": "27px",
+              "family": "Lato"
+            }
+          },
+          "_probeCleanup": true,
+          "sectionCount": 4
+        },
+        "tablet-landscape-1024x768": {
+          "docScrollWidth": 1024,
+          "clientWidth": 1024,
+          "horizontalOverflow": false,
+          "container": {
+            "w": 1024,
+            "h": 140,
+            "padTop": 40,
+            "padBottom": 40,
+            "padLeft": 32,
+            "radius": "0px"
+          },
+          "banner": {
+            "w": 984,
+            "h": 432,
+            "padTop": 48,
+            "padBottom": 48,
+            "padLeft": 32,
+            "radius": "0px"
+          },
+          "navbar": {
+            "w": 1024,
+            "h": 140,
+            "padTop": 0,
+            "padBottom": 0,
+            "padLeft": 0,
+            "radius": "0px"
+          },
+          "footer": {
+            "w": 1024,
+            "h": 847,
+            "padTop": 0,
+            "padBottom": 0,
+            "padLeft": 0,
+            "radius": "0px"
+          },
+          "sections": [
+            {
+              "padTop": 120,
+              "padBottom": 120
+            },
+            {
+              "padTop": 120,
+              "padBottom": 120
+            },
+            {
+              "padTop": 120,
+              "padBottom": 120
+            },
+            {
+              "padTop": 120,
+              "padBottom": 120
+            }
+          ],
+          "type": {
+            "h1": {
+              "size": 70,
+              "weight": "700",
+              "lh": "77px",
+              "family": "Montserrat"
+            },
+            "h2": {
+              "size": 48,
+              "weight": "700",
+              "lh": "57.6px",
+              "family": "Montserrat"
+            },
+            "h3": {
+              "size": 28,
+              "weight": "700",
+              "lh": "36.4px",
+              "family": "Montserrat"
+            },
+            "h4": {
+              "size": 21,
+              "weight": "700",
+              "lh": "27.3px",
+              "family": "Montserrat"
+            },
+            "p": {
+              "size": 18,
+              "weight": "400",
+              "lh": "27px",
+              "family": "Lato"
+            }
+          },
+          "_probeCleanup": true,
+          "sectionCount": 4
+        },
+        "tablet-portrait-768x1024": {
+          "docScrollWidth": 768,
+          "clientWidth": 768,
+          "horizontalOverflow": false,
+          "container": {
+            "w": 768,
+            "h": 140,
+            "padTop": 40,
+            "padBottom": 40,
+            "padLeft": 32,
+            "radius": "0px"
+          },
+          "banner": {
+            "w": 728,
+            "h": 432,
+            "padTop": 48,
+            "padBottom": 48,
+            "padLeft": 32,
+            "radius": "0px"
+          },
+          "navbar": {
+            "w": 768,
+            "h": 140,
+            "padTop": 0,
+            "padBottom": 0,
+            "padLeft": 0,
+            "radius": "0px"
+          },
+          "footer": {
+            "w": 768,
+            "h": 867,
+            "padTop": 0,
+            "padBottom": 0,
+            "padLeft": 0,
+            "radius": "0px"
+          },
+          "sections": [
+            {
+              "padTop": 120,
+              "padBottom": 120
+            },
+            {
+              "padTop": 120,
+              "padBottom": 120
+            },
+            {
+              "padTop": 120,
+              "padBottom": 120
+            },
+            {
+              "padTop": 120,
+              "padBottom": 120
+            }
+          ],
+          "type": {
+            "h1": {
+              "size": 70,
+              "weight": "700",
+              "lh": "77px",
+              "family": "Montserrat"
+            },
+            "h2": {
+              "size": 48,
+              "weight": "700",
+              "lh": "57.6px",
+              "family": "Montserrat"
+            },
+            "h3": {
+              "size": 28,
+              "weight": "700",
+              "lh": "36.4px",
+              "family": "Montserrat"
+            },
+            "h4": {
+              "size": 21,
+              "weight": "700",
+              "lh": "27.3px",
+              "family": "Montserrat"
+            },
+            "p": {
+              "size": 18,
+              "weight": "400",
+              "lh": "27px",
+              "family": "Lato"
+            }
+          },
+          "_probeCleanup": true,
+          "sectionCount": 4
+        },
+        "mobile-large-430x932": {
+          "docScrollWidth": 430,
+          "clientWidth": 430,
+          "horizontalOverflow": false,
+          "container": {
+            "w": 430,
+            "h": 88,
+            "padTop": 20,
+            "padBottom": 20,
+            "padLeft": 32,
+            "radius": "0px"
+          },
+          "banner": {
+            "w": 410,
+            "h": 340,
+            "padTop": 40,
+            "padBottom": 40,
+            "padLeft": 32,
+            "radius": "0px"
+          },
+          "navbar": {
+            "w": 430,
+            "h": 88,
+            "padTop": 0,
+            "padBottom": 0,
+            "padLeft": 0,
+            "radius": "0px"
+          },
+          "footer": {
+            "w": 430,
+            "h": 1256,
+            "padTop": 0,
+            "padBottom": 0,
+            "padLeft": 0,
+            "radius": "0px"
+          },
+          "sections": [
+            {
+              "padTop": 80,
+              "padBottom": 80
+            },
+            {
+              "padTop": 80,
+              "padBottom": 80
+            },
+            {
+              "padTop": 80,
+              "padBottom": 80
+            },
+            {
+              "padTop": 80,
+              "padBottom": 80
+            }
+          ],
+          "type": {
+            "h1": {
+              "size": 50,
+              "weight": "700",
+              "lh": "55px",
+              "family": "Montserrat"
+            },
+            "h2": {
+              "size": 36,
+              "weight": "700",
+              "lh": "43.2px",
+              "family": "Montserrat"
+            },
+            "h3": {
+              "size": 22,
+              "weight": "700",
+              "lh": "28.6px",
+              "family": "Montserrat"
+            },
+            "h4": {
+              "size": 18,
+              "weight": "700",
+              "lh": "23.4px",
+              "family": "Montserrat"
+            },
+            "p": {
+              "size": 16,
+              "weight": "400",
+              "lh": "24px",
+              "family": "Lato"
+            }
+          },
+          "_probeCleanup": true,
+          "sectionCount": 4
+        },
+        "mobile-standard-390x844": {
+          "docScrollWidth": 390,
+          "clientWidth": 390,
+          "horizontalOverflow": false,
+          "container": {
+            "w": 390,
+            "h": 88,
+            "padTop": 20,
+            "padBottom": 20,
+            "padLeft": 32,
+            "radius": "0px"
+          },
+          "banner": {
+            "w": 370,
+            "h": 340,
+            "padTop": 40,
+            "padBottom": 40,
+            "padLeft": 32,
+            "radius": "0px"
+          },
+          "navbar": {
+            "w": 390,
+            "h": 88,
+            "padTop": 0,
+            "padBottom": 0,
+            "padLeft": 0,
+            "radius": "0px"
+          },
+          "footer": {
+            "w": 390,
+            "h": 1314,
+            "padTop": 0,
+            "padBottom": 0,
+            "padLeft": 0,
+            "radius": "0px"
+          },
+          "sections": [
+            {
+              "padTop": 80,
+              "padBottom": 80
+            },
+            {
+              "padTop": 80,
+              "padBottom": 80
+            },
+            {
+              "padTop": 80,
+              "padBottom": 80
+            },
+            {
+              "padTop": 80,
+              "padBottom": 80
+            }
+          ],
+          "type": {
+            "h1": {
+              "size": 50,
+              "weight": "700",
+              "lh": "55px",
+              "family": "Montserrat"
+            },
+            "h2": {
+              "size": 36,
+              "weight": "700",
+              "lh": "43.2px",
+              "family": "Montserrat"
+            },
+            "h3": {
+              "size": 22,
+              "weight": "700",
+              "lh": "28.6px",
+              "family": "Montserrat"
+            },
+            "h4": {
+              "size": 18,
+              "weight": "700",
+              "lh": "23.4px",
+              "family": "Montserrat"
+            },
+            "p": {
+              "size": 16,
+              "weight": "400",
+              "lh": "24px",
+              "family": "Lato"
+            }
+          },
+          "_probeCleanup": true,
+          "sectionCount": 4
+        }
+      }
     }
   }
 }

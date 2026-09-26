@@ -34,6 +34,8 @@ const UKBT_ROUTES = [
   '/players',
   '/franchises',
   '/franchises/uppsala-tigers',
+  '/join',
+  '/privacy',
 ];
 
 /** Mirrors reference-geometry.spec.ts's probe, against our class names. */

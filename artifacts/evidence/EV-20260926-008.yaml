@@ -1,0 +1,46 @@
+id: EV-20260926-008
+classification: STATED_BUT_UNVERIFIED
+claim: >
+  The join-form program (PR #122, merged 2026-09-26) shipped a live
+  application-form UI on /join/ behind the submitForm() adapter boundary
+  with a mock adapter that always returns `unavailable` — i.e. UI ahead of
+  any endpoint, with no success state and no data sent or stored. This
+  invalidates FORM-CONTRACT.md's "Do not implement yet" section ("No form
+  is implemented at this contract freeze", lines 41-50), which was true at
+  freeze time and is now history. The boundary rules, invariants, and
+  forbidden behavior are unaffected: the UI depends only on
+  submitForm(payload), imports no provider types, and the validation
+  method's mock-adapter unit test exists and runs in CI.
+source: "Merged branch state feat/join-form (PR #122, merge 15d2d01) + owner approvals recorded in EV-20260926-006."
+source_type: first_party_repo_state
+retrieved_at: 2026-09-26
+verified_at: 2026-09-26
+valid_until: null
+justification_for_null: >
+  Records a repo-state observation at a point in time, not a perishable
+  external claim. The merged files (apps/web/src/components/JoinForm.astro,
+  apps/web/src/lib/forms/submit-form.ts + adapters/mock.ts +
+  submit-form.test.ts) are the evidence.
+scope: "contracts/FORM-CONTRACT.md 'Do not implement yet' section (lines 41-50)."
+method: >
+  Read the merged seam: JoinForm.astro calls only submitForm() (lines 286,
+  383); submit-form.ts imports no provider/Cloudflare types; mockAdapter
+  resolves { status: 'unavailable' } without network I/O; unit tests assert
+  `ok` is never resolved in v1; /join/ keeps noindex. The freeze-time claim
+  "no form exists" is therefore superseded, while every enforceable rule
+  in the contract holds.
+result: |
+  Authorises FORM-CONTRACT.md AMENDMENT 01: the 'Do not implement yet'
+  section becomes history; the adapter boundary + validation method govern
+  the shipped UI. Requires the amendment text to cite this record ID.
+related_files:
+  - contracts/FORM-CONTRACT.md
+  - apps/web/src/components/JoinForm.astro
+  - apps/web/src/lib/forms/submit-form.ts
+  - apps/web/src/lib/forms/adapters/mock.ts
+  - apps/web/src/lib/forms/submit-form.test.ts
+relates_to: [EV-20260926-006]
+notes: >
+  The real Cloudflare/worker adapter remains Stage 4+ work per the
+  contract's layering — this amendment authorises the UI-ahead-of-endpoint
+  state actually shipped, it does not authorise an endpoint.

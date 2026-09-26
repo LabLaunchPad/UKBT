@@ -1,0 +1,45 @@
+id: EV-20260926-009
+classification: STATED_BUT_UNVERIFIED
+claim: >
+  REPOSITORY-CONTRACT.md's "Test locations" section (lines 70-75: "No test
+  lives outside these two trees" — packages/truth/**/*.test.ts and
+  apps/web/tests/visual/**) conflicts with the shipped join-form program:
+  apps/web/src/lib/forms/submit-form.test.ts (Vitest unit spec for the
+  FORM-CONTRACT adapter seam) lives under apps/web/src/, sanctioned by
+  apps/web/AGENTS.md ("Two test runners, two locations") and wired into CI
+  via root `test:unit` and the `unit-tests` job. The conflict dates to
+  merged PR #122, not to this record.
+source: "Merged branch state feat/join-form (PR #122, merge 15d2d01) + file listing."
+source_type: first_party_repo_state
+retrieved_at: 2026-09-26
+verified_at: 2026-09-26
+valid_until: null
+justification_for_null: >
+  Records a repo-state observation at a point in time. The files
+  (submit-form.test.ts, apps/web/vitest.config.ts scoping include to
+  src/**/*.test.ts, root package.json test:unit chain) are the evidence.
+scope: "contracts/REPOSITORY-CONTRACT.md 'Test locations' section (lines 70-75)."
+method: >
+  Listed test files: packages/truth unit specs pass, apps/web Playwright
+  specs live under tests/visual/, and exactly one Vitest spec lives under
+  apps/web/src/ (the FORM-CONTRACT validation-method spec). The contract's
+  two-tree rule predates the form program; the local app guide already
+  sanctions the third location. Moving the spec into tests/visual/ would
+  break Vitest scoping semantics (unit vs e2e runners); the honest fix is
+  to authorise the location, not relocate the file.
+result: |
+  Authorises a REPOSITORY-CONTRACT.md amendment adding
+  apps/web/src/**/*.test.ts (Vitest, co-located, scoped by
+  apps/web/vitest.config.ts) as a sanctioned third test location.
+  Requires the amendment text to cite this record ID. Status PROPOSED
+  pending owner re-approval at PR review, per the repo-sync R-07 pattern.
+related_files:
+  - contracts/REPOSITORY-CONTRACT.md
+  - apps/web/AGENTS.md
+  - apps/web/src/lib/forms/submit-form.test.ts
+  - apps/web/vitest.config.ts
+relates_to: [EV-20260926-006, EV-20260926-008]
+notes: >
+  Narrow exception, not a new rule: only Vitest unit specs co-located with
+  the code they test, include-scoped so Playwright specs are never
+  collected by `vitest run`. Playwright specs stay in tests/visual/ only.

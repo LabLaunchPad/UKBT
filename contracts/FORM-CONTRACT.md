@@ -103,3 +103,22 @@ whether the boundary held.
 
 HIGH, by construction — this is the adapter boundary's entire purpose
 (`ARCHITECTURE-PROPOSAL-V3.md` §7).
+
+## AMENDMENT 01 — UI-ahead-of-endpoint state authorised (2026-09-26)
+
+**Date:** 2026-09-26 · **Authority:** `artifacts/evidence/EV-20260926-008.yaml`
+(repo-state observation on merged PR #122) · **Status:** AMENDED (frozen
+text above preserved verbatim)
+
+**Superseded:** the "Do not implement yet" section (lines 41-50: "No form
+is implemented at this contract freeze") is now HISTORY. A form UI exists
+on `/join/` behind the `submitForm()` boundary with a mock adapter that
+always returns `unavailable` — no endpoint, no success state, no data sent
+or stored.
+
+**Unaffected:** the layering, rules, invariants (`INV-004/005/006`),
+forbidden behavior, and validation method all stand and all hold against
+the shipped UI (zero provider-type imports; mock-adapter unit test runs in
+CI). The real adapter implementation remains Stage 4+ work under this same
+boundary — this amendment authorises the shipped UI-ahead-of-endpoint
+state, not an endpoint.

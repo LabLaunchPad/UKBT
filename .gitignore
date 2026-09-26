@@ -30,3 +30,16 @@ playwright/.cache/
 # per-run, not the immutable reference itself)
 **/tests/visual/**/*-actual.png
 **/tests/visual/**/*-diff.png
+
+# Local-only agent/session noise — untracked by design, never committed.
+# (A parallel session's agent definitions + MCP logs; no secrets found
+# 2026-09-26. If any of these become intentional repo content, that is a
+# plan update + re-approval first.)
+.opencode/Agentfile.json
+.opencode/agents/design-*.md
+.opencode/agents/engineering-*.md
+.opencode/agents/marketing-*.md
+.opencode/agents/testing-*.md
+.opencode/agents/gis-*.md
+.opencode/skills/.opencode/
+.playwright-mcp/
