@@ -43,37 +43,56 @@ const bannerBackground = {
     />
 
     <Section paddingBottom="normal">
-      <div class="ukbt-franchise-grid">
+      {/*
+        Multi-agent UI/UX audit 2026-09-26: with a single verified franchise
+        the N-item grid rendered a 16rem sliver + void. The :only-child
+        override promotes the singleton to a full-width feature card and
+        reverts automatically when a second franchise lands. Blurb stays
+        verbatim (gate-backed copy); "more to come" framing rests on the
+        client instruction cited in franchises-data.ts (EV-0831-01/02).
+      */}
+      <p class="ukbt-franchise-intro">
+        Our sister franchise. More franchises will be added here as they launch.
+      </p>
+      <ul class="ukbt-franchise-grid">
         {
           ourFranchises.map((f) => (
-            <h2>
-              <a class="ukbt-franchise-card" href={`/franchises/${f.slug}/`}>
-                <div class="ukbt-franchise-card__crest-panel">
-                  {/*
-                    Shared-element crest: same file, same 220x220 geometry as
-                    the Uppsala detail intro, so card → detail morphs one
-                    genuine object. Uppsala is currently the sole franchise
-                    with a detail page — a second one must use its own name,
-                    since a duplicated name silently disables the pair.
-                  */}
-                  <img
-                    src={f.logo}
-                    width="220"
-                    height="220"
-                    alt={f.logoAlt}
-                    transition:name="ukbt-franchise-crest"
-                  />
-                </div>
-                <div class="ukbt-franchise-card__body">
-                  <span>{f.name}</span>
-                  <p class="ukbt-franchise-card__country">{f.country}</p>
-                  <p>{f.blurb}</p>
-                </div>
-              </a>
-            </h2>
+            <li>
+              <article class="ukbt-franchise-card">
+                <a class="ukbt-franchise-card__link" href={`/franchises/${f.slug}/`}>
+                  <div class="ukbt-franchise-card__crest-panel">
+                    {/*
+                      Shared-element crest: same file, same 220x220 geometry as
+                      the Uppsala detail intro, so card → detail morphs one
+                      genuine object. Uppsala is currently the sole franchise
+                      with a detail page — a second one must use its own name,
+                      since a duplicated name silently disables the pair.
+                      alt="" here: the adjacent h2 names the franchise, so the
+                      crest is decorative in this card context (logoAlt stays
+                      in the data module for the detail-page use).
+                    */}
+                    <img
+                      src={f.logo}
+                      width="220"
+                      height="220"
+                      alt=""
+                      transition:name="ukbt-franchise-crest"
+                    />
+                  </div>
+                  <div class="ukbt-franchise-card__body">
+                    <h2 class="ukbt-franchise-card__title">{f.name}</h2>
+                    <p class="ukbt-franchise-card__country">{f.country}</p>
+                    <p class="ukbt-franchise-card__blurb">{f.blurb}</p>
+                    <span class="ukbt-franchise-card__cta">
+                      View team &amp; squad <span aria-hidden="true">&rarr;</span>
+                    </span>
+                  </div>
+                </a>
+              </article>
+            </li>
           ))
         }
-      </div>
+      </ul>
     </Section>
   </main>
 
@@ -81,12 +100,36 @@ const bannerBackground = {
 </BaseLayout>
 
 <style>
+  .ukbt-franchise-intro {
+    margin: 0 0 var(--ukbt-space-6) 0;
+    color: var(--ukbt-color-neutral-700);
+    font-size: var(--ukbt-font-size-1);
+    max-width: 40rem;
+  }
   .ukbt-franchise-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
     gap: var(--ukbt-space-8);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    align-items: start;
+  }
+  /* Singleton: full-width horizontal feature card. Auto-reverts to the
+     N-item grid above when a second franchise lands. */
+  .ukbt-franchise-grid:has(> :only-child) {
+    grid-template-columns: 1fr;
+  }
+  .ukbt-franchise-grid:has(> :only-child) .ukbt-franchise-card__link {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    gap: var(--ukbt-space-6);
   }
   .ukbt-franchise-card {
+    margin: 0;
+  }
+  .ukbt-franchise-card__link {
     display: block;
     background: var(--ukbt-color-surface-alt);
     border-radius: var(--ukbt-radius-lg);
@@ -94,13 +137,23 @@ const bannerBackground = {
     overflow: hidden;
     color: inherit;
     text-decoration: none;
+    transition:
+      transform var(--ukbt-motion-duration-base) var(--ukbt-motion-easing-standard),
+      box-shadow var(--ukbt-motion-duration-base) var(--ukbt-motion-easing-standard);
+  }
+  .ukbt-franchise-card__link:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--ukbt-shadow-md);
+  }
+  .ukbt-franchise-card__link:hover .ukbt-franchise-card__cta {
+    text-decoration: underline;
   }
   .ukbt-franchise-card__crest-panel {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--ukbt-color-surface);
-    padding: var(--ukbt-space-8) var(--ukbt-space-4);
+    background: var(--ukbt-color-surface-alt);
+    padding: var(--ukbt-space-6) var(--ukbt-space-4);
   }
   .ukbt-franchise-card__crest-panel img {
     display: block;
@@ -108,20 +161,58 @@ const bannerBackground = {
     width: auto;
   }
   .ukbt-franchise-card__body {
-    padding: var(--ukbt-space-4);
+    display: flex;
+    flex-direction: column;
+    gap: var(--ukbt-space-1);
+    padding: var(--ukbt-space-4) var(--ukbt-space-6) var(--ukbt-space-6);
   }
-  .ukbt-franchise-card__body span {
-    margin: 0 0 var(--ukbt-space-1) 0;
+  .ukbt-franchise-card__body p {
+    max-width: 40rem;
+  }
+  .ukbt-franchise-card__title {
+    margin: 0;
+    font-family: var(--ukbt-font-family-heading);
     font-size: var(--ukbt-font-size-2);
+    font-weight: var(--ukbt-font-weight-bold);
+    line-height: 1.3;
+    color: var(--ukbt-color-brand-primary);
   }
   .ukbt-franchise-card__country {
-    margin: 0 0 var(--ukbt-space-2) 0;
-    color: var(--ukbt-color-neutral-700);
+    margin: 0 0 var(--ukbt-space-1) 0;
+    color: var(--ukbt-color-brand-primary);
     font-size: var(--ukbt-font-size-0);
+    font-weight: var(--ukbt-font-weight-bold);
   }
-  .ukbt-franchise-card__body p:last-child {
+  .ukbt-franchise-card__blurb {
     margin: 0;
     color: var(--ukbt-color-neutral-700);
     font-size: var(--ukbt-font-size-0);
+  }
+  .ukbt-franchise-card__cta {
+    display: inline-block;
+    margin-top: var(--ukbt-space-2);
+    color: var(--ukbt-color-brand-primary);
+    font-size: var(--ukbt-font-size-0);
+    font-weight: var(--ukbt-font-weight-bold);
+  }
+  @media (max-width: 1025px) {
+    .ukbt-franchise-grid:has(> :only-child) .ukbt-franchise-card__link {
+      gap: var(--ukbt-space-4);
+    }
+    .ukbt-franchise-card__crest-panel img {
+      height: 6rem;
+    }
+  }
+  @media (max-width: 767px) {
+    .ukbt-franchise-grid:has(> :only-child) .ukbt-franchise-card__link {
+      grid-template-columns: 1fr;
+      gap: var(--ukbt-space-4);
+    }
+    .ukbt-franchise-card__crest-panel img {
+      height: 5.5rem;
+    }
+    .ukbt-franchise-card__body {
+      padding: var(--ukbt-space-6);
+    }
   }
 </style>
