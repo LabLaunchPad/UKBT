@@ -7,20 +7,24 @@
 // reveal-controller arming. Output ends with:
 //   MOTION_STATUS = PASS | FAIL
 import { globSync, readFileSync } from 'node:fs';
-import { dirname, join } from 'node:path';
+import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const root = dirname(dirname(fileURLToPath(import.meta.url)));
+const root = process.env.UKBT_CHECK_ROOT
+  ? resolve(process.env.UKBT_CHECK_ROOT)
+  : dirname(dirname(fileURLToPath(import.meta.url)));
 const srcDir = join(root, 'apps/web/src');
 
 const failures = [];
 const fail = (rule, detail) => failures.push({ rule, detail });
 
 // 1. Shorthand transition/animation declarations must reference motion
-// tokens. Longhands (`animation-delay` choreography offsets,
-// `transition-timing-function` directional overrides) are intentionally
-// out of scope: delays stage shared durations, they are not a second
-// duration language. Multi-line shorthands are joined before testing.
+// tokens. `animation-delay`/`transition-delay` choreography offsets are
+// intentionally out of scope and stripped before testing: delays stage
+// shared durations, they are not a second duration language
+// (MOTION-CONTRACT.md invariant 1: justified micro-values with a comment;
+// e.g. Hero.astro's commented signature-entrance stagger). Multi-line
+// shorthands are joined before testing.
 const styleFiles = globSync('**/*.{astro,css}', { cwd: srcDir });
 const ALLOWLIST = new Set([
   // base.css holds the reduced-motion kill (0.01ms literals) by design —
@@ -58,16 +62,38 @@ for (const f of styleFiles) {
       if (/\b(?:height|max-height)\b/.test(t)) {
         fail('layout-animation', `${f}: ${t.slice(0, 80)}`);
       }
-      if (!ALLOWLIST.has(f.split('/').pop() ?? '')) {
-        if (/\b\d+(?:\.\d+)?m?s\b/.test(t) && !/var\(--ukbt-motion/.test(t)) {
-          fail('literal-duration', `${f}: ${t.slice(0, 80)}`);
-        }
-        if (
-          /\b(?:ease(?:-in-out|-in|-out)?|linear|cubic-bezier\()/.test(t) &&
-          !/var\(--ukbt-motion/.test(t)
-        ) {
-          fail('literal-easing', `${f}: ${t.slice(0, 80)}`);
-        }
+    }
+    // Duration/easing scan applies to declaration lines mentioning the
+    // property, not just declarations starting at the line edge: `.x {
+    // transition: opacity 300ms; }` is the normal single-line form and must
+    // fail the same way (proven by test-motion-failure-injection.mjs
+    // `literal-duration`). The property mention keeps prose comments
+    // (e.g. "none of it eases") and unrelated declarations out of scope.
+    // Path split handles both separators: glob returns `\` on Windows,
+    // which used to silently defeat the base.css ALLOWLIST there.
+    if (!ALLOWLIST.has(f.split(/[\\/]/).pop() ?? '')) {
+      const mentionsProp = /transition|animation/.test(t);
+      // Delay longhands are intentionally out of scope (header comment):
+      // delays stage shared durations, they are not a second duration
+      // language. Strip them before testing so `animation-delay: 150ms`
+      // passes while durations elsewhere on the line still fail.
+      const tNoDelay = t.replace(
+        /(?:animation|transition)-delay\s*:[^;]+;?/g,
+        '',
+      );
+      if (
+        mentionsProp &&
+        /\b\d+(?:\.\d+)?m?s\b/.test(tNoDelay) &&
+        !/var\(--ukbt-motion/.test(t)
+      ) {
+        fail('literal-duration', `${f}: ${t.slice(0, 80)}`);
+      }
+      if (
+        mentionsProp &&
+        /\b(?:ease(?:-in-out|-in|-out)?|linear|cubic-bezier\()/.test(t) &&
+        !/var\(--ukbt-motion/.test(t)
+      ) {
+        fail('literal-easing', `${f}: ${t.slice(0, 80)}`);
       }
     }
   }

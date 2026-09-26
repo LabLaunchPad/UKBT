@@ -95,7 +95,104 @@ const facts = {
     value: 'Right-Arm Off Spin Bowler',
     sources: ['EV-026'],
   },
-} satisfies Record<string, Fact<string>>;
+  // Stat rows + franchise lists are gated records too (C-004/005/006 →
+  // EV-026; the current/previous split follows the client corrections
+  // EV-0831-01/02). The `captain` export below reads `.value`, so the
+  // rendered shape is unchanged — only the provenance is now enforced.
+  battingStats: {
+    field: 'captain.batting_stats',
+    value: [
+      {
+        format: '50-Over',
+        matches: 276,
+        innings: 231,
+        runs: 11276,
+        highScore: '189',
+        average: '48.81',
+        strikeRate: '117',
+        hundreds: 31,
+        fifties: 45,
+      },
+      {
+        format: 'T20',
+        matches: 136,
+        innings: 123,
+        runs: 4700,
+        highScore: '132',
+        average: '38.21',
+        strikeRate: '132',
+        hundreds: 7,
+        fifties: 26,
+      },
+      {
+        format: 'T10',
+        matches: 54,
+        innings: 47,
+        runs: 1600,
+        highScore: '103',
+        average: '34.04',
+        strikeRate: '147',
+        hundreds: 2,
+        fifties: 11,
+      },
+    ],
+    sources: ['EV-026'],
+  },
+  bowlingStats: {
+    field: 'captain.bowling_stats',
+    value: [
+      {
+        format: '50-Over',
+        overs: '1203.2',
+        wickets: 297,
+        average: '14.56',
+        economy: '4.09',
+        best: '6/21',
+      },
+      {
+        format: 'T20',
+        overs: '246.3',
+        wickets: 143,
+        average: '15.70',
+        economy: '6.30',
+        best: '5/19',
+      },
+      {
+        format: 'T10',
+        overs: '98.2',
+        wickets: 67,
+        average: '17.98',
+        economy: '8.06',
+        best: '4/26',
+      },
+    ],
+    sources: ['EV-026'],
+  },
+  currentFranchises: {
+    field: 'captain.current_franchises',
+    value: [
+      'London Blaze (England, Gateway T20)',
+      'Roma Ovest Titans (Italy, RPL T10)',
+      'UK Bangla Tigers (UAE, Safari International T20 Cup)',
+      'Uppsala Tigers (Sweden, Nordic Smash T20)',
+    ],
+    sources: ['EV-026', 'EV-0831-01', 'EV-0831-02'],
+  },
+  previousFranchises: {
+    field: 'captain.previous_franchises',
+    value: [
+      'Yankee Royals (USA, US Open)',
+      'Bangladesh Tigers of USA (USA, Atlanta Open)',
+      'US All Stars (West Indies, Caribbean T10)',
+      'Dynamite Ducks (South Africa, LMS World Championship)',
+      'Bangladesh Tigers (USA, Diversity Cup)',
+      'BAS Vampire (England, T20 Pro:Am)',
+      'Bangladesh Tigers of USA (USA, Motor City Championship)',
+      'Faisalabad Falcons (USA, US Open)',
+    ],
+    sources: ['EV-026', 'EV-0831-01', 'EV-0831-02'],
+  },
+} satisfies Record<string, Fact<unknown>>;
 
 const allRecords: ContentRecord[] = Object.values(facts).map((f) => record(f));
 for (const rec of allRecords) {
@@ -119,88 +216,29 @@ export const captain = {
   nationality: facts.nationality.value,
   battingStyle: facts.battingStyle.value,
   bowlingStyle: facts.bowlingStyle.value,
-  // Current/Previous per EV-0831-01 + EV-0831-02 plus the client's later
-  // confirmation: London Blaze and Roma Ovest Titans are CURRENT teams
-  // alongside UK Bangla Tigers and Uppsala Tigers; the remaining 8
-  // correction-document entries are Previous. Display order set directly
-  // by the client (chat 2026-09-10): Blaze, Roma, UKBT, Uppsala.
-  currentFranchises: [
-    'London Blaze (England, Gateway T20)',
-    'Roma Ovest Titans (Italy, RPL T10)',
-    'UK Bangla Tigers (UAE, Safari International T20 Cup)',
-    'Uppsala Tigers (Sweden, Nordic Smash T20)',
-  ],
-  previousFranchises: [
-    'Yankee Royals (USA, US Open)',
-    'Bangladesh Tigers of USA (USA, Atlanta Open)',
-    'US All Stars (West Indies, Caribbean T10)',
-    'Dynamite Ducks (South Africa, LMS World Championship)',
-    'Bangladesh Tigers (USA, Diversity Cup)',
-    'BAS Vampire (England, T20 Pro:Am)',
-    'Bangladesh Tigers of USA (USA, Motor City Championship)',
-    'Faisalabad Falcons (USA, US Open)',
-  ],
-  battingStats: [
-    {
-      format: '50-Over',
-      matches: 276,
-      innings: 231,
-      runs: 11276,
-      highScore: '189',
-      average: '48.81',
-      strikeRate: '117',
-      hundreds: 31,
-      fifties: 45,
-    },
-    {
-      format: 'T20',
-      matches: 136,
-      innings: 123,
-      runs: 4700,
-      highScore: '132',
-      average: '38.21',
-      strikeRate: '132',
-      hundreds: 7,
-      fifties: 26,
-    },
-    {
-      format: 'T10',
-      matches: 54,
-      innings: 47,
-      runs: 1600,
-      highScore: '103',
-      average: '34.04',
-      strikeRate: '147',
-      hundreds: 2,
-      fifties: 11,
-    },
-  ],
-  bowlingStats: [
-    {
-      format: '50-Over',
-      overs: '1203.2',
-      wickets: 297,
-      average: '14.56',
-      economy: '4.09',
-      best: '6/21',
-    },
-    {
-      format: 'T20',
-      overs: '246.3',
-      wickets: 143,
-      average: '15.70',
-      economy: '6.30',
-      best: '5/19',
-    },
-    {
-      format: 'T10',
-      overs: '98.2',
-      wickets: 67,
-      average: '17.98',
-      economy: '8.06',
-      best: '4/26',
-    },
-  ],
+  // Gated above — `.value` keeps the rendered shape identical. Casts
+  // restore the row shapes the page maps over (`unknown` has no `.map`).
+  currentFranchises: facts.currentFranchises.value as string[],
+  previousFranchises: facts.previousFranchises.value as string[],
+  battingStats: facts.battingStats.value as Array<{
+    format: string;
+    matches: number;
+    innings: number;
+    runs: number;
+    highScore: string;
+    average: string;
+    strikeRate: string;
+    hundreds: number;
+    fifties: number;
+  }>,
+  bowlingStats: facts.bowlingStats.value as Array<{
+    format: string;
+    overs: string;
+    wickets: number;
+    average: string;
+    economy: string;
+    best: string;
+  }>,
   statsProviders: [
     {
       name: 'ESPN Cricinfo',

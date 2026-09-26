@@ -1,7 +1,7 @@
 # Roadmap & Open Items
 
 **Status:** LIVING DOCUMENT — update in place as stages/items close, don't
-fork a second copy. Last updated 2026-09-25.
+fork a second copy. Last updated 2026-09-26.
 
 **Purpose:** one place that answers "what's done, what's next, what's
 blocked, and on whom" without re-deriving it from receipts scattered across
@@ -1018,10 +1018,8 @@ here, deliberately:
 5. **Unit coverage for `src/lib/content-trust.ts`** — the trust-class
    policy map (~230 lines) has no direct test; only the static check
    script observes it.
-6. **Remaining gate injection suites** — check-ui / check-motion /
-   check-internal-links lack failure-injection tests (check-security and
-   check-seo gained theirs in this batch); check-ui also lacks the
-   `UKBT_CHECK_ROOT` sandbox override.
+6. **Remaining gate injection suites** -- CLOSED 2026-09-26 (PR #123): check-ui + check-motion gained test-ui/motion-failure-injection.mjs (9 + 8 cases, fixtures via new UKBT_CHECK_ROOT overrides in both gates); check-internal-links was already covered by the SEO suite. Chain + CI job now run 9 suites, all PASS. The work also closed a real gate hole the motion suite exposed: duration/easing only fired on line-leading declarations -- fixed, plus a Windows path bug in the base.css allowlist and a delay-longhand exemption lock.
+
 7. **Tina visual-edit preview on static hosting** — `?tina-edit=1`
    requests match static assets (asset-first routing) and never reach the
    middleware; admin-iframe path now permitted by CSP frame-ancestors
@@ -1168,3 +1166,33 @@ TinaIsland/loader path differs between dev and prod. Next step when
 scheduled: reproduce (edit in `/admin`, compare local vs live render),
 then decide (document the pull-to-see-edits workflow vs dev-mode cloud
 passthrough). Production Save path itself is proven (closure §2 above).
+
+## Join-form program + full-repo audit — merged 2026-09-26 (PR #121 `874dc06`, #122 `15d2d01`, #123 `0483b2b`)
+
+1. **Join form UI-first on `/join/` + `/privacy/` stub (PR #122):**
+   `submitForm()` seam + mock adapter (`unavailable`, never `ok`) + unit
+   tests in CI; 8 live fields, native-rule validation with focus-managed
+   error summary, gated upload, consent + age/guardian attestation, no
+   success state (honesty rule). FORM-CONTRACT AMENDMENT 01 (`EV-20260926-008`)
+   + REPOSITORY test-location amendment PROPOSED (`EV-20260926-009`) +
+   ROUTE AMENDMENT 05 AMENDED (`EV-20260926-006`); CSS budget 130KB
+   (`EV-20260926-005/007`). Evidence: PR #122 (all 19 CI green),
+   Playwright 347/0, 4 sign-offs, final review GO-WITH-PARKED.
+2. **CI node24 pin (PR #121):** `download-artifact` v5 re-pin; all green.
+3. **Audit fix batch (PR #123 `0483b2b`):** consent ticks carried in
+   payload; error-jump double-navigation fix; doc-rot + allowlist + route
+   counts; `/admin/` font CSP observation from old MCP logs investigated
+   and closed as stale (violations 2026-09-19 predate `font-src 'self'
+   data:`, live since 2026-09-23 per `_headers` blame).
+4. **Injection proofs + content gating (PR #124, this branch):**
+   `test-ui/motion-failure-injection.mjs` (9 + 8 cases, 9-suite chain +
+   CI, all PASS) closing roadmap item 6 above; F3/F4 closed — captain
+   stat rows + franchise lists and about mission/sister/network
+   sentences are now gated records (C-004/005/006 → EV-026, split →
+   EV-0831-01/02; fresh build passes with the new records enforced);
+   motion-gate hole fixed (single-line durations now fail) + Windows
+   allowlist path fix + delay-longhand exemption citing
+   MOTION-CONTRACT invariant 1.
+5. **Standing blocker unchanged:** post-deploy smoke FAILs on `main`
+   (run `36233616374`: 19/19 CI jobs green, only `smoke-verify` red —
+   live 403 `mitigated=challenge`). Owner action per closure §5 above.
