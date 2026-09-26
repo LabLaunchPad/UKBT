@@ -340,6 +340,10 @@ const notOpenNote =
             const item = document.createElement('li');
             const jump = document.createElement('a');
             jump.href = `#${field.id}`;
+            // D-05: a native fragment jump moves the viewport but does not
+            // reliably move AT focus — focus the target explicitly so the
+            // landing is announced rather than merely scrolled to.
+            jump.addEventListener('click', () => field.focus());
             jump.textContent =
               form.querySelector(`label[for="${field.id}"]`)?.textContent?.trim() ??
               field.name;
@@ -532,6 +536,15 @@ const notOpenNote =
     background: var(--ukbt-color-neutral-50);
     border-radius: var(--ukbt-radius-ref-xs);
     padding: var(--ukbt-space-3) var(--ukbt-space-4);
+  }
+  /* D-03: programmatic `.focus()` on a `div` may not match the global
+     `:focus-visible` heuristics, so the summary carries its own `:focus`
+     ring — the landing point always shows a ring, not only when the
+     browser deems the focus "visible". Same token pair as the global
+     ring in styles/base.css. */
+  .ukbt-join__errors:focus {
+    outline: 2px solid var(--ukbt-color-focus-ring, var(--ukbt-color-surface-foreground));
+    outline-offset: 2px;
   }
   .ukbt-join__errors-title {
     margin: 0 0 var(--ukbt-space-2) 0;
