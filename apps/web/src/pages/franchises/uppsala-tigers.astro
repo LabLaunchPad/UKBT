@@ -25,6 +25,7 @@ import Footer from '../../components/Footer.astro';
 import { homepage } from '../../content/homepage-data';
 import {
   ourFranchises,
+  uppsalaFacts,
   uppsalaOfficials,
   uppsalaSquad,
 } from '../../content/franchises-data';
@@ -66,16 +67,19 @@ if (!uppsala) {
           />
         </div>
         {/*
-          Owner directive 2026-09-26: the Nordic Smash T20 title + paragraph
-          (uppsalaFacts) is deleted from this intro — render, import, and
-          CSS below all removed whole (no empty ul shell). The data export
-          itself stays untouched (minimal blast radius; EV-20260926-001
-          tension note lives with it). Forward motion without new claims:
-          anchor to the existing #squad grid.
+          Owner directive 2026-09-26/27: the Nordic Smash T20 title (h3) stays
+          out of the intro, but the owner-supplied fact BODY is restored here
+          as the subheader lede — rendered from the uppsalaFacts data export
+          (single source of truth for copy, EV-20260926-001), not pasted.
         */}
         <div class="ukbt-franchise-intro__text">
           <SubHeading label="Sister Franchise" />
           <h2 class="ukbt-franchise-intro__title">Uppsala Tigers is a franchise team owned and managed by UK Bangla Tigers</h2>
+          {
+            uppsalaFacts.map((f) => (
+              <p class="ukbt-franchise-intro__lede">{f.body}</p>
+            ))
+          }
           <a class="ukbt-franchise-intro__squad-link" href="#squad">
             Meet the squad <span aria-hidden="true">&darr;</span>
           </a>
@@ -138,6 +142,16 @@ if (!uppsala) {
     font-weight: var(--ukbt-font-heading-h3-weight);
     line-height: var(--ukbt-font-heading-h3-line-height);
     color: var(--ukbt-color-brand-primary);
+  }
+  /*
+   * Lede truth: same body-copy tokens as the franchises index intro line
+   * (size-1 on neutral-700, 40rem measure) — one source, reused.
+   */
+  .ukbt-franchise-intro__lede {
+    margin: 0;
+    color: var(--ukbt-color-neutral-700);
+    font-size: var(--ukbt-font-size-1);
+    max-width: 40rem;
   }
   .ukbt-franchise-intro__squad-link {
     display: inline-block;

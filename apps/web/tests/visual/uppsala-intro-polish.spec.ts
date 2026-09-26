@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 
 /**
  * TDD spec for the 2026-09-26 Uppsala intro + franchises-card polish.
@@ -10,9 +10,14 @@ import { test, expect } from '@playwright/test';
 
 const INTRO = '.ukbt-franchise-intro';
 
-test('uppsala intro carries no Nordic Smash T20 copy', async ({ page }) => {
+test('uppsala intro carries the tournament lede (owner-supplied copy)', async ({
+  page,
+}) => {
   await page.goto('/franchises/uppsala-tigers/');
-  await expect(page.locator(INTRO)).not.toContainText('Nordic Smash');
+  const lede = page.locator(`${INTRO} .ukbt-franchise-intro__lede`);
+  await expect(lede).toBeVisible();
+  await expect(lede).toContainText('Nordic Smash T20');
+  await expect(lede).toContainText('15th till 20th of June 2026');
 });
 
 test('uppsala intro heading order is h1 banner then one intro h2', async ({
