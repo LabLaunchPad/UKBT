@@ -1,0 +1,41 @@
+id: EV-20260926-007
+classification: STATED_BUT_UNVERIFIED
+claim: >
+  Per the owner's direct decision (2026-09-26 chat): set the CSS transfer
+  budget to 130KB. The join application form takes the measured site total
+  to ~100.3KB against the 99KB budget (EV-20260926-005); rather than a
+  second incremental bump in the same session, the owner directed a single
+  jump to 130KB to give the form and near-term design work room without
+  repeated re-approvals.
+source: "Owner decision in project chat, 2026-09-26 (first-party client-supplied)."
+source_type: first_party_client_supplied
+retrieved_at: 2026-09-26
+verified_at: 2026-09-26
+valid_until: null
+justification_for_null: >
+  Records a budget decision, not a perishable external claim. The measured
+  figure (~100.3KB) is attested by fresh runs of
+  `node scripts/check-perf.mjs` on the join-form build.
+scope: "scripts/check-perf.mjs cssTotal budget only; no other budget changes."
+method: >
+  Owner instruction "set perf budget - 130 KB" in-chat 2026-09-26,
+  following the Task 3 fix round that measured 100.33KB against the 99KB
+  budget. Recorded implication (stated once, not hidden): ~30KB of
+  headroom means the CSS budget stops being a tight regression tripwire
+  until the site grows into it; the gate still fails closed above 130KB
+  and the injection suite is re-aimed to prove it.
+result: |
+  Authorizes editing scripts/check-perf.mjs cssTotal 99→130KB with the
+  dated header comment, plus re-aiming the css-over-budget injection
+  fixture above 130KB so the proof keeps proving. All other budgets
+  unchanged.
+related_files:
+  - scripts/check-perf.mjs
+  - scripts/test-perf-failure-injection.mjs
+relates_to: [EV-20260926-005]
+notes: >
+  Precedent chain (script header): 56→72 Stacki, html/js Tina bumps,
+  72→80 Cloudflare adapter, 80→88 Tina islands, 88→96 island registration
+  (2026-09-19), 96→99 join form projection (2026-09-26, EV-20260926-005),
+  now 99→130 owner-directed headroom (2026-09-26). PROPOSED as a
+  re-approval event; requires owner sign-off in the PR before merge.
