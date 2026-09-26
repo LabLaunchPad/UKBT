@@ -19,7 +19,7 @@ Proves the release is shippable. `deploy:verify` (18 steps, `<root>/package.json
 
 ## Structure
 
-27 scripts + `dependency-allowlist.json`:
+29 scripts + `dependency-allowlist.json`:
 
 | Script | Purpose | Invoked by (root command) | Gate? Release semantics? | Exit contract |
 |---|---|---|---|---|
@@ -29,13 +29,15 @@ Proves the release is shippable. `deploy:verify` (18 steps, `<root>/package.json
 | `check-deploy-mapping.mjs` | `<root>/wrangler.jsonc` `main`/`assets.directory` vs real `<root>/apps/web/dist/client/` + `<root>/apps/web/dist/server/entry.mjs` | `pnpm check:deploy-mapping` | Yes — step 9; editing it redefines what "deployable" means | `DEPLOY_MAPPING_STATUS = PASS \| FAIL` + exit 0/1 |
 | `check-release-path.mjs` | `ci.yml` smoke/deploy wiring intact (REM-002; asserts run-steps, not comments) | `pnpm check:release-path` | Yes — step 10 | `RELEASE_PATH_STATUS = PASS \| FAIL` + exit 0/1 |
 | `check-content-trust.mjs` | Tina field classification + JSON-LD truth-sourcing (REM-004) | `pnpm check:content-trust`; also runs inside `<root>/apps/web` build | Yes — step 11; also build-blocking | `CONTENT_TRUST_STATUS = PASS \| FAIL` + exit 0/1 |
-| `test-deploy-failure-injection.mjs` | Proves deploy-mapping fails on known-bad topologies (fixtures under OS temp dir, `UKBT_CHECK_ROOT`) | `pnpm test:failure-injection` (7 suites) | Yes — step 12; editing it weakens the proof without touching the gate | `FAILURE_INJECTION_STATUS = PASS \| FAIL` + exit 0/1 |
+| `test-deploy-failure-injection.mjs` | Proves deploy-mapping fails on known-bad topologies (fixtures under OS temp dir, `UKBT_CHECK_ROOT`) | `pnpm test:failure-injection` (9 suites) | Yes — step 12; editing it weakens the proof without touching the gate | `FAILURE_INJECTION_STATUS = PASS \| FAIL` + exit 0/1 |
 | `test-perf-failure-injection.mjs` | Proves perf gate fails on budget violations | `pnpm test:failure-injection` | Yes — step 12 | `PERF_INJECTION_STATUS = PASS \| FAIL` + exit 0/1 |
 | `test-seo-failure-injection.mjs` | Proves SEO + link gates fail on known-bad topologies | `pnpm test:failure-injection` | Yes — step 12 | `SEO_INJECTION_STATUS = PASS \| FAIL` + exit 0/1 |
 | `test-smoke-failure-injection.mjs` | Proves smoke gate fails closed (local fixture server, never production) | `pnpm test:failure-injection` | Yes — step 12 | `SMOKE_INJECTION_STATUS = PASS \| FAIL` + exit 0/1 |
 | `test-content-trust-injection.mjs` | Proves content-trust fails on each bypass class | `pnpm test:failure-injection` | Yes — step 12 | `CONTENT_TRUST_INJECTION_STATUS = PASS \| FAIL` + exit 0/1 |
 | `test-security-failure-injection.mjs` | Proves security gate fails on known-bad header/leak topologies | `pnpm test:failure-injection` | Yes — step 12 | `SECURITY_INJECTION_STATUS = PASS \| FAIL` + exit 0/1 |
 | `test-release-path-failure-injection.mjs` | Proves release-path gate fails on known-bad `ci.yml` topologies | `pnpm test:failure-injection` | Yes — step 12 | `RELEASE_PATH_INJECTION_STATUS = PASS \| FAIL` + exit 0/1 |
+| `test-ui-failure-injection.mjs` | Proves UI gate fails on each defect class (h1/order/alt/stale/focus/faq-sink/raw-sink) | `pnpm test:failure-injection` | Yes — step 12 | `UI_INJECTION_STATUS = PASS \| FAIL` + exit 0/1 |
+| `test-motion-failure-injection.mjs` | Proves motion gate fails on each defect class (duration/easing/all/scroll/VT/router/fade) | `pnpm test:failure-injection` | Yes — step 12 | `MOTION_INJECTION_STATUS = PASS \| FAIL` + exit 0/1 |
 | `check-internal-links.mjs` | Internal-href integrity over built `dist` (regex, no parser dep by design) | `pnpm check:links` | Yes — step 13 | exit 0/1 (no STATUS line) |
 | `check-seo.mjs` | SEO defects over built `dist` (+ JSON detail) | `pnpm check:seo` | Yes — step 14 | `SEO_STATUS = PASS \| FAIL` + exit 0/1 |
 | `check-ui.mjs` | Headings/focus/events/images (P0 FAIL, judgment WARN) | `pnpm check:ui` | Yes — step 15 | `UI_STATUS = PASS \| FAIL` + exit 0/1 |
@@ -66,7 +68,7 @@ None — pure Node stdlib by design (see `check-internal-links.mjs` header: a pa
 
 ## Protected / Generated
 
-- Nothing in this directory is generated — all 27 scripts + the allowlist JSON are hand-maintained source.
+- Nothing in this directory is generated — all scripts + the allowlist JSON are hand-maintained source.
 - `dependency-allowlist.json` additions are policy decisions (see `<root>/contracts/REPOSITORY-CONTRACT.md` dependency-addition policy); adding an entry to silence the gate is gate weakening.
 
 ## Conventions

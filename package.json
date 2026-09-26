@@ -35,7 +35,7 @@
     "check:deploy-mapping": "node scripts/check-deploy-mapping.mjs",
     "check:release-path": "node scripts/check-release-path.mjs",
     "check:content-trust": "node scripts/check-content-trust.mjs",
-    "test:failure-injection": "node scripts/test-deploy-failure-injection.mjs && node scripts/test-perf-failure-injection.mjs && node scripts/test-seo-failure-injection.mjs && node scripts/test-smoke-failure-injection.mjs && node scripts/test-content-trust-injection.mjs && node scripts/test-security-failure-injection.mjs && node scripts/test-release-path-failure-injection.mjs",
+    "test:failure-injection": "node scripts/test-deploy-failure-injection.mjs && node scripts/test-perf-failure-injection.mjs && node scripts/test-seo-failure-injection.mjs && node scripts/test-smoke-failure-injection.mjs && node scripts/test-content-trust-injection.mjs && node scripts/test-security-failure-injection.mjs && node scripts/test-release-path-failure-injection.mjs && node scripts/test-ui-failure-injection.mjs && node scripts/test-motion-failure-injection.mjs",
     "check:control-plane": "node scripts/check-control-plane.mjs",
     "smoke:deploy": "node scripts/smoke-deploy.mjs",
     "check:governance-scaffold": "node scripts/scaffold-self-test.mjs",

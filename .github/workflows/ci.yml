@@ -99,6 +99,8 @@ jobs:
       - run: node scripts/test-content-trust-injection.mjs
       - run: node scripts/test-security-failure-injection.mjs
       - run: node scripts/test-release-path-failure-injection.mjs
+      - run: node scripts/test-ui-failure-injection.mjs
+      - run: node scripts/test-motion-failure-injection.mjs
 
   lint:
     name: Lint (Biome)

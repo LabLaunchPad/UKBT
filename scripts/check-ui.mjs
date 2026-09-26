@@ -4,10 +4,12 @@
 // unless failures exist). Output ends with:
 //   UI_STATUS = PASS | FAIL
 import { existsSync, globSync, readdirSync, readFileSync } from 'node:fs';
-import { dirname, join } from 'node:path';
+import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const root = dirname(dirname(fileURLToPath(import.meta.url)));
+const root = process.env.UKBT_CHECK_ROOT
+  ? resolve(process.env.UKBT_CHECK_ROOT)
+  : dirname(dirname(fileURLToPath(import.meta.url)));
 // With @astrojs/cloudflare adapter, static output goes to dist/client/.
 // Without adapter, it goes to dist/. Check both locations.
 const distDirClient = join(root, 'apps/web/dist/client');

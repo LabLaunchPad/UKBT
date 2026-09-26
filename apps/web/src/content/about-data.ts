@@ -168,6 +168,32 @@ const facts = {
     ],
     sources: ['EV-20260910-001', 'EV-20260910-002'],
   },
+  // Composed-page sentences that name tournaments / the sister franchise
+  // are gated records too (names → EV-026 per C-004/C-009; Uppsala →
+  // EV-026 + EV-029 like homepage `franchiseName`). The `about` export
+  // below reads `.value`, so the rendered copy is unchanged.
+  missionInternationalBody: {
+    field: 'org.mission_international',
+    value:
+      'Competing on the international stage, from the Safari International T20 Cup to the upcoming Nordic Lights and Global T20 Championship.',
+    sources: ['EV-026'],
+  },
+  missionSisterBody: {
+    field: 'org.mission_sister_franchise',
+    value:
+      'Part of a multi-franchise family alongside Uppsala Tigers (Sweden).',
+    sources: ['EV-026', 'EV-029'],
+  },
+  // Composed-page sentences that name tournaments / the sister franchise
+  // are gated records too (names → EV-026 per C-004/C-009; Uppsala →
+  // EV-026 + EV-029 like homepage `franchiseName`). Clause facts compose
+  // with sibling gated facts at the export below, so no value is written
+  // twice and a future edit touches one place.
+  networkClause: {
+    field: 'org.network_clause',
+    value: 'building a sister-franchise network with Uppsala Tigers in Sweden',
+    sources: ['EV-026', 'EV-029'],
+  },
 } satisfies Record<string, Fact<unknown>>;
 
 const allRecords: ContentRecord[] = Object.values(facts).map((f) => record(f));
@@ -197,7 +223,7 @@ export const about = {
   missionFacts: [
     {
       title: 'International Cricket',
-      body: 'Competing on the international stage, from the Safari International T20 Cup to the upcoming Nordic Lights and Global T20 Championship.',
+      body: facts.missionInternationalBody.value,
     },
     {
       title: 'Community & Learning',
@@ -205,7 +231,7 @@ export const about = {
     },
     {
       title: 'Sister Franchise Network',
-      body: 'Part of a multi-franchise family alongside Uppsala Tigers (Sweden).',
+      body: facts.missionSisterBody.value,
     },
     {
       title: 'Registered Organisation',
@@ -214,7 +240,7 @@ export const about = {
   ],
   storyParagraphs: [
     facts.tagline.value,
-    `Founded in ${facts.founded.value} · registered as ${facts.legalEntity.value}, competing as a cricket franchise on the international stage while building a sister-franchise network with Uppsala Tigers in Sweden.`,
+    `Founded in ${facts.founded.value} · registered as ${facts.legalEntity.value}, competing as a cricket franchise on the international stage while ${facts.networkClause.value}.`,
   ],
   leaders: [
     {
