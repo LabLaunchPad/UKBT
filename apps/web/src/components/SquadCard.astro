@@ -255,7 +255,9 @@ const initials = p.name
       var(--ukbt-space-3);
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    /* One step up from 2px: a single token step of air under the name;
+       country/role min-height slots below are untouched so rows align. */
+    gap: var(--ukbt-space-1);
     flex: 1;
   }
   .ukbt-squad-card__name {

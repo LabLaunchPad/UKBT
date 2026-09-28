@@ -42,3 +42,10 @@ test('role-duplicate tags render once, in the role pill', async ({ page }) => {
   await expect(card.locator('.ukbt-squad-card__badge--role')).toHaveText('Wicket-keeper');
   await expect(card.locator('.ukbt-squad-card__badge--tag', { hasText: 'Wicket-keeper' })).toHaveCount(0);
 });
+
+test('squad header carries the pavilion rule', async ({ page }) => {
+  for (const path of ['/players/', '/franchises/uppsala-tigers/']) {
+    await page.goto(path);
+    await expect(page.locator('.ukbt-squad-head__rule').first()).toBeVisible();
+  }
+});

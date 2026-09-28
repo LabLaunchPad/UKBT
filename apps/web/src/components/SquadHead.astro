@@ -28,6 +28,7 @@ const { eyebrow, heading, count, sub = false } = Astro.props;
   >
     {heading}
   </h2>
+  <span class="ukbt-squad-head__rule" aria-hidden="true"></span>
   {count && <p class="ukbt-squad-head__count">{count}</p>}
 </div>
 
@@ -53,6 +54,17 @@ const { eyebrow, heading, count, sub = false } = Astro.props;
   }
   .ukbt-squad-head__heading--sub {
     font-size: clamp(2rem, 1.5rem + 2vw, 2.75rem);
+  }
+  /* Pavilion rule: short static accent stroke under the heading.
+     Tokens-only mapping of the 3rem x 2px geometry (gutter for the
+     length, border-width-md for the stroke); no transition, so it is
+     static under reduced motion by construction. */
+  .ukbt-squad-head__rule {
+    display: block;
+    width: var(--ukbt-container-gutter);
+    height: var(--ukbt-border-width-md);
+    background: var(--ukbt-color-brand-accent);
+    border-radius: var(--ukbt-radius-sm);
   }
   .ukbt-squad-head__count {
     margin: 0;
