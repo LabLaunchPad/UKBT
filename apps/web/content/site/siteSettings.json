@@ -7,10 +7,22 @@
     "phoneHref": "tel:+447827627997"
   },
   "social": [
-    { "platform": "facebook", "url": "https://www.facebook.com/UKBanglaTigers" },
-    { "platform": "instagram", "url": "https://www.instagram.com/ukbanglatigers/" },
-    { "platform": "tiktok", "url": "https://www.tiktok.com/@uk.bangla.tigers" },
-    { "platform": "x", "url": "https://x.com/ukbanglatigers" }
+    {
+      "platform": "facebook",
+      "url": "https://www.facebook.com/UKBanglaTigers"
+    },
+    {
+      "platform": "instagram",
+      "url": "https://www.instagram.com/ukbanglatigers/"
+    },
+    {
+      "platform": "tiktok",
+      "url": "https://www.tiktok.com/@uk.bangla.tigers"
+    },
+    {
+      "platform": "x",
+      "url": "https://x.com/ukbanglatigers"
+    }
   ],
-  "socialCard": "/social-card.jpg"
+  "socialCard": "/media/9b3772d5-cd70-43e7-87f6-5a3e36795737.jpg"
 }
