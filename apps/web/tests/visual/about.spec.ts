@@ -202,3 +202,40 @@ test('leadership heading precedes leader names in the heading sequence', async (
   expect(titleIdx).toBeGreaterThan(-1);
   expect(seq.indexOf(firstLeader)).toBeGreaterThan(titleIdx);
 });
+
+test('about section titles sit at h2 with no orphan caption headings', async ({
+  page,
+}) => {
+  await page.goto('/about/');
+  await expect(page.locator('.ukbt-about-cta__headline')).toHaveCount(1);
+  expect(
+    await page.locator('.ukbt-about-cta__headline').evaluate((e) => e.tagName),
+  ).toBe('H2');
+  const seq = await page
+    .locator('main h1, main h2, main h3')
+    .evaluateAll((els) => els.map((e) => e.tagName));
+  // Reconciled 2026-09-29 (Task 2): brief's verbatim array placed the
+  // leadership H2 AFTER the 3 leader H3s (pre-Task-1 cards-first order).
+  // Task 1 committed title-first DOM order (see 'leadership title precedes
+  // cards in DOM order' + 'leadership heading precedes leader names' above),
+  // so the true sequence is founder H2, leadership H2, 3 leader H3s, CTA H2.
+  // Same 15-entry strictness — order corrected, not weakened: the story
+  // detail-caption H3 is GONE and the CTA is H2.
+  expect(seq).toEqual([
+    'H1',
+    'H2',
+    'H3',
+    'H3',
+    'H3',
+    'H3',
+    'H2',
+    'H3',
+    'H2',
+    'H2',
+    'H2',
+    'H3',
+    'H3',
+    'H3',
+    'H2',
+  ]);
+});
