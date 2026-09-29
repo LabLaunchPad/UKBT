@@ -168,15 +168,19 @@ test('leadership title precedes cards in DOM order', async ({
   expect(order[1]).toMatch(/cards/);
   // Mobile visual order (stacked layout ≤1025px): title above cards.
   const mobileContext = await browser.newContext({
+    baseURL: 'http://127.0.0.1:4321',
     viewport: { width: 390, height: 844 },
   });
-  const mobile = await mobileContext.newPage();
-  await mobile.goto('/about/');
-  const [titleTop, cardsTop] = await mobile
-    .locator('.ukbt-leadership__title, .ukbt-leadership__cards')
-    .evaluateAll((els) => els.map((e) => e.getBoundingClientRect().top));
-  expect(titleTop).toBeLessThan(cardsTop);
-  await mobileContext.close();
+  try {
+    const mobile = await mobileContext.newPage();
+    await mobile.goto('/about/');
+    const [titleTop, cardsTop] = await mobile
+      .locator('.ukbt-leadership__title, .ukbt-leadership__cards')
+      .evaluateAll((els) => els.map((e) => e.getBoundingClientRect().top));
+    expect(titleTop).toBeLessThan(cardsTop);
+  } finally {
+    await mobileContext.close();
+  }
 });
 
 test('leadership heading precedes leader names in the heading sequence', async ({
