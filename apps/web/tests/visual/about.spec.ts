@@ -239,3 +239,31 @@ test('about section titles sit at h2 with no orphan caption headings', async ({
     'H2',
   ]);
 });
+
+test('cta also-on row excludes the primary platform', async ({ page }) => {
+  await page.goto('/about/');
+  const alsoOn = await page.locator('.ukbt-about-cta__social').innerText();
+  expect(alsoOn).not.toMatch(/Facebook/);
+  await expect(page.locator('.ukbt-about-cta__actions')).toContainText(
+    'Follow on Facebook',
+  );
+});
+
+test('sponsors header needs no eyebrow pill', async ({ page }) => {
+  await page.goto('/about/');
+  await expect(
+    page.locator(
+      '.ukbt-sponsors .ukbt-eyebrow, .ukbt-sponsors [class*=eyebrow]',
+    ),
+  ).toHaveCount(0);
+  await expect(page.locator('.ukbt-sponsors h2')).toContainText('Our Sponsors');
+});
+
+test('story caption keeps its approved centered style', async ({ page }) => {
+  await page.goto('/about/');
+  const caption = page.locator('.ukbt-story__detail-card p');
+  await expect(caption).toHaveCount(1);
+  expect(await caption.evaluate((e) => getComputedStyle(e).textAlign)).toBe(
+    'center',
+  );
+});

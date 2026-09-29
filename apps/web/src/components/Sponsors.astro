@@ -32,11 +32,9 @@ interface Props {
   sponsors: { name: string; tagline?: string; logo: string; logoAlt: string }[];
 }
 const { sponsors } = Astro.props;
-import SubHeading from './SubHeading.astro';
 ---
 
 <div class="ukbt-sponsors">
-  <SubHeading label="Proud Sponsor" />
   <h2>Our Sponsors</h2>
   <div class="ukbt-sponsors__row">
     {

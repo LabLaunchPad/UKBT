@@ -36,7 +36,7 @@ const primarySocial = social[0];
   </div>
   <div class="ukbt-about-cta__social">
     <span class="ukbt-about-cta__social-label">Also on</span>
-    <SocialLinks links={social} tone="on-light" label="UK Bangla Tigers on other platforms" />
+    <SocialLinks links={social.filter((s) => s !== primarySocial)} tone="on-light" label="UK Bangla Tigers on other platforms" />
   </div>
   <div class="ukbt-about-cta__photo">
     <img
