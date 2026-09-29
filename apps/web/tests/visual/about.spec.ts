@@ -155,3 +155,32 @@ test('no horizontal overflow on the About Us page at any frozen viewport', async
     ).toBeLessThanOrEqual(clientWidth);
   }
 });
+
+test('leadership title precedes cards in DOM order', async ({ page }) => {
+  await page.goto('/about/');
+  const order = await page
+    .locator('.ukbt-leadership > *')
+    .evaluateAll((els) => els.map((e) => e.className));
+  expect(order[0]).toMatch(/title/);
+  expect(order[1]).toMatch(/cards/);
+});
+
+test('leadership heading precedes leader names in the heading sequence', async ({
+  page,
+}) => {
+  await page.goto('/about/');
+  const seq = await page
+    .locator('main h2, main h3')
+    .evaluateAll((els) =>
+      els.map(
+        (e) => e.tagName + ':' + (e.textContent || '').trim().slice(0, 20),
+      ),
+    );
+  const titleIdx = seq.findIndex((s) => s.includes('Meet the People'));
+  const firstLeader = await page
+    .locator('.ukbt-leadership h3')
+    .first()
+    .evaluate((e) => 'H3:' + (e.textContent || '').trim().slice(0, 20));
+  expect(titleIdx).toBeGreaterThan(-1);
+  expect(seq.indexOf(firstLeader)).toBeGreaterThan(titleIdx);
+});

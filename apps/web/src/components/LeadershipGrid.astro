@@ -36,6 +36,11 @@ const introMarker = data ? tinaField(data, 'leadershipIntro') : tinaFieldProp;
 ---
 
 <div class="ukbt-leadership">
+  <div class="ukbt-leadership__title">
+    <SubHeading label="Our Leadership" />
+    <h2>Meet the People Behind the Tigers</h2>
+    <p {...introMarker ? { 'data-tina-field': introMarker } : {}}>{intro}</p>
+  </div>
   <div class="ukbt-leadership__cards">
     {
       leaders.map((l, i) => (
@@ -60,11 +65,6 @@ const introMarker = data ? tinaField(data, 'leadershipIntro') : tinaFieldProp;
       ))
     }
   </div>
-  <div class="ukbt-leadership__title">
-    <SubHeading label="Our Leadership" />
-    <h2>Meet the People Behind the Tigers</h2>
-    <p {...introMarker ? { 'data-tina-field': introMarker } : {}}>{intro}</p>
-  </div>
 </div>
 
 <style>
@@ -77,6 +77,7 @@ const introMarker = data ? tinaField(data, 'leadershipIntro') : tinaFieldProp;
   }
   .ukbt-leadership__cards {
     flex: 0 0 55%;
+    order: -1;
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: var(--ukbt-space-4);
@@ -152,9 +153,9 @@ const introMarker = data ? tinaField(data, 'leadershipIntro') : tinaFieldProp;
     line-height: var(--ukbt-font-line-height-body);
     max-width: 32rem;
   }
-  /* Reference `.team-content-wrapper` at <=1025px: column-reverse, 50px gap. */  @media screen and (max-width: 1025px) {
+  /* Reference `.team-content-wrapper` at <=1025px: column, 50px gap. */  @media screen and (max-width: 1025px) {
     .ukbt-leadership {
-      flex-direction: column-reverse;
+      flex-direction: column;
       gap: var(--ukbt-space-gap-5);
     }
     .ukbt-leadership__cards {
