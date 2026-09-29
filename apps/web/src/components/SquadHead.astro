@@ -54,6 +54,21 @@ const { eyebrow, heading, count, sub = false } = Astro.props;
   .ukbt-squad-head__heading--sub {
     font-size: clamp(2rem, 1.5rem + 2vw, 2.75rem);
   }
+  /* Pavilion rule: short static accent stroke under the heading,
+     now zero-markup via ::after. Tokens-only mapping of the 3rem x 2px
+     geometry (gutter for the length, border-width-md for the stroke);
+     margin-top restores the gap the old span occupied, so the spacing
+     above the count line is unchanged; no transition, so it is static
+     under reduced motion by construction. */
+  .ukbt-squad-head__heading::after {
+    content: '';
+    display: block;
+    width: var(--ukbt-container-gutter);
+    height: var(--ukbt-border-width-md);
+    margin-top: var(--ukbt-space-2);
+    background: var(--ukbt-color-brand-accent);
+    border-radius: var(--ukbt-radius-sm);
+  }
   .ukbt-squad-head__count {
     margin: 0;
     color: var(--ukbt-color-neutral-700);

@@ -66,13 +66,16 @@ const badges = [
 const meta = (p.tags ?? []).filter(
   (t) => !(t in BADGE_LABELS) && t !== 'Also plays for Uppsala Tigers',
 );
-// ponytail: role label lives on the media badge for players (deduped
-// against tag badges); officials keep the role-led text line.
+// ponytail: single pill per card — role span leads (tag spans exclude
+// entries repeating the role string); officials render tag spans only.
 const roleLabel = p.role === 'All-rounder' ? 'All-Rounder' : p.role;
 const mediaBadges = isOfficial
   ? badges
   : [...new Set([roleLabel, ...badges])];
 const uppsala = (p.tags ?? []).includes('Also plays for Uppsala Tigers');
+// Tag pills exclude entries repeating the role string (R5) — the tag
+// still renders, in the role pill. Display strings unchanged.
+const tagBadges = badges.filter((b) => b !== roleLabel);
 
 // Monogram for the text-only variant: initials of the verified name.
 const initials = p.name
@@ -96,14 +99,34 @@ const initials = p.name
           loading="lazy"
         />
         {mediaBadges.length > 0 && (
-          <p class="ukbt-squad-card__badge">{mediaBadges.join(' · ')}</p>
+          <p class="ukbt-squad-card__badge">
+            {!isOfficial && (
+              <span class="ukbt-squad-card__badge--role">{roleLabel}</span>
+            )}
+            {tagBadges.map((b) => (
+              <>
+                {', '}
+                <span class="ukbt-squad-card__badge--tag">{b}</span>
+              </>
+            ))}
+          </p>
         )}
       </div>
     ) : (
       <div class="ukbt-squad-card__text">
         <span aria-hidden="true">{initials}</span>
         {mediaBadges.length > 0 && (
-          <p class="ukbt-squad-card__badge">{mediaBadges.join(' · ')}</p>
+          <p class="ukbt-squad-card__badge">
+            {!isOfficial && (
+              <span class="ukbt-squad-card__badge--role">{roleLabel}</span>
+            )}
+            {tagBadges.map((b) => (
+              <>
+                {', '}
+                <span class="ukbt-squad-card__badge--tag">{b}</span>
+              </>
+            ))}
+          </p>
         )}
       </div>
     )
@@ -184,7 +207,9 @@ const initials = p.name
     color: var(--ukbt-color-brand-accent);
     letter-spacing: 0.04em;
   }
-  /* Verified-tag badge overlapping the media bottom-left. */
+  /* Single badge pill overlapping the media bottom-left: role span
+     leads bold, tag spans follow at regular weight after a
+     sight-visible comma (pauses SRs; echoes the old · separator). */
   .ukbt-squad-card__badge {
     position: absolute;
     left: var(--ukbt-space-2);
@@ -199,12 +224,19 @@ const initials = p.name
     font-weight: var(--ukbt-font-weight-bold);
     line-height: 1.4;
   }
+  /* Tag spans read secondary: same pill at regular weight; the
+     sight-visible comma between role and tags pauses SRs naturally. */
+  .ukbt-squad-card__badge--tag {
+    font-weight: var(--ukbt-font-weight-regular);
+  }
   .ukbt-squad-card__body {
     padding: var(--ukbt-space-3) var(--ukbt-space-3) var(--ukbt-space-4)
       var(--ukbt-space-3);
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    /* One step up from 2px: a single token step of air under the name;
+       country/role min-height slots below are untouched so rows align. */
+    gap: var(--ukbt-space-1);
     flex: 1;
   }
   .ukbt-squad-card__name {

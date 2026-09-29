@@ -8,6 +8,10 @@
 // A filter renders only when at least one record matches it — no empty
 // categories, no invented counts. Other role filters (Batsmen/Bowlers)
 // are deliberately not offered by design, not because no taxonomy exists.
+// The bar groups cricket meaning (All, Wicket-keepers, All-Rounders,
+// U-19, Uppsala) before photo presence (With/No Photos), each a
+// labelled group; keys, labels, counts, and per-key match semantics
+// are identical grouped or flat.
 //
 // Progressive enhancement: the filter bar is hidden until the
 // component script runs (data-squad-ready), so no-JS renders the full
@@ -102,21 +106,46 @@ const allFilters: Filter[] = [
 ];
 // 'All' always renders; every other filter needs ≥1 real record.
 const visibleFilters = allFilters.filter((f) => f.key === 'a' || f.count > 0);
+// Grouped render: cricket meaning first, photo presence second. Key
+// order inside each group follows allFilters ('All' stays first); a
+// group renders only when it has ≥1 button (e.g. Uppsala's 20/20
+// photos hide 'No Photos', leaving a single photo button).
+const cricketFilters = visibleFilters.filter((f) =>
+  ['a', 'k', 'r', 'j', 't'].includes(f.key),
+);
+const photoFilters = visibleFilters.filter((f) =>
+  ['p', 'n'].includes(f.key),
+);
+const filterGroups = [
+  { label: 'Playing role', filters: cricketFilters },
+  { label: 'Photo availability', filters: photoFilters },
+].filter((g) => g.filters.length > 0);
 ---
 
 <div class="ukbt-squad" id={id} data-squad-grid>
   {
     filters && (
       <div class="ukbt-squad__bar">
-        <div class="ukbt-squad__filters" role="group" aria-label={filterLabel}>
-          {visibleFilters.map((f, i) => (
-            <button
-              class="ukbt-squad__filter"
-              data-filter={f.key}
-              aria-pressed={i === 0 ? 'true' : undefined}
+        <div class="ukbt-squad__filters" aria-label={filterLabel}>
+          {filterGroups.map((g) => (
+            <div
+              class="ukbt-squad__filter-group"
+              role="group"
+              aria-label={g.label}
             >
-              {f.label}
-            </button>
+              <span class="ukbt-squad__group-label" aria-hidden="true">
+                {g.label}
+              </span>
+              {g.filters.map((f) => (
+                <button
+                  class="ukbt-squad__filter"
+                  data-filter={f.key}
+                  aria-pressed={f.key === 'a' ? 'true' : undefined}
+                >
+                  {f.label}
+                </button>
+              ))}
+            </div>
           ))}
         </div>
         <p class="ukbt-squad__count" data-squad-count aria-live="polite">
@@ -146,8 +175,14 @@ const visibleFilters = allFilters.filter((f) => f.key === 'a' || f.count > 0);
     if (buttons.length === 0) continue;
     root.setAttribute('data-squad-wired', 'true');
     const cards = [...root.querySelectorAll('.ukbt-squad-card')];
+    // [R6] Aggregate EVERY badge pill on the card (role + tags): the
+    // role pill carries the role text, so first-match querySelector
+    // read 0 for tag-only filters (j/U-19). Keys and per-key semantics
+    // below are unchanged — reader fix only.
     const badge = (c: Element) =>
-      c.querySelector('.ukbt-squad-card__badge')?.textContent ?? '';
+      [...c.querySelectorAll('.ukbt-squad-card__badge')]
+        .map((b) => b.textContent ?? '')
+        .join(' ');
     const matches = (c: Element, key: string): boolean => {
       if (key === 'a') return true;
       if (key === 'p') return c.querySelector('img') !== null;
@@ -214,6 +249,19 @@ const visibleFilters = allFilters.filter((f) => f.key === 'a' || f.count > 0);
   }
   [data-squad-ready] .ukbt-squad__filters {
     display: flex;
+  }
+  /* Filter groups: cricket meaning first, photo presence second. Same
+     wrap/gap rhythm as the bar; the group label reads muted at the
+     base type step (existing tokens only, no new scale values). */
+  .ukbt-squad__filter-group {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--ukbt-space-2);
+  }
+  .ukbt-squad__group-label {
+    color: var(--ukbt-color-neutral-700);
+    font-size: var(--ukbt-font-size-0);
   }
   .ukbt-squad__filter {
     appearance: none;
