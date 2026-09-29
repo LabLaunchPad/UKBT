@@ -155,3 +155,128 @@ test('no horizontal overflow on the About Us page at any frozen viewport', async
     ).toBeLessThanOrEqual(clientWidth);
   }
 });
+
+test('leadership title precedes cards in DOM order', async ({
+  page,
+  browser,
+}) => {
+  await page.goto('/about/');
+  const order = await page
+    .locator('.ukbt-leadership > *')
+    .evaluateAll((els) => els.map((e) => e.className));
+  expect(order[0]).toMatch(/title/);
+  expect(order[1]).toMatch(/cards/);
+  // Mobile visual order (stacked layout ≤1025px): title above cards.
+  const mobileContext = await browser.newContext({
+    baseURL: 'http://127.0.0.1:4321',
+    viewport: { width: 390, height: 844 },
+  });
+  try {
+    const mobile = await mobileContext.newPage();
+    await mobile.goto('/about/');
+    const [titleTop, cardsTop] = await mobile
+      .locator('.ukbt-leadership__title, .ukbt-leadership__cards')
+      .evaluateAll((els) => els.map((e) => e.getBoundingClientRect().top));
+    expect(titleTop).toBeLessThan(cardsTop);
+  } finally {
+    await mobileContext.close();
+  }
+});
+
+test('leadership heading precedes leader names in the heading sequence', async ({
+  page,
+}) => {
+  await page.goto('/about/');
+  const seq = await page
+    .locator('main h2, main h3')
+    .evaluateAll((els) =>
+      els.map(
+        (e) => e.tagName + ':' + (e.textContent || '').trim().slice(0, 20),
+      ),
+    );
+  const titleIdx = seq.findIndex((s) => s.includes('Meet the People'));
+  const firstLeader = await page
+    .locator('.ukbt-leadership h3')
+    .first()
+    .evaluate((e) => 'H3:' + (e.textContent || '').trim().slice(0, 20));
+  expect(titleIdx).toBeGreaterThan(-1);
+  expect(seq.indexOf(firstLeader)).toBeGreaterThan(titleIdx);
+});
+
+test('about section titles sit at h2 with no orphan caption headings', async ({
+  page,
+}) => {
+  await page.goto('/about/');
+  await expect(page.locator('.ukbt-about-cta__headline')).toHaveCount(1);
+  expect(
+    await page.locator('.ukbt-about-cta__headline').evaluate((e) => e.tagName),
+  ).toBe('H2');
+  const seq = await page
+    .locator('main h1, main h2, main h3')
+    .evaluateAll((els) => els.map((e) => e.tagName));
+  // Reconciled 2026-09-29 (Task 2): brief's verbatim array placed the
+  // leadership H2 AFTER the 3 leader H3s (pre-Task-1 cards-first order).
+  // Task 1 committed title-first DOM order (see 'leadership title precedes
+  // cards in DOM order' + 'leadership heading precedes leader names' above),
+  // so the true sequence is founder H2, leadership H2, 3 leader H3s, CTA H2.
+  // Same 15-entry strictness — order corrected, not weakened: the story
+  // detail-caption H3 is GONE and the CTA is H2.
+  expect(seq).toEqual([
+    'H1',
+    'H2',
+    'H3',
+    'H3',
+    'H3',
+    'H3',
+    'H2',
+    'H3',
+    'H2',
+    'H2',
+    'H2',
+    'H3',
+    'H3',
+    'H3',
+    'H2',
+  ]);
+});
+
+test('cta also-on row excludes the primary platform', async ({ page }) => {
+  await page.goto('/about/');
+  const alsoOn = await page.locator('.ukbt-about-cta__social').innerText();
+  expect(alsoOn).not.toMatch(/Facebook/);
+  await expect(page.locator('.ukbt-about-cta__actions')).toContainText(
+    'Follow on Facebook',
+  );
+});
+
+test('sponsors header needs no eyebrow pill', async ({ page }) => {
+  await page.goto('/about/');
+  await expect(page.locator('.ukbt-sponsors .ukbt-subheading')).toHaveCount(0);
+  await expect(
+    page.locator(
+      '.ukbt-sponsors .ukbt-eyebrow, .ukbt-sponsors [class*=eyebrow]',
+    ),
+  ).toHaveCount(0);
+  await expect(page.locator('.ukbt-sponsors h2')).toContainText('Our Sponsors');
+});
+
+test('story caption keeps its approved centered style', async ({ page }) => {
+  await page.goto('/about/');
+  const caption = page.locator('.ukbt-story__detail-card p');
+  await expect(caption).toHaveCount(1);
+  expect(await caption.evaluate((e) => getComputedStyle(e).textAlign)).toBe(
+    'center',
+  );
+});
+
+test('sponsor mark has presence and cream appears once', async ({ page }) => {
+  await page.goto('/about/');
+  const box = await page
+    .locator('.ukbt-sponsors__item img')
+    .first()
+    .boundingBox();
+  expect(box).not.toBeNull();
+  expect(Math.min(box.width, box.height)).toBeGreaterThanOrEqual(160);
+  const creams = await page.locator('main .ukbt-section--surface-alt').count();
+  expect(creams).toBe(1);
+});
