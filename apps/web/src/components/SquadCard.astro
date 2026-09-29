@@ -66,9 +66,8 @@ const badges = [
 const meta = (p.tags ?? []).filter(
   (t) => !(t in BADGE_LABELS) && t !== 'Also plays for Uppsala Tigers',
 );
-// ponytail: role pill renders for players; tag pills exclude entries that
-// repeat the role string (the tag still renders, in the role pill).
-// Officials keep the role-led text line and render tag pills only.
+// ponytail: single pill per card — role span leads (tag spans exclude
+// entries repeating the role string); officials render tag spans only.
 const roleLabel = p.role === 'All-rounder' ? 'All-Rounder' : p.role;
 const mediaBadges = isOfficial
   ? badges
@@ -100,48 +99,34 @@ const initials = p.name
           loading="lazy"
         />
         {mediaBadges.length > 0 && (
-          <div class="ukbt-squad-card__badges" role="list">
+          <p class="ukbt-squad-card__badge">
             {!isOfficial && (
-              <p
-                class="ukbt-squad-card__badge ukbt-squad-card__badge--role"
-                role="listitem"
-              >
-                {roleLabel}
-              </p>
+              <span class="ukbt-squad-card__badge--role">{roleLabel}</span>
             )}
             {tagBadges.map((b) => (
-              <p
-                class="ukbt-squad-card__badge ukbt-squad-card__badge--tag"
-                role="listitem"
-              >
-                {b}
-              </p>
+              <>
+                {', '}
+                <span class="ukbt-squad-card__badge--tag">{b}</span>
+              </>
             ))}
-          </div>
+          </p>
         )}
       </div>
     ) : (
       <div class="ukbt-squad-card__text">
         <span aria-hidden="true">{initials}</span>
         {mediaBadges.length > 0 && (
-          <div class="ukbt-squad-card__badges" role="list">
+          <p class="ukbt-squad-card__badge">
             {!isOfficial && (
-              <p
-                class="ukbt-squad-card__badge ukbt-squad-card__badge--role"
-                role="listitem"
-              >
-                {roleLabel}
-              </p>
+              <span class="ukbt-squad-card__badge--role">{roleLabel}</span>
             )}
             {tagBadges.map((b) => (
-              <p
-                class="ukbt-squad-card__badge ukbt-squad-card__badge--tag"
-                role="listitem"
-              >
-                {b}
-              </p>
+              <>
+                {', '}
+                <span class="ukbt-squad-card__badge--tag">{b}</span>
+              </>
             ))}
-          </div>
+          </p>
         )}
       </div>
     )
@@ -222,22 +207,15 @@ const initials = p.name
     color: var(--ukbt-color-brand-accent);
     letter-spacing: 0.04em;
   }
-  /* Badge cluster overlapping the media bottom-left: the wrapper
-     anchors, role pill first with tag pills wrapping after. List
-     semantics keep assistive tech from hearing a run-on string. */
-  .ukbt-squad-card__badges {
+  /* Single badge pill overlapping the media bottom-left: role span
+     leads bold, tag spans follow at regular weight after a
+     sight-visible comma (pauses SRs; echoes the old · separator). */
+  .ukbt-squad-card__badge {
     position: absolute;
     left: var(--ukbt-space-2);
     bottom: var(--ukbt-space-2);
     margin: 0;
     max-width: calc(100% - var(--ukbt-space-4));
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--ukbt-space-1);
-  }
-  /* Verified-tag badge pill: navy/white geometry shared by role + tags. */
-  .ukbt-squad-card__badge {
-    margin: 0;
     background: var(--ukbt-color-brand-primary);
     color: var(--ukbt-color-neutral-0);
     border-radius: var(--ukbt-radius-sm, 4px);
@@ -246,7 +224,8 @@ const initials = p.name
     font-weight: var(--ukbt-font-weight-bold);
     line-height: 1.4;
   }
-  /* Tag pills read secondary: same geometry at regular weight. */
+  /* Tag spans read secondary: same pill at regular weight; the
+     sight-visible comma between role and tags pauses SRs naturally. */
   .ukbt-squad-card__badge--tag {
     font-weight: var(--ukbt-font-weight-regular);
   }

@@ -46,6 +46,14 @@ test('role-duplicate tags render once, in the role pill', async ({ page }) => {
 test('squad header carries the pavilion rule', async ({ page }) => {
   for (const path of ['/players/', '/franchises/uppsala-tigers/']) {
     await page.goto(path);
-    await expect(page.locator('.ukbt-squad-head__rule').first()).toBeVisible();
+    const rule = await page
+      .locator('.ukbt-squad-head__heading')
+      .first()
+      .evaluate((el) => {
+        const cs = getComputedStyle(el, '::after');
+        return { bg: cs.backgroundColor, width: cs.width };
+      });
+    expect(rule.bg).toBe('rgb(204, 164, 79)');
+    expect(Number.parseFloat(rule.width)).toBeGreaterThan(0);
   }
 });
