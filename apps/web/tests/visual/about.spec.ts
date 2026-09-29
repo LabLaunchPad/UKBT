@@ -251,6 +251,7 @@ test('cta also-on row excludes the primary platform', async ({ page }) => {
 
 test('sponsors header needs no eyebrow pill', async ({ page }) => {
   await page.goto('/about/');
+  await expect(page.locator('.ukbt-sponsors .ukbt-subheading')).toHaveCount(0);
   await expect(
     page.locator(
       '.ukbt-sponsors .ukbt-eyebrow, .ukbt-sponsors [class*=eyebrow]',
