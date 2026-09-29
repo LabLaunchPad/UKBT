@@ -268,3 +268,15 @@ test('story caption keeps its approved centered style', async ({ page }) => {
     'center',
   );
 });
+
+test('sponsor mark has presence and cream appears once', async ({ page }) => {
+  await page.goto('/about/');
+  const box = await page
+    .locator('.ukbt-sponsors__item img')
+    .first()
+    .boundingBox();
+  expect(box).not.toBeNull();
+  expect(Math.min(box.width, box.height)).toBeGreaterThanOrEqual(160);
+  const creams = await page.locator('main .ukbt-section--surface-alt').count();
+  expect(creams).toBe(1);
+});
