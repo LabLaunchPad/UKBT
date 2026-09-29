@@ -156,13 +156,27 @@ test('no horizontal overflow on the About Us page at any frozen viewport', async
   }
 });
 
-test('leadership title precedes cards in DOM order', async ({ page }) => {
+test('leadership title precedes cards in DOM order', async ({
+  page,
+  browser,
+}) => {
   await page.goto('/about/');
   const order = await page
     .locator('.ukbt-leadership > *')
     .evaluateAll((els) => els.map((e) => e.className));
   expect(order[0]).toMatch(/title/);
   expect(order[1]).toMatch(/cards/);
+  // Mobile visual order (stacked layout ≤1025px): title above cards.
+  const mobileContext = await browser.newContext({
+    viewport: { width: 390, height: 844 },
+  });
+  const mobile = await mobileContext.newPage();
+  await mobile.goto('/about/');
+  const [titleTop, cardsTop] = await mobile
+    .locator('.ukbt-leadership__title, .ukbt-leadership__cards')
+    .evaluateAll((els) => els.map((e) => e.getBoundingClientRect().top));
+  expect(titleTop).toBeLessThan(cardsTop);
+  await mobileContext.close();
 });
 
 test('leadership heading precedes leader names in the heading sequence', async ({
