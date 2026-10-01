@@ -29,7 +29,7 @@
     "@axe-core/playwright": "^4.10.1",
     "@playwright/test": "^1.63.0",
     "@tinacms/cli": "^3.0.0",
-    "@types/node": "^22.10.2",
+    "@types/node": "^26.6.3",
     "typescript": "^5.7.2",
     "vitest": "^5.0.0",
     "wrangler": "^4.141.0"
