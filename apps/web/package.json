@@ -31,7 +31,7 @@
     "@tinacms/cli": "^3.0.0",
     "@types/node": "^22.10.2",
     "typescript": "^5.7.2",
-    "vitest": "^5.0.0",
+    "vitest": "^5.0.2",
     "wrangler": "^4.141.0"
   }
 }
