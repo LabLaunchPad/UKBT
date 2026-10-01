@@ -44,7 +44,7 @@
   "devDependencies": {
     "@biomejs/biome": "^2.5.14",
     "@tinacms/cli": "^3.0.0",
-    "tinacms": "^3.14.0",
+    "tinacms": "^3.14.1",
     "typescript": "^5.7.2",
     "wrangler": "^4.141.0"
   }
